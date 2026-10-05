@@ -1,0 +1,17 @@
+{
+  "name": "dailyfunding-fe",
+  "private": true,
+  "packageManager": "pnpm@11.0.4",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "typecheck": "turbo typecheck",
+    "lint": "turbo lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.0"
+  }
+}
