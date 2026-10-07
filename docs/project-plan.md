@@ -20,7 +20,7 @@
 ## 2. 아키텍처
 
 ```
-dailyfunding-fe (pnpm workspace + turborepo)
+dailyfunding-fe (bun workspace + turborepo)
 ├─ apps/
 │  ├─ web/                    # Next.js 15 App Router — 단일 배포 단위
 │  │   ├─ app/(public)/       # 홈·상품·콘텐츠 — SSR
@@ -33,7 +33,7 @@ dailyfunding-fe (pnpm workspace + turborepo)
 │      ├─ webview/            # WebView 스크린 + 로딩/에러 상태
 │      └─ bridge/             # 브릿지 핸들러(생체인증·푸시·공유·세션)
 └─ packages/
-   ├─ design-system/          # panda-css tokens/recipes + tokens.json export
+   ├─ design-system/          # 커스텀 토큰(scale/semantic) + tokens.css + React 컴포넌트
    ├─ bridge/                 # 메시지 타입·프로토콜 정의(웹↔네이티브 공유)
    └─ api-client/             # openapi-typescript 타입 + fetch 래퍼
 ```
@@ -133,7 +133,7 @@ type BridgeResponse<T> = { ok: true; data: T } | { ok: false; error: { code: str
 
 ## 5. 디자인 시스템
 
-- panda-css config: colors·spacing·typography·radii·shadows 토큰, button/card/input/badge/table recipe, pattern(스택·그리드)
+- 커스텀 토큰 config: colors·spacing·typography·radii scale + semantic 매핑 → tokens.css 생성, Button/Field/Steps 컴포넌트 + Storybook
 - `tokens.json` export → app이 읽어 네이티브 스타일 상수로 사용
 - 컴포넌트 카탈로그(web `/design-system` + 앱 내 미리보기 화면)로 회귀 확인
 
@@ -143,7 +143,7 @@ type BridgeResponse<T> = { ok: true; data: T } | { ok: false; error: { code: str
 
 | Phase | 내용                                           | 산출물                                              |
 | ----- | ---------------------------------------------- | --------------------------------------------------- |
-| M1    | 워크스페이스 + 디자인 시스템 + api-client 골격 | pnpm/turbo 구성, 토큰, 타입 생성 CI                 |
+| M1    | 워크스페이스 + 디자인 시스템 + api-client 골격 | bun/turbo 구성, 토큰, 타입 생성 CI                 |
 | M2    | 공개 영역                                      | 홈·상품 목록/상세·콘텐츠 SSR, 시드 연결             |
 | M3    | 인증 + 마이페이지                              | 가입·로그인·간편비밀번호·2차 인증·대시보드          |
 | M4    | 투자 플로우                                    | 계산기·장바구니·주문·적합성·예약투자                |
