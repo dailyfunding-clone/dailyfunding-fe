@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490321910648",
+    "project_id": "dailyfunding-48763",
+    "storage_bucket": "dailyfunding-48763.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490321910648:android:cbb55baaef967a4ab1068d",
+        "android_client_info": {
+          "package_name": "com.cyjoon.dailyfundingmobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6JhmBGm6mDORFAkysQTEhslTnYJ5eT6k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

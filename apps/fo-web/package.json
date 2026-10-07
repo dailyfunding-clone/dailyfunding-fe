@@ -1,0 +1,46 @@
+{
+  "name": "@dailyfunding/fo-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "devtools": "react-devtools",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@dailyfunding/api-client": "workspace:*",
+    "@dailyfunding/bridge": "workspace:*",
+    "@dailyfunding/design-system": "workspace:*",
+    "@tanstack/react-query": "^5.80.0",
+    "ky": "^2.1.0",
+    "next": "^16.3.8",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
+    "@storybook/addon-docs": "^10.6.1",
+    "@storybook/nextjs": "^10.6.1",
+    "@types/node": "^22.15.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.3.8",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
+    "prettier": "^3.9.9",
+    "react-devtools": "^8.0.0",
+    "sass": "^1.105.1",
+    "storybook": "^10.6.1",
+    "typescript": "^5.8.0"
+  }
+}

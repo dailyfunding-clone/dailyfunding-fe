@@ -1,0 +1,69 @@
+appId: com.cyjoon.dailyfundingmobile
+---
+- launchApp
+- runFlow:
+    when:
+      visible:
+        text: Fetch development servers
+    commands:
+      - openLink: "dailyfunding://expo-development-client/?url=http%3A%2F%2F172.30.1.71%3A8081"
+- runFlow:
+    when:
+      visible:
+        text: Continue
+    commands:
+      - tapOn:
+          text: Continue
+- runFlow:
+    when:
+      visible:
+        text: Open DevTools|Toggle performance monitor
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      text: 마이
+    timeout: 30000
+- tapOn:
+    text: 마이
+- extendedWaitUntil:
+    visible:
+      text: 간편비밀번호 입력|간편비밀번호를 등록해 주세요
+    timeout: 15000
+- tapOn:
+    text: "1"
+- tapOn:
+    text: "2"
+- tapOn:
+    text: "3"
+- tapOn:
+    text: "4"
+- tapOn:
+    text: "5"
+- tapOn:
+    text: "6"
+- runFlow:
+    when:
+      visible:
+        text: 한 번 더 입력해 주세요
+    commands:
+      - tapOn:
+          text: "1"
+      - tapOn:
+          text: "2"
+      - tapOn:
+          text: "3"
+      - tapOn:
+          text: "4"
+      - tapOn:
+          text: "5"
+      - tapOn:
+          text: "6"
+- extendedWaitUntil:
+    visible:
+      text: 마이
+    timeout: 15000
+- assertNotVisible:
+    text: 간편비밀번호 입력
+- assertNotVisible:
+    text: 취소

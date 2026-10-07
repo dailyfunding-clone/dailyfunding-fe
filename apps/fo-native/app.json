@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "데일리펀딩",
+    "slug": "dailyfunding-mobile",
+    "scheme": "dailyfunding",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cyjoon.dailyfunding-mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.cyjoon.dailyfundingmobile",
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "간편하게 로그인하려면 생체 인증이 필요해요"
+        }
+      ],
+      "expo-notifications",
+      "expo-font"
+    ],
+    "experiments": {
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c81d692d-7160-432b-b1ef-3d791ade40ab"
+      }
+    },
+    "owner": "cyjoon"
+  }
+}

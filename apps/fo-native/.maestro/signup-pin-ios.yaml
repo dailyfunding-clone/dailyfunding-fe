@@ -1,0 +1,109 @@
+appId: com.cyjoon.dailyfunding-mobile
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+- runFlow:
+    when:
+      visible:
+        text: Enter URL manually
+    file: subflows/dev-server-load.yaml
+- runFlow:
+    when:
+      visible:
+        text: Toggle performance monitor
+    commands:
+      - tapOn:
+          point: 89%,48%
+- extendedWaitUntil:
+    visible:
+      text: 가입하기
+    timeout: 30000
+- tapOn:
+    text: 가입하기
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: 어떤 회원으로 가입할까요?
+    timeout: 30000
+- tapOn:
+    text: 개인 이메일로 바로 가입해요
+- extendedWaitUntil:
+    visible:
+      text: 계정 정보
+    timeout: 30000
+- assertNotVisible:
+    text: 이미 계정이 있어요
+- repeat:
+    times: 4
+    while:
+      notVisible:
+        text: 이름
+    commands:
+      - tapOn:
+          text: "^이메일$"
+      - eraseText
+      - inputText: pinuser12@test.com
+      - tapOn:
+          text: "^비밀번호$"
+      - eraseText
+      - inputText: Test1234!
+      - tapOn:
+          text: 비밀번호 확인
+      - eraseText
+      - inputText: Test1234!
+      - tapOn:
+          text: 계정 정보
+      - tapOn:
+          text: 모두 동의해요
+      - tapOn:
+          text: "^다음$"
+- repeat:
+    times: 4
+    while:
+      notVisible:
+        text: 육테스트
+    commands:
+      - tapOn:
+          text: "^이름$"
+      - inputText: 육테스트
+- repeat:
+    times: 4
+    while:
+      notVisible:
+        text: "19980305"
+    commands:
+      - tapOn:
+          text: 생년월일
+      - eraseText
+      - inputText: "19980305"
+- repeat:
+    times: 4
+    while:
+      notVisible:
+        text: "01099992222"
+    commands:
+      - tapOn:
+          text: "^휴대폰 번호$"
+      - eraseText
+      - inputText: "01099992222"
+- tapOn:
+    text: 본인인증
+- tapOn:
+    text: 인증하고 가입하기
+- extendedWaitUntil:
+    visible:
+      text: 가입이 완료됐어요
+    timeout: 30000
+- tapOn:
+    text: 로그인하기
+- extendedWaitUntil:
+    visible:
+      text: 이메일
+    timeout: 15000
+- runFlow:
+    file: subflows/webview-signin.yaml
+- extendedWaitUntil:
+    visible:
+      text: 마이
+    timeout: 30000

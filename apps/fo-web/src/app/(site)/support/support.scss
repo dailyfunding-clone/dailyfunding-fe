@@ -1,0 +1,19 @@
+.support-phone {
+  font-size: 14px;
+  color: var(--semantic-color-fg-secondary);
+}
+
+.support-links {
+  display: flex;
+  flex-direction: column;
+  max-width: 760px;
+  margin-top: 8px;
+}
+
+.support-links a {
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--semantic-color-stroke-default);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--semantic-color-fg-primary);
+}

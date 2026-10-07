@@ -1,0 +1,40 @@
+.terms-tabs {
+  margin-top: 8px;
+}
+
+.terms-list {
+  display: flex;
+  flex-direction: column;
+  max-width: 760px;
+}
+
+.terms-list a {
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--semantic-color-stroke-default);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--semantic-color-fg-primary);
+}
+
+.terms-doc {
+  max-width: 760px;
+}
+
+.terms-doc h1 {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 28px 0 6px;
+}
+
+.terms-date {
+  font-size: 13px;
+  color: var(--semantic-color-fg-tertiary);
+}
+
+.terms-body {
+  margin-top: 24px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--semantic-color-fg-secondary);
+  white-space: pre-line;
+}

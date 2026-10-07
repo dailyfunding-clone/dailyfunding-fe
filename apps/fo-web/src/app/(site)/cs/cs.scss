@@ -1,0 +1,75 @@
+.cs-nav {
+  margin-bottom: 8px;
+}
+
+.notice-list .notice-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notice-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notice-date {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--semantic-color-fg-tertiary);
+}
+
+.notice-head {
+  padding: 24px 0 20px;
+  border-bottom: 1px solid var(--semantic-color-stroke-subtle);
+}
+
+.notice-head h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 10px 0 8px;
+  line-height: 1.4;
+}
+
+.notice-head time {
+  font-size: 13px;
+  color: var(--semantic-color-fg-tertiary);
+}
+
+.notice-body {
+  padding: 28px 0;
+  font-size: 15px;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.notice-files {
+  margin: 8px 0 24px;
+  padding: 16px;
+  border-radius: var(--scale-radius-md);
+  background: var(--semantic-color-bg-subtle, #f2f4f6);
+  list-style: none;
+}
+
+.notice-files li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  padding: 6px 0;
+}
+
+.notice-files li::before {
+  content: "📎";
+}
+
+.notice-back {
+  margin-top: 8px;
+}
+
+.faq-keywords {
+  margin-bottom: 20px;
+}

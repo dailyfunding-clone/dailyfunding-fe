@@ -3,8 +3,13 @@ packages:
   - "packages/*"
 
 allowBuilds:
+  '@parcel/watcher': true
+  core-js-pure: true
   electron: true
+  esbuild: true
   unrs-resolver: true
 
 overrides:
   zod-validation-error: ^4.0.0
+patchedDependencies:
+  react-native-webview@13.16.1: patches/react-native-webview@13.16.1.patch

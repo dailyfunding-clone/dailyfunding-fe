@@ -1,0 +1,43 @@
+diff --git a/android/src/main/java/com/reactnativecommunity/webview/RNCWebView.java b/android/src/main/java/com/reactnativecommunity/webview/RNCWebView.java
+index 80c6803..d94cebb 100644
+--- a/android/src/main/java/com/reactnativecommunity/webview/RNCWebView.java
++++ b/android/src/main/java/com/reactnativecommunity/webview/RNCWebView.java
+@@ -273,10 +273,10 @@ public class RNCWebView extends WebView implements LifecycleEventListener {
+     }
+ 
+     private void injectJavascriptObject() {
+-      if (getSettings().getJavaScriptEnabled()) {
++      if (getSettings().getJavaScriptEnabled() && injectedJavaScriptObject != null) {
+         String js = "(function(){\n" +
+-          "    window." + JAVASCRIPT_INTERFACE + " = window." + JAVASCRIPT_INTERFACE + " || {};\n" +
+-          "    window." + JAVASCRIPT_INTERFACE + ".injectedObjectJson = function () { return " + (injectedJavaScriptObject == null ? null : ("`" + injectedJavaScriptObject + "`")) + "; };\n" +
++          "    if (!window." + JAVASCRIPT_INTERFACE + ") { window." + JAVASCRIPT_INTERFACE + " = {}; }\n" +
++          "    window." + JAVASCRIPT_INTERFACE + ".injectedObjectJson = function () { return `" + injectedJavaScriptObject + "`; };\n" +
+           "})();";
+         evaluateJavascriptWithFallback(js);
+       }
+diff --git a/apple/RNCWebViewImpl.m b/apple/RNCWebViewImpl.m
+index 7f5c24d..11ee98d 100644
+--- a/apple/RNCWebViewImpl.m
++++ b/apple/RNCWebViewImpl.m
+@@ -522,6 +522,10 @@ RCTAutoInsetsProtocol>
+     _webView.menuItems = _menuItems;
+     _webView.suppressMenuItems = _suppressMenuItems;
+     _webView.scrollView.delegate = self;
++    if (@available(iOS 26.0, *)) {
++      _webView.scrollView.bottomEdgeEffect.hidden = YES;
++      _webView.scrollView.topEdgeEffect.hidden = YES;
++    }
+ #endif // !TARGET_OS_OSX
+     _webView.UIDelegate = self;
+     _webView.navigationDelegate = self;
+@@ -729,6 +733,9 @@ RCTAutoInsetsProtocol>
+   self.opaque = _webView.opaque = opaque;
+   _webView.scrollView.backgroundColor = backgroundColor;
+   _webView.backgroundColor = backgroundColor;
++  if (@available(iOS 15.0, *)) {
++    _webView.underPageBackgroundColor = backgroundColor;
++  }
+ #else
+   // https://stackoverflow.com/questions/40007753/macos-wkwebview-background-transparency
+   NSOperatingSystemVersion version = { 10, 12, 0 };
