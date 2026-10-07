@@ -2,6 +2,7 @@ appId: com.cyjoon.dailyfunding-mobile
 ---
 - launchApp:
     clearState: true
+    clearKeychain: true
 - runFlow:
     when:
       visible:
@@ -13,7 +14,7 @@ appId: com.cyjoon.dailyfunding-mobile
         text: Toggle performance monitor
     commands:
       - tapOn:
-          point: 88%,56%
+          point: 89%,48%
 - extendedWaitUntil:
     visible:
       text: 로그인|마이

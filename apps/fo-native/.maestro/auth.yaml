@@ -2,10 +2,31 @@ appId: com.cyjoon.dailyfundingmobile
 ---
 - launchApp:
     clearState: true
+- runFlow:
+    when:
+      visible:
+        text: Fetch development servers
+    commands:
+      - openLink: "dailyfunding://expo-development-client/?url=http%3A%2F%2F172.30.1.71%3A8081"
+- runFlow:
+    when:
+      visible:
+        text: Continue
+    commands:
+      - tapOn:
+          text: Continue
+- runFlow:
+    when:
+      visible:
+        text: Open DevTools|Toggle performance monitor
+    commands:
+      - back
 - assertVisible:
     text: 데일리펀딩
-- assertVisible:
-    text: 투자부터 상환까지, 매일 쌓이는 수익
+- extendedWaitUntil:
+    visible:
+      text: 투자부터 상환까지, 매일 쌓이는 수익
+    timeout: 30000
 - tapOn:
     text: 로그인
     index: 0
