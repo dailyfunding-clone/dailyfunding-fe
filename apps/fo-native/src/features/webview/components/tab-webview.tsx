@@ -5,8 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, BackHandler, Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { handleBridgeMessage } from "@/features/webview";
-
+import { handleBridgeMessage } from "../bridge";
 import AppWebView from "./app-webview";
 
 import type { WebView, WebViewMessageEvent } from "react-native-webview";
@@ -24,9 +23,18 @@ const TabWebView = ({ path }: Props) => {
   const canGoBackRef = useRef(false);
   const [ready, setReady] = useState(false);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const mounted = useRef(true);
 
   useEffect(() => {
-    void SecureStore.getItemAsync("refresh_token").then(setRefreshToken);
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    void SecureStore.getItemAsync("refresh_token").then((token) => {
+      if (mounted.current) setRefreshToken(token);
+    });
   }, []);
 
   const goBack = useCallback(() => {
@@ -48,7 +56,9 @@ const TabWebView = ({ path }: Props) => {
       router,
       goBack,
       setTitle: () => {},
-      onReady: () => setReady(true),
+      onReady: () => {
+        if (mounted.current) setReady(true);
+      },
       webViewRef,
     });
 
@@ -59,7 +69,9 @@ const TabWebView = ({ path }: Props) => {
         path={path}
         refreshToken={refreshToken}
         onMessage={handleMessage}
-        onLoadEnd={() => setReady(true)}
+        onLoadEnd={() => {
+          if (mounted.current) setReady(true);
+        }}
         onNavigationStateChange={(navState) => {
           canGoBackRef.current = navState.canGoBack;
         }}

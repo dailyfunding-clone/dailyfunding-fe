@@ -28,7 +28,7 @@ export const clearSession = async () => {
 
 export const storeUserProfile = async (accessToken: string) => {
   try {
-    const res = await ky.get(`${WEB_BASE_URL}/api/auth/me`, {
+    const res = await ky.get(`${WEB_BASE_URL}/api/me`, {
       headers: { Authorization: `Bearer ${accessToken}` },
       throwHttpErrors: false,
     });

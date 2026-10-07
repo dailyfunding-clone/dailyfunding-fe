@@ -1,6 +1,6 @@
 import { tokens } from "@dailyfunding/design-system";
 import { Redirect, useRootNavigationState } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 import { validateStoredSession } from "@/features/auth";
@@ -12,8 +12,18 @@ const GateScreen = () => {
     undefined,
   );
 
+  const mounted = useRef(true);
+
   useEffect(() => {
-    void validateStoredSession().then(setSession);
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    void validateStoredSession().then((s) => {
+      if (mounted.current) setSession(s);
+    });
   }, []);
 
   if (session === undefined || !navState?.key) {

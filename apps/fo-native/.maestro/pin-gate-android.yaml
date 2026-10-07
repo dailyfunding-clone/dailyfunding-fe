@@ -7,6 +7,19 @@ appId: com.cyjoon.dailyfundingmobile
         text: Fetch development servers
     commands:
       - openLink: "dailyfunding://expo-development-client/?url=http%3A%2F%2F172.30.1.71%3A8081"
+- runFlow:
+    when:
+      visible:
+        text: Continue
+    commands:
+      - tapOn:
+          text: Continue
+- runFlow:
+    when:
+      visible:
+        text: Open DevTools|Toggle performance monitor
+    commands:
+      - back
 - extendedWaitUntil:
     visible:
       text: 마이
