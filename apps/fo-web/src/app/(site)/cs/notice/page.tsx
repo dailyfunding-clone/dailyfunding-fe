@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 
-import { Pagination } from "@/entities/content";
 import {
-  fetchJson,
+  Pagination,
+} from "@/entities/content";
+import {
   firstParam,
   fmtDate,
   qs,
 } from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
 import type { Metadata } from "next";

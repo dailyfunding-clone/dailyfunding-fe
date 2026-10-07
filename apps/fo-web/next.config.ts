@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   reactCompiler: true,
   cacheComponents: true,
+  experimental: {
+    instantInsights: { validationLevel: "manual-warning" },
+  },
   poweredByHeader: false,
   allowedDevOrigins: ["10.0.2.2"],
   transpilePackages: ["@dailyfunding/bridge", "@dailyfunding/design-system"],

@@ -1,13 +1,16 @@
 import { Suspense } from "react";
 
-import { fetchJson, firstParam } from "@/entities/content";
+import {
+  firstParam,
+} from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 import { fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
 
 import { CATEGORY_LABEL } from "./types";
 
 import type { LoanProduct } from "./types";
-import "./loan.css";
+import "./loan.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "대출받기" };
 

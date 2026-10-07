@@ -1,6 +1,6 @@
 import { CartListPanel } from "../investment/_components";
 
-import "../investment/investment.css";
+import "../investment/investment.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "장바구니" };
 

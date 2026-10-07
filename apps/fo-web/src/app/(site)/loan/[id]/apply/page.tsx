@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { fetchJson } from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
 import ApplyForm from "./apply-form";
 
 import type { LoanProduct } from "../../types";
 import type { Metadata } from "next";
-import "../../loan.css";
+import "../../loan.scss";
 
 export const metadata: Metadata = { title: "대출 신청" };
 

@@ -9,7 +9,7 @@ import { useDocumentTitle } from "@/shared/lib";
 
 import { toISODate } from "../_components";
 
-import "../mypage.css";
+import "../mypage.scss";
 
 
 type CalendarDay = {

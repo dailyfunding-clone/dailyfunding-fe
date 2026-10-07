@@ -14,7 +14,7 @@ import { useMe } from "@/shared/session";
 import { apiErrorMessage, GRADE_LABELS, GRADE_LIMIT_TABLE, GRADE_REQUEST_STATUS_LABELS } from "../_components";
 import { fmtDate } from "../_components";
 
-import "../mypage.css";
+import "../mypage.scss";
 
 
 type GradeInfo = {

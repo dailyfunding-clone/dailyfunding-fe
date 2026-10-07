@@ -6,7 +6,7 @@ import { API_URL } from "@/shared/api";
 import { ProductBrowser } from "./_components";
 
 import type { ProductListItem } from "./_components";
-import "./investment.css";
+import "./investment.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "투자하기" };
 

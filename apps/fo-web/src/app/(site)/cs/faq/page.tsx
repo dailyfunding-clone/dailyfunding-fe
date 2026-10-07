@@ -1,14 +1,16 @@
 import { Suspense } from "react";
 
-import { Pagination } from "@/entities/content";
 import {
-  fetchJson,
+  Pagination,
+} from "@/entities/content";
+import {
   firstParam,
   qs,
 } from "@/entities/content";
-import { AppLink } from "@/shared/ui";
+import { fetchJson } from "@/entities/content/index.server";
+import { AppLink, FilterRow } from "@/shared/ui";
 
-import "@/entities/content/content.css";
+import "@/entities/content/content.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "자주 묻는 질문" };
 
@@ -82,14 +84,15 @@ const FaqContent = async ({
         </button>
       </form>
       {(keywords?.keywords?.length ?? 0) > 0 && (
-        <div className="chips faq-keywords">
-          <span>인기</span>
-          {keywords!.keywords.map((k) => (
-            <AppLink key={k} href={`/cs/faq?q=${encodeURIComponent(k)}`} className="chip">
-              {k}
-            </AppLink>
-          ))}
-        </div>
+        <FilterRow label="인기">
+          <div className="chips faq-keywords">
+            {keywords!.keywords.map((k) => (
+              <AppLink key={k} href={`/cs/faq?q=${encodeURIComponent(k)}`} className="chip">
+                {k}
+              </AppLink>
+            ))}
+          </div>
+        </FilterRow>
       )}
       {faqs.length === 0 ? (
         <div className="empty">

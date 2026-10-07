@@ -1,15 +1,18 @@
+import { connection } from "next/server";
 import { Suspense } from "react";
 
-import { JsonBlock } from "@/entities/content";
 import {
-  fetchJson,
+  JsonBlock,
+} from "@/entities/content";
+import {
   firstParam,
   fmtDate,
   qs,
 } from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
-import "./disclosure.css";
+import "./disclosure.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "공시" };
 
@@ -55,6 +58,7 @@ const DisclosureContent = async ({
     `/disclosures${qs({ year, month })}`,
   );
   const d = data?.results?.[0];
+  await connection();
   const thisYear = new Date().getFullYear();
   const years = [thisYear, thisYear - 1, thisYear - 2, thisYear - 3];
   return (

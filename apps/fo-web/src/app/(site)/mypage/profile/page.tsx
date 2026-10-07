@@ -7,7 +7,7 @@ import { useMe } from "@/shared/session";
 
 import { GRADE_LABELS } from "../_components";
 
-import "../mypage.css";
+import "../mypage.scss";
 
 
 const ProfilePage = () => {

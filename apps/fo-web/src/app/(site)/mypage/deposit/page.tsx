@@ -11,7 +11,7 @@ import { DepositCharge } from "../_components";
 import { DepositWithdraw } from "../_components";
 import { DepositLinked } from "../_components";
 
-import "../mypage.css";
+import "../mypage.scss";
 
 
 const TABS = [

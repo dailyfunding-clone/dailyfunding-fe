@@ -12,7 +12,7 @@ import { AppLink } from "@/shared/ui";
 
 import { GRADE_LABELS } from "./_components";
 
-import "./mypage.css";
+import "./mypage.scss";
 
 
 type Dashboard = {

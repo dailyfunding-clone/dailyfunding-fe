@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { fetchJson } from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 import { fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
 
@@ -9,8 +9,8 @@ import { CATEGORY_LABEL, faqOf, textOf } from "../types";
 
 import type { LoanDetail } from "../types";
 import type { Metadata } from "next";
-import "../loan.css";
-import "@/entities/content/content.css";
+import "../loan.scss";
+import "@/entities/content/content.scss";
 
 export const generateMetadata = async ({
   params,

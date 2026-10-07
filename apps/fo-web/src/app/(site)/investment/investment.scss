@@ -7,21 +7,6 @@
   margin-bottom: 24px;
 }
 
-.inv-filter-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.inv-filter-label {
-  width: 64px;
-  flex-shrink: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--semantic-color-fg-secondary);
-}
-
 .inv-sort {
   height: 36px;
   padding: 0 10px;

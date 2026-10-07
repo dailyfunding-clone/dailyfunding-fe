@@ -2,7 +2,7 @@ import { RootProviders } from "@/apps/providers";
 
 import type { Metadata } from "next";
 import "@dailyfunding/design-system/tokens.css";
-import "./globals.css";
+import "./globals.scss";
 
 export const metadata: Metadata = {
   title: "데일리펀딩 관리자",

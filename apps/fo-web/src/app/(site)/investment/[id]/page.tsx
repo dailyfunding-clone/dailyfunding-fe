@@ -17,7 +17,7 @@ import {
 
 import type { ProductDetail } from "../_components";
 import type { Metadata } from "next";
-import "../investment.css";
+import "../investment.scss";
 
 export const generateMetadata = async ({
   params,

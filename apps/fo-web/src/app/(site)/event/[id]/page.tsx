@@ -2,14 +2,17 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { fetchJson, fmtDate } from "@/entities/content";
+import {
+  fmtDate,
+} from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
 import EnterButton from "./enter-button";
 import { STATUS_LABEL, dday } from "../utils";
 
 import type { Metadata } from "next";
-import "../event.css";
+import "../event.scss";
 
 export const generateMetadata = async ({
   params,

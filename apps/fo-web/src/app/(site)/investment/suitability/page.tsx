@@ -1,6 +1,6 @@
 import { SuitabilityTest } from "../_components";
 
-import "../investment.css";
+import "../investment.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "투자적합성 테스트" };
 
