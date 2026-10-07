@@ -1,9 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { tokens } from "@dailyfunding/design-system";
 import { Link } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function AuthStartScreen() {
+const AuthStartScreen = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.hero}>
         <Text style={styles.badge}>온라인투자연계금융</Text>
         <Text style={styles.title}>데일리펀딩</Text>
@@ -19,15 +21,15 @@ export default function AuthStartScreen() {
           </Pressable>
         </Link>
         <Link
-          href={{ pathname: "/webview", params: { path: "/auth/signup", title: "회원가입" } }}
+          href={{ pathname: "/webview", params: { path: "/auth/signup", title: "가입하기" } }}
           asChild
         >
           <Pressable style={styles.outlineBtn}>
-            <Text style={styles.outlineBtnText}>회원가입</Text>
+            <Text style={styles.outlineBtnText}>가입하기</Text>
           </Pressable>
         </Link>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -35,56 +37,58 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 48,
-    backgroundColor: "#fff",
+    paddingHorizontal: tokens.scale.spacing.xl,
+    paddingVertical: tokens.scale.spacing["3xl"],
+    backgroundColor: tokens.semantic.color.bgDefault,
   },
   hero: {
-    marginTop: 48,
+    marginTop: tokens.scale.spacing["3xl"],
   },
   badge: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#0033A4",
-    marginBottom: 8,
+    fontSize: tokens.scale.fontSize.sm,
+    fontWeight: tokens.scale.fontWeight.semibold,
+    color: tokens.semantic.color.accentPrimary,
+    marginBottom: tokens.scale.spacing.sm,
   },
   title: {
-    fontSize: 32,
-    fontWeight: "800",
+    fontSize: tokens.scale.fontSize["3xl"],
+    fontWeight: tokens.scale.fontWeight.extrabold,
     letterSpacing: -0.5,
-    color: "#1A1A1A",
+    color: tokens.semantic.color.fgPrimary,
   },
   desc: {
-    marginTop: 8,
-    fontSize: 15,
-    color: "#8A8F98",
+    marginTop: tokens.scale.spacing.sm,
+    fontSize: tokens.scale.fontSize.base,
+    color: tokens.semantic.color.fgTertiary,
   },
   actions: {
-    gap: 12,
+    gap: tokens.scale.spacing.md,
   },
   primaryBtn: {
     height: 52,
-    borderRadius: 12,
-    backgroundColor: "#0033A4",
+    borderRadius: tokens.scale.radius.md,
+    backgroundColor: tokens.semantic.color.accentPrimary,
     alignItems: "center",
     justifyContent: "center",
   },
   primaryBtnText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#fff",
+    fontSize: tokens.scale.fontSize.lg,
+    fontWeight: tokens.scale.fontWeight.semibold,
+    color: tokens.semantic.color.bgDefault,
   },
   outlineBtn: {
     height: 52,
-    borderRadius: 12,
+    borderRadius: tokens.scale.radius.md,
     borderWidth: 1,
-    borderColor: "#D7DAE0",
+    borderColor: tokens.semantic.color.strokeDefault,
     alignItems: "center",
     justifyContent: "center",
   },
   outlineBtnText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#1A1A1A",
+    fontSize: tokens.scale.fontSize.lg,
+    fontWeight: tokens.scale.fontWeight.semibold,
+    color: tokens.semantic.color.fgPrimary,
   },
 });
+
+export default AuthStartScreen;

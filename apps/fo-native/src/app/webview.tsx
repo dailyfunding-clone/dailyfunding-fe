@@ -1,3 +1,5 @@
+import { tokens } from "@dailyfunding/design-system";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -8,12 +10,14 @@ import {
   Text,
   View,
 } from "react-native";
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import type { WebView, WebViewMessageEvent } from "react-native-webview";
-import { AppWebView } from "../components/AppWebView";
-import { handleBridgeMessage } from "../bridge/handler";
 
-export default function WebViewScreen() {
+import { AppWebView , handleBridgeMessage } from "@/features/webview";
+
+import type { WebView, WebViewMessageEvent } from "react-native-webview";
+
+
+
+const WebViewScreen = () => {
   const { path, title } = useLocalSearchParams<{
     path?: string;
     title?: string;
@@ -23,6 +27,7 @@ export default function WebViewScreen() {
   const webViewRef = useRef<WebView>(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [ready, setReady] = useState(false);
+  const currentTitle = useRef<string | undefined>(title);
 
   const goBack = useCallback(() => {
     if (canGoBack) {
@@ -57,12 +62,16 @@ export default function WebViewScreen() {
     handleBridgeMessage(event, {
       router,
       goBack,
-      setTitle: (t) => navigation.setOptions({ title: t }),
+      setTitle: (t) => {
+        currentTitle.current = t;
+        navigation.setOptions({ title: t });
+      },
       onReady: () => setReady(true),
+      webViewRef,
     });
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: tokens.semantic.color.bgDefault }}>
       <AppWebView
         ref={webViewRef}
         path={path ?? "/"}
@@ -71,13 +80,14 @@ export default function WebViewScreen() {
         onNavigationStateChange={(navState) => {
           setCanGoBack(navState.canGoBack);
           if (!title && navState.title) {
+            currentTitle.current = navState.title;
             navigation.setOptions({ title: navState.title });
           }
         }}
       />
       {!ready && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator color="#0033A4" />
+          <ActivityIndicator color={tokens.semantic.color.accentPrimary} />
         </View>
       )}
     </View>
@@ -91,8 +101,10 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: "#fff",
+    backgroundColor: tokens.semantic.color.bgDefault,
     alignItems: "center",
     justifyContent: "center",
   },
 });
+
+export default WebViewScreen;

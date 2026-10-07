@@ -1,0 +1,18 @@
+appId: com.cyjoon.dailyfundingmobile
+---
+- tapOn:
+    text: 로그인
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: 이메일
+    timeout: 30000
+- tapOn:
+    text: 이메일
+- inputText: test@test.com
+- tapOn:
+    text: 비밀번호
+- inputText: test1234
+- tapOn:
+    text: 로그인
+    index: 1
