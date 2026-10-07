@@ -5,13 +5,24 @@ type ReactNativeWebViewHost = {
 };
 
 export function isInWebView(): boolean {
-  return !!(globalThis as ReactNativeWebViewHost).ReactNativeWebView;
+  const host = (globalThis as ReactNativeWebViewHost).ReactNativeWebView;
+  return typeof host?.postMessage === "function";
 }
 
 export function postToNative(message: WebToNativeMessage): void {
-  (globalThis as ReactNativeWebViewHost).ReactNativeWebView?.postMessage(
-    JSON.stringify({ v: BRIDGE_VERSION, ...message }),
-  );
+  const host = (globalThis as ReactNativeWebViewHost).ReactNativeWebView;
+  if (typeof host?.postMessage !== "function") return;
+  host.postMessage(JSON.stringify({ v: BRIDGE_VERSION, ...message }));
+}
+
+type ReauthWindow = { __resolveReauth?: (token: string | null) => void };
+
+export function requestReauth(): Promise<string | null> {
+  if (!isInWebView()) return Promise.resolve(null);
+  return new Promise((resolve) => {
+    (globalThis as ReauthWindow).__resolveReauth = resolve;
+    postToNative({ type: "auth.reauth" });
+  });
 }
 
 export const bridge = {
@@ -20,6 +31,11 @@ export const bridge = {
   replace: (path: string, title?: string) =>
     postToNative({ type: "nav.replace", payload: { path, title } }),
   back: () => postToNative({ type: "nav.back" }),
+  native: (route: string) =>
+    postToNative({ type: "nav.native", payload: { route } }),
   setTitle: (title: string) => postToNative({ type: "title.set", payload: { title } }),
+  exchangeAuthCode: (code: string, next?: string) =>
+    postToNative({ type: "auth.exchange", payload: { code, next } }),
+  signOut: () => postToNative({ type: "auth.signOut" }),
   ready: () => postToNative({ type: "app.ready" }),
 };

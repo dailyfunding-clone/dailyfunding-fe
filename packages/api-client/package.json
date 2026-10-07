@@ -1,0 +1,20 @@
+{
+  "name": "@dailyfunding/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typegen": "openapi-typescript schema.yaml -o src/schema.d.ts",
+    "sync-schema": "sh scripts/fetch-schema.sh",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.9.1",
+    "typescript": "^5.8.0"
+  },
+  "dependencies": {
+    "effect": "^4.0.1",
+    "ky": "^2.1.0"
+  }
+}
