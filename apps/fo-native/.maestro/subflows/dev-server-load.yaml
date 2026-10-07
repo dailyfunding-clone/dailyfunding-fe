@@ -1,0 +1,55 @@
+appId: com.cyjoon.dailyfunding-mobile
+---
+- extendedWaitUntil:
+    visible:
+      text: Enter URL manually
+    timeout: 15000
+- openLink: "dailyfunding://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- runFlow:
+    when:
+      visible:
+        text: 열기
+    commands:
+      - tapOn:
+          text: 열기
+- runFlow:
+    when:
+      visible:
+        text: Enter URL manually
+    commands:
+      - openLink: "dailyfunding://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+      - tapOn:
+          text: 열기
+          optional: true
+- runFlow:
+    when:
+      visible:
+        text: Enter URL manually
+    commands:
+      - tapOn:
+          text: Enter URL manually
+      - tapOn:
+          text: exp.*
+          optional: true
+      - inputText: localhost:8081
+      - tapOn:
+          text: Connect
+          optional: true
+- extendedWaitUntil:
+    visible:
+      text: 데일리펀딩|Continue
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        text: Continue
+    commands:
+      - tapOn:
+          text: Continue
+- runFlow:
+    when:
+      visible:
+        text: Toggle performance monitor
+    commands:
+      - tapOn:
+          point: 88%,56%

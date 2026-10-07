@@ -1,0 +1,49 @@
+appId: com.cyjoon.dailyfundingmobile
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    text: 데일리펀딩
+- assertVisible:
+    text: 투자부터 상환까지, 매일 쌓이는 수익
+- tapOn:
+    text: 로그인
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: 이메일
+    timeout: 30000
+- assertVisible:
+    text: 비밀번호
+- assertVisible:
+    text: 가입하기
+- back
+- assertVisible:
+    text: 데일리펀딩
+- tapOn:
+    text: 가입하기
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: 어떤 회원으로 가입할까요?
+    timeout: 30000
+- assertVisible:
+    text: 법인 사업자등록증이 필요해요
+- tapOn:
+    text: 개인 이메일로 바로 가입해요
+- extendedWaitUntil:
+    visible:
+      text: 계정 정보
+    timeout: 30000
+- assertVisible:
+    text: 본인인증
+- assertVisible:
+    text: 추천인 이메일 \(선택\)
+- assertVisible:
+    text: 약관 동의
+- assertVisible:
+    text: 다음
+- back
+- back
+- assertVisible:
+    text: 데일리펀딩
