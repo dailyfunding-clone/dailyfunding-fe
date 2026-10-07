@@ -7,7 +7,7 @@ import { WebViewBridge } from "@/apps/ui";
 
 import type { Metadata, Viewport } from "next";
 import "@dailyfunding/design-system/tokens.css";
-import "./globals.css";
+import "./globals.scss";
 
 export const metadata: Metadata = {
   title: "데일리펀딩",

@@ -2,10 +2,10 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import {
-  fetchJson,
   fileUrl,
   fmtDate,
 } from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
 import type { Metadata } from "next";

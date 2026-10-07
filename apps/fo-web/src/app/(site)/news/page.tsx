@@ -1,10 +1,10 @@
-import { fetchJson } from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 
 import NewsCard from "./news-card";
 import NewsMore from "./news-more";
 
 import type { NewsItem } from "./news-card";
-import "./news.css";
+import "./news.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "언론보도" };
 

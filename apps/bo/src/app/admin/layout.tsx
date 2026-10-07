@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 
 import { useMe, useSignOut } from "@/shared/session";
-import "./admin.css";
+import "./admin.scss";
 
 const NAV = [
   { href: "/admin/products", label: "상품" },

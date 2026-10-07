@@ -39,6 +39,7 @@
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "prettier": "^3.9.9",
     "react-devtools": "^8.0.0",
+    "sass": "^1.105.1",
     "storybook": "^10.6.1",
     "typescript": "^5.8.0"
   }

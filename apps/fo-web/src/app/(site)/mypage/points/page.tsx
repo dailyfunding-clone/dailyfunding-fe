@@ -22,7 +22,7 @@ import { useDocumentTitle } from "@/shared/lib";
 import { apiErrorMessage, POINT_KIND_LABELS } from "../_components";
 import { daysAgo, fmtDate, monthsAgo, today } from "../_components";
 
-import "../mypage.css";
+import "../mypage.scss";
 
 
 type PointBalance = {

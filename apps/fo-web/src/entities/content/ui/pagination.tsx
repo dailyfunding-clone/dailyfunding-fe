@@ -1,5 +1,5 @@
 import { AppLink } from "@/shared/ui";
-import "../content.css";
+import "../content.scss";
 
 type Props = {
   total: number;

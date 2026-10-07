@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/nextjs";
 import "@dailyfunding/design-system/tokens.css";
-import "../app/globals.css";
+import "../src/app/globals.scss";
 
 const preview: Preview = {
   parameters: {

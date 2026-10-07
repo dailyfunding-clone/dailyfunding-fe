@@ -6,6 +6,7 @@ import { useState } from "react";
 import { api, fmtMan } from "@/shared/api";
 import { useMounted } from "@/shared/lib";
 import { useMe } from "@/shared/session";
+import { FilterRow } from "@/shared/ui";
 
 import {
   HIDDEN_STATUSES,
@@ -118,8 +119,7 @@ const ProductBrowser = ({ products }: Props) => {
   return (
     <>
       <div className="inv-filters">
-        <div className="inv-filter-row">
-          <span className="inv-filter-label">모집상태</span>
+        <FilterRow label="모집상태">
           <div className="chips">
             {STATUS_TABS.map((t) => (
               <button
@@ -137,9 +137,8 @@ const ProductBrowser = ({ products }: Props) => {
               {notifyMsg || "신규 상품 알림 받기"}
             </button>
           )}
-        </div>
-        <div className="inv-filter-row">
-          <span className="inv-filter-label">상품유형</span>
+        </FilterRow>
+        <FilterRow label="상품유형">
           <div className="chips">
             <button
               type="button"
@@ -161,9 +160,8 @@ const ProductBrowser = ({ products }: Props) => {
               </button>
             ))}
           </div>
-        </div>
-        <div className="inv-filter-row">
-          <span className="inv-filter-label">수익률</span>
+        </FilterRow>
+        <FilterRow label="수익률">
           <select
             className="inv-sort"
             value={f.sort}
@@ -175,9 +173,8 @@ const ProductBrowser = ({ products }: Props) => {
               </option>
             ))}
           </select>
-        </div>
-        <div className="inv-filter-row">
-          <span className="inv-filter-label">투자기간</span>
+        </FilterRow>
+        <FilterRow label="투자기간">
           <div className="inv-range">
             <input
               type="range"
@@ -207,9 +204,8 @@ const ProductBrowser = ({ products }: Props) => {
               {f.max_term >= TERM_MAX ? `${TERM_MAX}개월+` : `${f.max_term}개월`}
             </span>
           </div>
-        </div>
-        <div className="inv-filter-row">
-          <span className="inv-filter-label">모집금액</span>
+        </FilterRow>
+        <FilterRow label="모집금액">
           <div className="inv-range">
             <input
               type="range"
@@ -243,7 +239,7 @@ const ProductBrowser = ({ products }: Props) => {
               {fmtAmountCap(f.max_amount, AMOUNT_MAX)}
             </span>
           </div>
-        </div>
+        </FilterRow>
       </div>
 
       {open.length === 0 ? (

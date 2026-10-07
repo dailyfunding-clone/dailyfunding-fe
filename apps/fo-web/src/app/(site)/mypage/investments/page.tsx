@@ -10,7 +10,7 @@ import { useDocumentTitle } from "@/shared/lib";
 import { INVESTMENT_STATUS_LABELS, PRODUCT_TYPE_LABELS } from "../_components";
 import { fmtDate } from "../_components";
 
-import "../mypage.css";
+import "../mypage.scss";
 
 
 type InvestmentItem = {

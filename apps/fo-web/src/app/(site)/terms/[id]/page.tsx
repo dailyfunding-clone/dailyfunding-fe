@@ -2,13 +2,14 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import {
-  fetchJson,
   fmtDate,
+  TERMS,
 } from "@/entities/content";
+import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
 import type { Metadata } from "next";
-import "../terms.css";
+import "../terms.scss";
 
 export const generateMetadata = async ({
   params,
@@ -17,18 +18,10 @@ export const generateMetadata = async ({
 }): Promise<Metadata> => {
   const { id } = await params;
   const term = await fetchJson<{ title?: string }>(`/terms/${id}`);
-  return { title: term?.title ?? "약관" };
+  if (!term) notFound();
+  return { title: term.title ?? "약관" };
 };
 
-
-const TERMS = [
-  { id: "investment", label: "투자약관" },
-  { id: "loan", label: "대출약관" },
-  { id: "electronic_finance", label: "전자금융" },
-  { id: "service", label: "서비스 이용" },
-  { id: "privacy", label: "개인정보" },
-  { id: "credit_info", label: "신용정보" },
-];
 
 type Term = {
   key: string;
@@ -46,9 +39,9 @@ const TermContent = async ({ params }: { params: Promise<{ id: string }> }) => {
       <nav className="tabs terms-tabs">
         {TERMS.map((t) => (
           <AppLink
-            key={t.id}
-            href={`/terms/${t.id}`}
-            className={t.id === term.key ? "is-active" : undefined}
+            key={t.key}
+            href={`/terms/${t.key}`}
+            className={t.key === term.key ? "is-active" : undefined}
           >
             {t.label}
           </AppLink>

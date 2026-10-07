@@ -563,6 +563,21 @@ input {
   border-bottom-color: var(--semantic-color-fg-primary);
 }
 
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  width: 64px;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--semantic-color-fg-secondary);
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -570,6 +585,8 @@ input {
 }
 
 .chip {
+  display: inline-flex;
+  align-items: center;
   height: 32px;
   padding: 0 14px;
   border-radius: 999px;
