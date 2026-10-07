@@ -1,20 +1,39 @@
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
-import reactCompiler from "eslint-plugin-react-compiler";
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import prettierConfig from "eslint-config-prettier";
+import reactCompiler from "eslint-plugin-react-compiler";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const compat = new FlatCompat({ baseDirectory: __dirname });
-
-const eslintConfig = [
-  { ignores: [".next/**", "node_modules/**", "next-env.d.ts"] },
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+export default defineConfig([
+  globalIgnores([
+    ".next/**",
+    "node_modules/**",
+    "next-env.d.ts",
+    "storybook-static/**",
+  ]),
+  ...nextVitals,
+  ...nextTypescript,
   {
     plugins: { "react-compiler": reactCompiler },
-    rules: { "react-compiler/react-compiler": "error" },
+    rules: {
+      "react-compiler/react-compiler": "error",
+      "import/order": [
+        "error",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            ["parent", "sibling", "index"],
+            "type",
+          ],
+          "newlines-between": "always",
+          alphabetize: { order: "asc", caseInsensitive: true },
+          pathGroups: [{ pattern: "@/**", group: "internal" }],
+          pathGroupsExcludedImportTypes: [],
+        },
+      ],
+    },
   },
   prettierConfig,
-];
-
-export default eslintConfig;
+]);

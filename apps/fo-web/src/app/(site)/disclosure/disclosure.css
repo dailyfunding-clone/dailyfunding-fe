@@ -1,0 +1,39 @@
+.disc-filter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.disc-filter select {
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--semantic-color-stroke-default);
+  border-radius: var(--scale-radius-sm);
+  font: inherit;
+  font-size: 14px;
+  background: var(--semantic-color-bg-default);
+}
+
+.disc-filter .btn {
+  height: 44px;
+  padding: 0 18px;
+  font-size: 14px;
+}
+
+.disc-period {
+  margin: 20px 0 4px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.disc-published {
+  font-size: 13px;
+  color: var(--semantic-color-fg-tertiary);
+}
+
+.disc-section {
+  margin-top: 32px;
+  overflow-x: auto;
+}
