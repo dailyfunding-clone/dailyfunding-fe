@@ -14,7 +14,7 @@ appId: com.cyjoon.dailyfunding-mobile
         text: Toggle performance monitor
     commands:
       - tapOn:
-          point: 89%,48%
+          point: 90%,61%
 - extendedWaitUntil:
     visible:
       text: 가입하기
@@ -43,7 +43,7 @@ appId: com.cyjoon.dailyfunding-mobile
       - tapOn:
           text: "^이메일$"
       - eraseText
-      - inputText: corp12@test.com
+      - inputText: corp13@test.com
       - tapOn:
           text: "^비밀번호$"
       - eraseText
@@ -71,32 +71,32 @@ appId: com.cyjoon.dailyfunding-mobile
     times: 4
     while:
       notVisible:
-        text: "19850317"
+        text: "19850318"
     commands:
       - tapOn:
           text: 생년월일
       - eraseText
-      - inputText: "19850317"
+      - inputText: "19850318"
 - repeat:
     times: 4
     while:
       notVisible:
-        text: "01055558888"
+        text: "01055559999"
     commands:
       - tapOn:
           text: "^휴대폰 번호$"
       - eraseText
-      - inputText: "01055558888"
+      - inputText: "01055559999"
 - repeat:
     times: 4
     while:
       notVisible:
-        text: "2208123458"
+        text: "2208123459"
     commands:
       - tapOn:
           text: "^사업자등록번호$"
       - eraseText
-      - inputText: "2208123458"
+      - inputText: "2208123459"
 - tapOn:
     text: 본인인증
 - tapOn:
@@ -113,6 +113,12 @@ appId: com.cyjoon.dailyfunding-mobile
     timeout: 15000
 - runFlow:
     file: subflows/webview-signin.yaml
+- extendedWaitUntil:
+    visible:
+      text: 간편비밀번호|마이
+    timeout: 30000
+- runFlow:
+    file: subflows/pin-unlock.yaml
 - extendedWaitUntil:
     visible:
       text: 마이

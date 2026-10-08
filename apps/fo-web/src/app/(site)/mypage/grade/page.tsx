@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
 import { AuthGate } from "@/features/auth";
-import { ReauthGate, useReauth } from "@/features/auth";
+import { ReauthProvider, useReauth } from "@/features/auth";
 import { api, apiFetch, fmtMan } from "@/shared/api";
 import { gradeRequestSchema, parseForm, type FormState } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
@@ -156,12 +156,12 @@ const Grade = () => {
 
       <div className="mypage-section">
         <h2>등급 변경 신청</h2>
-        <ReauthGate
+        <ReauthProvider
           title="등급 변경 비밀번호 확인"
           description="등급 변경을 신청하려면 비밀번호를 한 번 더 입력해 주세요."
         >
           <GradeRequestForm />
-        </ReauthGate>
+        </ReauthProvider>
       </div>
 
       <div className="mypage-section">
@@ -217,31 +217,32 @@ const GradeRequestForm = () => {
       if ("error" in parsed) return { error: parsed.error };
       const file = formData.get("document");
       if (file instanceof File && file.size === 0) formData.delete("document");
-      try {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const token = await reauth?.ensure(attempt > 0);
+        if (!token) return { error: "본인 인증이 취소됐어요" };
         const res = await apiFetch("/api/me/grade-request", {
           method: "POST",
-          headers: { "X-Reauth-Token": reauth?.token ?? "" },
+          headers: { "X-Reauth-Token": token },
           body: formData,
         });
-        if (!res.ok) {
-          const body = (await res.json().catch(() => null)) as {
-            code?: string;
-            message?: string;
-          } | null;
-          if (body?.code === "REAUTH_REQUIRED") {
-            reauth?.reset();
-            return null;
-          }
-          return { error: body?.message ?? "신청에 실패했어요" };
+        if (res.ok) {
+          setDone(true);
+          queryClient.invalidateQueries({ queryKey: ["me-grade-history"] });
+          queryClient.invalidateQueries({ queryKey: ["me-grade"] });
+          queryClient.invalidateQueries({ queryKey: ["me"] });
+          return null;
         }
-        setDone(true);
-        queryClient.invalidateQueries({ queryKey: ["me-grade-history"] });
-        queryClient.invalidateQueries({ queryKey: ["me-grade"] });
-        queryClient.invalidateQueries({ queryKey: ["me"] });
-        return null;
-      } catch (err) {
-        return { error: apiErrorMessage(err) };
+        const body = (await res.json().catch(() => null)) as {
+          code?: string;
+          message?: string;
+        } | null;
+        if (body?.code === "REAUTH_REQUIRED") {
+          reauth?.reset();
+          continue;
+        }
+        return { error: body?.message ?? "신청에 실패했어요" };
       }
+      return { error: "잠시 후 다시 시도해 주세요" };
     },
     null,
   );

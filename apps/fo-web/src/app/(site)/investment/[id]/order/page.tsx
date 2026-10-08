@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import { ReauthProvider } from "@/features/auth";
 import { API_URL } from "@/shared/api";
 
 import { OrderForm } from "../../_components";
@@ -44,7 +45,12 @@ const OrderContent = async ({ params }: Props) => {
       <h2 style={{ fontSize: 18, fontWeight: 700, margin: "10px 0 20px" }}>
         {product.name}
       </h2>
-      <OrderForm product={product} />
+      <ReauthProvider
+        title="투자 비밀번호 확인"
+        description="투자하려면 비밀번호를 한 번 더 입력해 주세요."
+      >
+        <OrderForm product={product} />
+      </ReauthProvider>
     </main>
   );
 };

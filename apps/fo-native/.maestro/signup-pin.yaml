@@ -7,7 +7,7 @@ appId: com.cyjoon.dailyfundingmobile
       visible:
         text: Fetch development servers
     commands:
-      - openLink: "dailyfunding://expo-development-client/?url=http%3A%2F%2F172.30.1.71%3A8081"
+      - openLink: "dailyfunding://expo-development-client/?url=http%3A%2F%2F10.0.2.2%3A8081"
 - runFlow:
     when:
       visible:
@@ -42,7 +42,7 @@ appId: com.cyjoon.dailyfundingmobile
     text: 이미 계정이 있어요
 - tapOn:
     text: "^이메일$"
-- inputText: pinuser6@test.com
+- inputText: pinuser20@test.com
 - hideKeyboard
 - tapOn:
     text: "^비밀번호$"
@@ -62,15 +62,15 @@ appId: com.cyjoon.dailyfundingmobile
     timeout: 15000
 - tapOn:
     text: "^이름$"
-- inputText: 육테스트
+- inputText: 이십테스트
 - hideKeyboard
 - tapOn:
     text: 생년월일
-- inputText: "19980303"
+- inputText: "19980320"
 - hideKeyboard
 - tapOn:
     text: 휴대폰 번호
-- inputText: "01099990000"
+- inputText: "01099990020"
 - hideKeyboard
 - tapOn:
     text: 인증하고 가입하기
@@ -86,6 +86,12 @@ appId: com.cyjoon.dailyfundingmobile
     timeout: 15000
 - runFlow:
     file: subflows/webview-signin-android.yaml
+- extendedWaitUntil:
+    visible:
+      text: 간편비밀번호|마이
+    timeout: 30000
+- runFlow:
+    file: subflows/pin-unlock-android.yaml
 - extendedWaitUntil:
     visible:
       text: 마이

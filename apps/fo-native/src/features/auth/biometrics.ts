@@ -36,6 +36,15 @@ export const enableBiometric = async (pin: string) => {
   await SecureStore.setItemAsync(ENABLED_KEY, "true");
 };
 
+export const authenticateBiometric = async (promptMessage: string) => {
+  try {
+    const res = await LocalAuthentication.authenticateAsync({ promptMessage });
+    return res.success;
+  } catch {
+    return false;
+  }
+};
+
 export const readBiometricPin = async (promptMessage: string) => {
   try {
     return await SecureStore.getItemAsync(PIN_KEY, {

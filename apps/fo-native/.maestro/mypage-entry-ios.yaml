@@ -10,8 +10,12 @@ appId: com.cyjoon.dailyfunding-mobile
 - extendedWaitUntil:
     visible:
       text: 마이
-    timeout: 15000
+    timeout: 30000
+- tapOn:
+    text: 마이
+- extendedWaitUntil:
+    visible:
+      text: 마이페이지
+    timeout: 30000
 - assertNotVisible:
-    text: 간편비밀번호 입력
-- assertNotVisible:
-    text: 취소
+    text: 간편비밀번호

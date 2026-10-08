@@ -1,11 +1,9 @@
 "use client";
 
-import { isInWebView } from "@dailyfunding/bridge";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { AuthGate } from "@/features/auth";
-import { ReauthGate } from "@/features/auth";
 import { api, fmtMan, fmtWon } from "@/shared/api";
 import { useDocumentTitle } from "@/shared/lib";
 import { AppLink } from "@/shared/ui";
@@ -59,13 +57,7 @@ const MyPage = () => {
   useDocumentTitle("마이페이지");
   return (
   <AuthGate>
-    {isInWebView() ? (
-      <ReauthGate>
-        <Dashboard />
-      </ReauthGate>
-    ) : (
-      <Dashboard />
-    )}
+    <Dashboard />
   </AuthGate>
 );
 };

@@ -3,6 +3,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
+import { useReauth } from "@/features/auth";
 import {
   ApiRequestError,
   api,
@@ -80,6 +81,7 @@ type Props = {
 
 const OrderForm = ({ product }: Props) => {
   const me = useMe();
+  const reauth = useReauth();
   const nav = useAppNavigate();
   const queryClient = useQueryClient();
   const [idem, setIdem] = useState(() => idempotencyKey());
@@ -121,27 +123,36 @@ const OrderForm = ({ product }: Props) => {
   >(async (_prev, formData) => {
     const parsed = parseForm(orderSchema, formData);
     if ("error" in parsed) return { error: parsed.error };
-    try {
-      const data = await api.request<InvestmentResponse>(
-        "post",
-        "/api/investments",
-        {
-          product_id: product.id,
-          amount: parsed.data.man * 10_000,
-          use_points: parsed.data.points,
-          confirm: "네",
-        },
-        { idempotencyKey: idem },
-      );
-      setIdem(idempotencyKey());
-      queryClient.invalidateQueries({ queryKey: ["deposit"] });
-      queryClient.invalidateQueries({ queryKey: ["points"] });
-      queryClient.invalidateQueries({ queryKey: ["investments"] });
-      return { result: data };
-    } catch (e) {
-      const mapped = mapError(e);
-      return { error: mapped.text, code: mapped.code };
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const token = await reauth?.ensure(attempt > 0);
+      if (!token) return { error: "본인 인증이 취소됐어요" };
+      try {
+        const data = await api.request<InvestmentResponse>(
+          "post",
+          "/api/investments",
+          {
+            product_id: product.id,
+            amount: parsed.data.man * 10_000,
+            use_points: parsed.data.points,
+            confirm: "네",
+          },
+          { idempotencyKey: idem, reauthToken: token },
+        );
+        setIdem(idempotencyKey());
+        queryClient.invalidateQueries({ queryKey: ["deposit"] });
+        queryClient.invalidateQueries({ queryKey: ["points"] });
+        queryClient.invalidateQueries({ queryKey: ["investments"] });
+        return { result: data };
+      } catch (e) {
+        if (e instanceof ApiRequestError && e.code === "REAUTH_REQUIRED") {
+          reauth?.reset();
+          continue;
+        }
+        const mapped = mapError(e);
+        return { error: mapped.text, code: mapped.code };
+      }
     }
+    return { error: "잠시 후 다시 시도해 주세요" };
   }, null);
 
   if (me.isLoading) {
