@@ -49,35 +49,40 @@ const DepositLinked = () => {
       setSaved(false);
       const parsed = parseForm(linkedAccountSchema, formData);
       if ("error" in parsed) return { error: parsed.error };
-      try {
-        const res = await api.request<
-          { linked: boolean } & Partial<LinkedAccount>
-        >("put", "/api/deposit/linked-account", parsed.data, {
-          reauthToken: reauth?.token,
-        });
-        setLinked({
-          bank_name: res.bank_name ?? "",
-          account_no: res.account_no ?? "",
-          holder: res.holder ?? "",
-          auto_charge: res.auto_charge ?? false,
-        });
-        setSaved(true);
-        return null;
-      } catch (err) {
-        if (
-          err instanceof ApiRequestError &&
-          err.code === "REAUTH_REQUIRED"
-        ) {
-          reauth?.reset();
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const token = await reauth?.ensure(attempt > 0);
+        if (!token) return { error: "본인 인증이 취소됐어요" };
+        try {
+          const res = await api.request<
+            { linked: boolean } & Partial<LinkedAccount>
+          >("put", "/api/deposit/linked-account", parsed.data, {
+            reauthToken: token,
+          });
+          setLinked({
+            bank_name: res.bank_name ?? "",
+            account_no: res.account_no ?? "",
+            holder: res.holder ?? "",
+            auto_charge: res.auto_charge ?? false,
+          });
+          setSaved(true);
           return null;
+        } catch (err) {
+          if (
+            err instanceof ApiRequestError &&
+            err.code === "REAUTH_REQUIRED"
+          ) {
+            reauth?.reset();
+            continue;
+          }
+          return {
+            error:
+              err instanceof ApiRequestError && err.code === "VALIDATION_ERROR"
+                ? "본인 명의 계좌인지 확인해 주세요"
+                : apiErrorMessage(err),
+          };
         }
-        return {
-          error:
-            err instanceof ApiRequestError && err.code === "VALIDATION_ERROR"
-              ? "본인 명의 계좌인지 확인해 주세요"
-              : apiErrorMessage(err),
-        };
       }
+      return { error: "잠시 후 다시 시도해 주세요" };
     },
     null,
   );

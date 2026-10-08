@@ -17,34 +17,41 @@ appId: com.cyjoon.dailyfunding-mobile
           point: 90%,61%
 - extendedWaitUntil:
     visible:
-      text: 로그인|마이
+      text: 간편비밀번호|마이|로그인
     timeout: 30000
 - runFlow:
     when:
       visible:
         text: 로그인
     file: subflows/webview-signin.yaml
-- extendedWaitUntil:
-    visible:
-      text: 간편비밀번호|마이
-    timeout: 30000
 - runFlow:
     file: subflows/pin-unlock.yaml
 - extendedWaitUntil:
     visible:
       text: 마이
     timeout: 30000
-- stopApp
-- launchApp
+- tapOn:
+    text: 마이
 - extendedWaitUntil:
     visible:
-      text: 간편비밀번호|마이
+      text: 마이페이지
     timeout: 30000
-- runFlow:
-    file: subflows/pin-unlock.yaml
+- tapOn:
+    text: 출금하기
 - extendedWaitUntil:
     visible:
-      text: 마이
+      text: 전액 출금
     timeout: 30000
 - assertNotVisible:
-    text: 투자부터 상환까지, 매일 쌓이는 수익
+    text: 간편비밀번호 입력
+- tapOn:
+    text: 전액 출금
+- tapOn:
+    text: 출금하기
+    index: 1
+- extendedWaitUntil:
+    visible:
+      text: 간편비밀번호 입력
+    timeout: 30000
+- assertVisible:
+    text: 간편비밀번호 입력

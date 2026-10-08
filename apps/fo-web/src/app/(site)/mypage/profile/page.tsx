@@ -1,7 +1,6 @@
 "use client";
 
 import { AuthGate } from "@/features/auth";
-import { ReauthGate } from "@/features/auth";
 import { useDocumentTitle } from "@/shared/lib";
 import { useMe } from "@/shared/session";
 
@@ -14,12 +13,7 @@ const ProfilePage = () => {
   useDocumentTitle("회원정보");
   return (
   <AuthGate>
-    <ReauthGate
-      title="회원정보 비밀번호 확인"
-      description="회원정보를 보려면 비밀번호를 한 번 더 입력해 주세요."
-    >
-      <Profile />
-    </ReauthGate>
+    <Profile />
   </AuthGate>
 );
 };

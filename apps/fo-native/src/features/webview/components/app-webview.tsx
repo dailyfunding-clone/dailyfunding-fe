@@ -1,6 +1,5 @@
 import { tokens } from "@dailyfunding/design-system";
-import { useNetworkState } from "expo-network";
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import {
   Linking,
   Platform,
@@ -34,14 +33,6 @@ const AppWebView = forwardRef<WebView, Props>(
   ) => {
     const innerRef = useRef<WebView>(null);
     useImperativeHandle(ref, () => innerRef.current as WebView);
-    const { isConnected } = useNetworkState();
-    const offline = isConnected === false;
-    const wasOffline = useRef(false);
-
-    useEffect(() => {
-      if (wasOffline.current && !offline) innerRef.current?.reload();
-      wasOffline.current = offline;
-    }, [offline]);
     const reload = () => innerRef.current?.reload();
 
     const restore = refreshToken
@@ -113,14 +104,6 @@ const AppWebView = forwardRef<WebView, Props>(
           cacheEnabled
           webviewDebuggingEnabled={__DEV__}
         />
-        {offline && (
-          <View style={styles.offline}>
-            <Text style={styles.errorTitle}>오프라인이에요</Text>
-            <Text style={styles.errorDesc}>
-              네트워크 연결 후 자동으로 다시 불러와요
-            </Text>
-          </View>
-        )}
       </View>
     );
   },
@@ -162,18 +145,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 15,
     fontWeight: "600",
-  },
-  offline: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: tokens.semantic.color.bgDefault,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    padding: 24,
   },
 });
 

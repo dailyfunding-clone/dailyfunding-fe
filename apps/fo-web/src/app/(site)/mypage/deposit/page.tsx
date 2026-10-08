@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 
-import { AuthGate } from "@/features/auth";
-import { ReauthGate } from "@/features/auth";
+import { AuthGate, ReauthProvider } from "@/features/auth";
 import { useDocumentTitle } from "@/shared/lib";
 
 import { DepositHistory } from "../_components";
@@ -60,20 +59,20 @@ const Deposit = () => {
       {tab === "history" && <DepositHistory />}
       {tab === "charge" && <DepositCharge />}
       {tab === "withdraw" && (
-        <ReauthGate
+        <ReauthProvider
           title="출금 비밀번호 확인"
           description="출금하려면 비밀번호를 한 번 더 입력해 주세요."
         >
           <DepositWithdraw />
-        </ReauthGate>
+        </ReauthProvider>
       )}
       {tab === "linked" && (
-        <ReauthGate
+        <ReauthProvider
           title="계좌 관리 비밀번호 확인"
           description="연결계좌를 관리하려면 비밀번호를 한 번 더 입력해 주세요."
         >
           <DepositLinked />
-        </ReauthGate>
+        </ReauthProvider>
       )}
     </div>
   );

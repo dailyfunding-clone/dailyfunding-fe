@@ -30,34 +30,39 @@ const DepositWithdraw = () => {
             return "error" in parsed ? parsed : parsed.data;
           })();
       if ("error" in body) return { error: body.error };
-      try {
-        const res = await api.request<{ fee: number; status: string }>(
-          "post",
-          "/api/deposit/withdraw",
-          body,
-          { idempotencyKey: idempotencyKey(), reauthToken: reauth?.token },
-        );
-        setResult(res);
-        queryClient.invalidateQueries({ queryKey: ["deposit-account"] });
-        queryClient.invalidateQueries({ queryKey: ["deposit-history"] });
-        queryClient.invalidateQueries({ queryKey: ["me-dashboard"] });
-        return null;
-      } catch (err) {
-        if (
-          err instanceof ApiRequestError &&
-          err.code === "REAUTH_REQUIRED"
-        ) {
-          reauth?.reset();
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const token = await reauth?.ensure(attempt > 0);
+        if (!token) return { error: "본인 인증이 취소됐어요" };
+        try {
+          const res = await api.request<{ fee: number; status: string }>(
+            "post",
+            "/api/deposit/withdraw",
+            body,
+            { idempotencyKey: idempotencyKey(), reauthToken: token },
+          );
+          setResult(res);
+          queryClient.invalidateQueries({ queryKey: ["deposit-account"] });
+          queryClient.invalidateQueries({ queryKey: ["deposit-history"] });
+          queryClient.invalidateQueries({ queryKey: ["me-dashboard"] });
           return null;
-        }
-        return {
-          error:
+        } catch (err) {
+          if (
             err instanceof ApiRequestError &&
-            err.code === "INSUFFICIENT_DEPOSIT"
-              ? "출금 가능한 금액을 초과했어요"
-              : apiErrorMessage(err),
-        };
+            err.code === "REAUTH_REQUIRED"
+          ) {
+            reauth?.reset();
+            continue;
+          }
+          return {
+            error:
+              err instanceof ApiRequestError &&
+              err.code === "INSUFFICIENT_DEPOSIT"
+                ? "출금 가능한 금액을 초과했어요"
+                : apiErrorMessage(err),
+          };
+        }
       }
+      return { error: "잠시 후 다시 시도해 주세요" };
     },
     null,
   );
