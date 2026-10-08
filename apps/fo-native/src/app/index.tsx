@@ -41,7 +41,11 @@ const GateScreen = () => {
     );
   }
   if (!session) return <Redirect href="/auth" />;
-  return <Redirect href="/(tabs)" />;
+  return (
+    <Redirect
+      href={{ pathname: "/auth/pin", params: { startup: "1" } }}
+    />
+  );
 };
 
 export default GateScreen;

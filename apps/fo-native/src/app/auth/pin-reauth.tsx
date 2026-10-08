@@ -2,29 +2,33 @@ import { tokens } from "@dailyfunding/design-system";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import ky from "ky";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { PinKeypad, resolveReauth } from "@/features/auth";
+import {
+  PinKeypad,
+  biometricEnabled,
+  biometricLabel,
+  readBiometricPin,
+  resolveReauth,
+} from "@/features/auth";
 import { WEB_BASE_URL } from "@/shared";
 
 const PinReauthScreen = () => {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
+  const [bioLabel, setBioLabel] = useState("");
+  const bioTried = useRef(false);
 
   useEffect(() => () => resolveReauth(null), []);
 
-  const onChange = (next: string) => {
-    if (next.length < 6) {
-      setValue(next);
-      return;
-    }
-    const submit = async () => {
+  const submit = useCallback(
+    async (pin: string) => {
       const access = await SecureStore.getItemAsync("access_token");
       const res = await ky.post(`${WEB_BASE_URL}/api/auth/reauth`, {
-        json: { pin: next },
+        json: { pin },
         headers: access ? { Authorization: `Bearer ${access}` } : undefined,
         throwHttpErrors: false,
       });
@@ -34,14 +38,38 @@ const PinReauthScreen = () => {
         router.back();
         return;
       }
-      if (res.status === 401) {
-        setError("간편비밀번호가 맞지 않아요");
-      } else {
-        setError("잠시 후 다시 시도해 주세요");
-      }
+      setError(
+        res.status === 401
+          ? "간편비밀번호가 맞지 않아요"
+          : "잠시 후 다시 시도해 주세요",
+      );
       setValue("");
-    };
-    void submit();
+    },
+    [router],
+  );
+
+  const tryBiometric = useCallback(async () => {
+    if (!(await biometricEnabled())) return;
+    const pin = await readBiometricPin("생체인증으로 본인 확인해요");
+    if (pin) void submit(pin);
+  }, [submit]);
+
+  useEffect(() => {
+    if (bioTried.current) return;
+    bioTried.current = true;
+    void (async () => {
+      if (!(await biometricEnabled())) return;
+      setBioLabel(await biometricLabel());
+      void tryBiometric();
+    })();
+  }, [tryBiometric]);
+
+  const onChange = (next: string) => {
+    if (next.length < 6) {
+      setValue(next);
+      return;
+    }
+    void submit(next);
   };
 
   return (
@@ -60,6 +88,15 @@ const PinReauthScreen = () => {
         <Text style={styles.title}>간편비밀번호 입력</Text>
         {!!error && <Text style={styles.error}>{error}</Text>}
         <PinKeypad value={value} onChange={onChange} />
+        {!!bioLabel && (
+          <Pressable
+            style={styles.forgot}
+            onPress={() => void tryBiometric()}
+            hitSlop={8}
+          >
+            <Text style={styles.forgotText}>{`${bioLabel}로 열기`}</Text>
+          </Pressable>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -95,6 +132,15 @@ const styles = StyleSheet.create({
     color: tokens.semantic.color.danger,
     marginTop: -24,
     marginBottom: 16,
+  },
+  forgot: {
+    marginTop: 32,
+    padding: 8,
+  },
+  forgotText: {
+    fontSize: 14,
+    color: tokens.semantic.color.fgTertiary,
+    textDecorationLine: "underline",
   },
 });
 

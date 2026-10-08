@@ -14,7 +14,7 @@ appId: com.cyjoon.dailyfunding-mobile
           text: 열기
 - extendedWaitUntil:
     visible:
-      text: Continue|로그인|마이|투자하기
+      text: Continue|로그인|마이|투자하기|간편비밀번호
     timeout: 90000
 - runFlow:
     when:
@@ -36,7 +36,7 @@ appId: com.cyjoon.dailyfunding-mobile
           optional: true
       - extendedWaitUntil:
           visible:
-            text: Continue|로그인|마이|투자하기
+            text: Continue|로그인|마이|투자하기|간편비밀번호
           timeout: 90000
       - runFlow:
           when:
@@ -51,8 +51,32 @@ appId: com.cyjoon.dailyfunding-mobile
         text: Toggle performance monitor
     commands:
       - tapOn:
-          point: 89%,48%
+          point: 90%,61%
+- runFlow:
+    when:
+      visible:
+        text: Toggle performance monitor
+    commands:
+      - tapOn:
+          point: 90%,61%
+- runFlow:
+    when:
+      visible:
+        text: Enter URL manually
+    commands:
+      - openLink: "dailyfunding://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+      - extendedWaitUntil:
+          visible:
+            text: Continue|로그인|마이|투자하기|간편비밀번호
+          timeout: 90000
+      - runFlow:
+          when:
+            visible:
+              text: Continue
+          commands:
+            - tapOn:
+                text: Continue
 - extendedWaitUntil:
     visible:
-      text: 로그인|마이|투자하기
+      text: 로그인|마이|투자하기|간편비밀번호
     timeout: 90000

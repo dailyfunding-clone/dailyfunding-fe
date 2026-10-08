@@ -1,5 +1,5 @@
 import { tokens } from "@dailyfunding/design-system";
-import { useNavigation, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import ky from "ky";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
   PinKeypad,
+  authenticateBiometric,
   biometricEnabled,
   biometricLabel,
   biometricSupported,
@@ -22,13 +23,17 @@ import { WEB_BASE_URL } from "@/shared";
 const PinScreen = () => {
   const router = useRouter();
   const navigation = useNavigation();
+  const { startup } = useLocalSearchParams<{ startup?: string }>();
   const [registered, setRegistered] = useState<boolean | null>(null);
   const [first, setFirst] = useState("");
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [bioLabel, setBioLabel] = useState("");
+  const [bioUsable, setBioUsable] = useState(false);
   const unlocked = useRef(false);
   const bioTried = useRef(false);
+  const bioLinkPending = useRef(false);
 
   useEffect(() => {
     pinGate.setOpen(true);
@@ -42,8 +47,9 @@ const PinScreen = () => {
       }
       const v = await SecureStore.getItemAsync("pin_registered");
       setRegistered(v === "true");
-      if (v === "true" && (await biometricEnabled())) {
+      if (v === "true" && (await biometricSupported())) {
         setBioLabel(await biometricLabel());
+        setBioUsable(true);
       }
     })();
     return () => pinGate.setOpen(false);
@@ -55,6 +61,15 @@ const PinScreen = () => {
     });
     return sub;
   }, [navigation]);
+
+  const done = useCallback(() => {
+    unlocked.current = true;
+    if (startup === "1") {
+      router.replace("/(tabs)");
+      return;
+    }
+    router.back();
+  }, [router, startup]);
 
   const offerBiometric = useCallback(async (pin: string) => {
     if (!(await biometricSupported())) return;
@@ -82,10 +97,13 @@ const PinScreen = () => {
         if (data.reauth_token) {
           cacheReauth(data.reauth_token, data.expires_in ?? 300);
         }
-        unlocked.current = true;
-        pinGate.justClosed = true;
-        void offerBiometric(pin);
-        router.back();
+        if (bioLinkPending.current) {
+          bioLinkPending.current = false;
+          void enableBiometric(pin);
+        } else {
+          void offerBiometric(pin);
+        }
+        done();
         return;
       }
       setError(
@@ -95,7 +113,7 @@ const PinScreen = () => {
       );
       setValue("");
     },
-    [router, offerBiometric],
+    [done, offerBiometric],
   );
 
   const register = useCallback(
@@ -122,31 +140,41 @@ const PinScreen = () => {
             cacheReauth(data.reauth_token, data.expires_in ?? 300);
           }
         }
-        unlocked.current = true;
-        pinGate.justClosed = true;
         void offerBiometric(pin);
-        router.back();
+        done();
         return;
       }
       setError("등록에 실패했어요. 다시 시도해 주세요");
       setFirst("");
       setValue("");
     },
-    [router, offerBiometric],
+    [done, offerBiometric],
   );
 
   const tryBiometric = useCallback(async () => {
-    if (!(await biometricEnabled())) return;
-    const pin = await readBiometricPin(
-      "간편비밀번호 대신 생체인증으로 잠금해제해요",
-    );
-    if (pin) void verify(pin);
-  }, [verify]);
+    if (await biometricEnabled()) {
+      const pin = await readBiometricPin(
+        "간편비밀번호 대신 생체인증으로 잠금해제해요",
+      );
+      if (pin) void verify(pin);
+      return;
+    }
+    if (
+      await authenticateBiometric(
+        `${bioLabel || "생체인증"}으로 잠금해제해요`,
+      )
+    ) {
+      bioLinkPending.current = true;
+      setNotice("간편비밀번호를 한 번 입력하면 생체인증이 연결돼요");
+    }
+  }, [bioLabel, verify]);
 
   useEffect(() => {
     if (registered !== true || bioTried.current) return;
     bioTried.current = true;
-    void tryBiometric();
+    void (async () => {
+      if (await biometricEnabled()) void tryBiometric();
+    })();
   }, [registered, tryBiometric]);
 
   const onChange = (next: string) => {
@@ -185,14 +213,15 @@ const PinScreen = () => {
                 : "간편비밀번호를 등록해 주세요"}
         </Text>
         {!!error && <Text style={styles.error}>{error}</Text>}
+        {!!notice && <Text style={styles.notice}>{notice}</Text>}
         <PinKeypad value={value} onChange={onChange} />
-        {registered === true && !!bioLabel && (
+        {registered === true && bioUsable && (
           <Pressable
             style={styles.forgot}
             onPress={() => void tryBiometric()}
             hitSlop={8}
           >
-            <Text style={styles.forgotText}>{bioLabel}로 열기</Text>
+            <Text style={styles.forgotText}>{`${bioLabel}로 열기`}</Text>
           </Pressable>
         )}
         {registered === true && (
@@ -251,6 +280,12 @@ const styles = StyleSheet.create({
   error: {
     fontSize: 14,
     color: tokens.semantic.color.danger,
+    marginTop: -24,
+    marginBottom: 16,
+  },
+  notice: {
+    fontSize: 14,
+    color: tokens.semantic.color.fgSecondary,
     marginTop: -24,
     marginBottom: 16,
   },

@@ -2,7 +2,6 @@ const waiters: (() => void)[] = [];
 
 export const pinGate = {
   open: false,
-  justClosed: false,
   setOpen(next: boolean) {
     this.open = next;
     if (!next) {
