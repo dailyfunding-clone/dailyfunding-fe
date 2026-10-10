@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseBridgeMessage, parseNativeMessage } from "../src/messages";
+import { isLocalPath, parseBridgeMessage, parseNativeMessage } from "../src/messages";
 import { createNativeChannel } from "../src/protocol";
 
 const signedOut = { status: "signedOut", accessToken: null } as const;
@@ -86,6 +86,27 @@ describe("bridge v2", () => {
       signedOut,
     );
     expect(sent).toEqual([]);
+  });
+
+  it("rejects authority, scheme, and control-character path injection", () => {
+    for (const path of [
+      "",
+      "x",
+      "@evil.test",
+      "//evil.test",
+      "/\\evil.test",
+      "/ok\n",
+      "/ok\t/x",
+      "javascript:alert(1)",
+      "https://evil.test/",
+      "/white space",
+      "/null\u0000x",
+    ]) {
+      expect(isLocalPath(path)).toBe(false);
+    }
+    for (const path of ["/", "/investment", "/mypage?a=1&b=2", "/p/x_y-z~1"]) {
+      expect(isLocalPath(path)).toBe(true);
+    }
   });
 
   it("scrubs buffered app codes on signout", () => {

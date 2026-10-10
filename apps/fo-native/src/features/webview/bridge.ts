@@ -8,12 +8,14 @@ import {
   clearSession,
   getSessionState,
   pinGate,
+  resolveReauth,
   sessionGeneration,
   sessionState,
   storeSessionTokens,
   storeUserProfile,
   subscribeSession,
   takeFreshReauth,
+  validateStoredSession,
 } from "@/features/auth";
 import { WEB_BASE_URL } from "@/shared";
 
@@ -41,7 +43,10 @@ const wireSessionBroadcast = () => {
   if (sessionBroadcastWired) return;
   sessionBroadcastWired = true;
   subscribeSession((state) => {
-    if (state.status === "signedOut") finishReauth(null);
+    if (state.status === "signedOut") {
+      finishReauth(null);
+      resolveReauth(null);
+    }
     for (const channel of channels) channel.updateAuth(state);
   });
 };
@@ -100,18 +105,28 @@ const signOut = async (router: Router) => {
   }
 };
 
+const postAppCode = (accessToken: string) =>
+  ky
+    .post(`${WEB_BASE_URL}/api/auth/app-code`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      throwHttpErrors: false,
+    })
+    .catch(() => null);
+
 const issueWebSessionCode = async (channel: NativeChannel, requestSeq: number) => {
   const at = sessionGeneration();
   let code: string | null = null;
   try {
-    const state = await getSessionState();
+    let state = await getSessionState();
     if (state.status === "signedIn" && sessionGeneration() === at) {
-      const res = await ky
-        .post(`${WEB_BASE_URL}/api/auth/app-code`, {
-          headers: { Authorization: `Bearer ${state.accessToken}` },
-          throwHttpErrors: false,
-        })
-        .catch(() => null);
+      let res = await postAppCode(state.accessToken);
+      if (res?.status === 401 && sessionGeneration() === at) {
+        await validateStoredSession();
+        state = await getSessionState();
+        if (state.status === "signedIn" && sessionGeneration() === at) {
+          res = await postAppCode(state.accessToken);
+        }
+      }
       if (res?.ok) {
         code = ((await res.json()) as { code?: string }).code ?? null;
       }
@@ -178,7 +193,7 @@ const handleReauth = (channel: NativeChannel, requestSeq: number, router: Router
   void (async () => {
     try {
       await pinGate.wait();
-      const cached = takeFreshReauth();
+      const cached = takeFreshReauth(sessionGeneration());
       if (cached) {
         finishReauth(cached);
         return;

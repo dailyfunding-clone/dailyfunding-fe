@@ -4,3 +4,4 @@ export { default as WebViewPrewarm } from "./components/webview-prewarm";
 export * from "./bridge";
 export * from "./constants";
 export * from "./pool";
+export * from "./url";

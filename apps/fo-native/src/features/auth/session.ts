@@ -1,7 +1,9 @@
 import * as SecureStore from "expo-secure-store";
 import ky from "ky";
 
-import { WEB_BASE_URL } from "@/shared";
+import { STORAGE_KEYS, WEB_BASE_URL, unregisterPushToken } from "@/shared";
+
+import { clearReauth } from "./reauth";
 
 import type { AuthState } from "@dailyfunding/bridge";
 
@@ -38,7 +40,7 @@ export const sessionGeneration = () => generation;
 export const getSessionState = async (): Promise<AuthState> => {
   if (current) return current;
   const at = generation;
-  const access = await SecureStore.getItemAsync("access_token");
+  const access = await SecureStore.getItemAsync(STORAGE_KEYS.accessToken);
   if (generation !== at) return sessionState();
   current = access ? { status: "signedIn", accessToken: access } : SIGNED_OUT;
   return current;
@@ -49,14 +51,24 @@ export const isRefreshingSession = () => refreshPromise !== null;
 export const storeSessionTokens = async (data: SessionTokens) => {
   const at = generation;
   if (data.refresh_token) {
-    await SecureStore.setItemAsync("refresh_token", data.refresh_token);
+    await SecureStore.setItemAsync(STORAGE_KEYS.refreshToken, data.refresh_token);
   }
   if (data.access_token) {
-    await SecureStore.setItemAsync("access_token", data.access_token);
+    await SecureStore.setItemAsync(STORAGE_KEYS.accessToken, data.access_token);
   }
   if (generation !== at) {
-    if (data.refresh_token) await SecureStore.deleteItemAsync("refresh_token");
-    if (data.access_token) await SecureStore.deleteItemAsync("access_token");
+    if (
+      data.refresh_token &&
+      (await SecureStore.getItemAsync(STORAGE_KEYS.refreshToken)) === data.refresh_token
+    ) {
+      await SecureStore.deleteItemAsync(STORAGE_KEYS.refreshToken);
+    }
+    if (
+      data.access_token &&
+      (await SecureStore.getItemAsync(STORAGE_KEYS.accessToken)) === data.access_token
+    ) {
+      await SecureStore.deleteItemAsync(STORAGE_KEYS.accessToken);
+    }
     return;
   }
   if (data.access_token) {
@@ -66,35 +78,48 @@ export const storeSessionTokens = async (data: SessionTokens) => {
 
 export const clearSession = async () => {
   generation += 1;
-  await SecureStore.deleteItemAsync("refresh_token");
-  await SecureStore.deleteItemAsync("access_token");
-  await SecureStore.deleteItemAsync("user_email");
-  await SecureStore.deleteItemAsync("pin_registered");
-  await SecureStore.deleteItemAsync("pin_biometric");
-  await SecureStore.deleteItemAsync("biometric_enabled");
+  clearReauth();
+  await unregisterPushToken();
+  await SecureStore.deleteItemAsync(STORAGE_KEYS.refreshToken);
+  await SecureStore.deleteItemAsync(STORAGE_KEYS.accessToken);
+  await SecureStore.deleteItemAsync(STORAGE_KEYS.userEmail);
+  await SecureStore.deleteItemAsync(STORAGE_KEYS.pinRegistered);
+  await SecureStore.deleteItemAsync(STORAGE_KEYS.pinBiometric);
+  await SecureStore.deleteItemAsync(STORAGE_KEYS.biometricEnabled);
   publish(SIGNED_OUT);
 };
 
 export const storeUserProfile = async (accessToken: string) => {
+  const at = generation;
   try {
     const res = await ky.get(`${WEB_BASE_URL}/api/me`, {
       headers: { Authorization: `Bearer ${accessToken}` },
       throwHttpErrors: false,
     });
-    if (!res.ok) return;
+    if (!res.ok || generation !== at) return;
     const me = (await res.json()) as { email?: string; pin_registered?: boolean };
+    if (generation !== at) return;
     if (me.email) {
-      await SecureStore.setItemAsync("user_email", me.email);
+      await SecureStore.setItemAsync(STORAGE_KEYS.userEmail, me.email);
     }
-    await SecureStore.setItemAsync("pin_registered", me.pin_registered ? "true" : "false");
+    if (generation !== at) return;
+    await SecureStore.setItemAsync(
+      STORAGE_KEYS.pinRegistered,
+      me.pin_registered ? "true" : "false",
+    );
   } catch {
     return;
   }
 };
 
+export const refreshAccessToken = async () => {
+  await validateStoredSession();
+  return SecureStore.getItemAsync(STORAGE_KEYS.accessToken);
+};
+
 const refreshStoredSession = async (): Promise<StoredSession> => {
   const at = generation;
-  const refresh = await SecureStore.getItemAsync("refresh_token");
+  const refresh = await SecureStore.getItemAsync(STORAGE_KEYS.refreshToken);
   if (!refresh || generation !== at) return null;
   try {
     const res = await ky.post(`${WEB_BASE_URL}/api/auth/refresh`, {
@@ -103,13 +128,14 @@ const refreshStoredSession = async (): Promise<StoredSession> => {
     });
     if (generation !== at) return null;
     if (!res.ok) {
+      if (res.status !== 401 && res.status !== 403) return { token: null };
       await clearSession();
       return null;
     }
     const data = (await res.json()) as SessionTokens;
     if (generation !== at) return null;
     await storeSessionTokens(data);
-    if (data.access_token && !(await SecureStore.getItemAsync("user_email"))) {
+    if (data.access_token && !(await SecureStore.getItemAsync(STORAGE_KEYS.userEmail))) {
       await storeUserProfile(data.access_token);
     }
     return { token: data.refresh_token ?? refresh };
