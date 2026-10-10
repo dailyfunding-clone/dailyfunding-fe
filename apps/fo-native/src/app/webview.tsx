@@ -11,11 +11,15 @@ import {
   View,
 } from "react-native";
 
-import { AppWebView , handleBridgeMessage } from "@/features/webview";
+import {
+  AppWebView,
+  createBridgeChannel,
+  handleBridgeMessage,
+  releaseBridgeChannel,
+} from "@/features/webview";
 
+import type { NativeChannel } from "@dailyfunding/bridge";
 import type { WebView, WebViewMessageEvent } from "react-native-webview";
-
-
 
 const WebViewScreen = () => {
   const { path, title } = useLocalSearchParams<{
@@ -26,8 +30,15 @@ const WebViewScreen = () => {
   const router = useRouter();
   const webViewRef = useRef<WebView>(null);
   const [canGoBack, setCanGoBack] = useState(false);
+  const [channel, setChannel] = useState<NativeChannel | null>(null);
   const [ready, setReady] = useState(false);
   const currentTitle = useRef<string | undefined>(title);
+
+  useEffect(() => {
+    const created = createBridgeChannel(webViewRef, `webview-${Date.now()}-${Math.random()}`);
+    setChannel(created);
+    return () => releaseBridgeChannel(created);
+  }, []);
 
   const goBack = useCallback(() => {
     if (canGoBack) {
@@ -58,17 +69,19 @@ const WebViewScreen = () => {
     return () => sub.remove();
   }, [canGoBack]);
 
-  const handleMessage = (event: WebViewMessageEvent) =>
+  const handleMessage = (event: WebViewMessageEvent) => {
+    if (!channel) return;
     handleBridgeMessage(event, {
       router,
+      channel,
       goBack,
       setTitle: (t) => {
         currentTitle.current = t;
         navigation.setOptions({ title: t });
       },
       onReady: () => setReady(true),
-      webViewRef,
     });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: tokens.semantic.color.bgDefault }}>
@@ -92,7 +105,7 @@ const WebViewScreen = () => {
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   loadingOverlay: {

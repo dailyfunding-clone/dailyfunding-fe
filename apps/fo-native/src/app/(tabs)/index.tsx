@@ -1,5 +1,10 @@
-import { TabWebView } from "@/features/webview";
+import { TabWebView, WebViewPrewarm } from "@/features/webview";
 
-const HomeTabScreen = () => <TabWebView path="/" />;
+const HomeTabScreen = () => (
+  <>
+    <TabWebView path="/" />
+    <WebViewPrewarm />
+  </>
+);
 
 export default HomeTabScreen;
