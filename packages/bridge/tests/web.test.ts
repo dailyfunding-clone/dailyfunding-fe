@@ -84,6 +84,60 @@ it("queries native every time, applies duplicates once, and shares in-flight rea
   client.dispose();
 });
 
+it("shares in-flight appCode requests and resolves with the issued code", async () => {
+  const outbound: any[] = [];
+  let receive = (_raw: string) => {};
+  const client = createWebBridge(
+    (raw) => outbound.push(JSON.parse(raw)),
+    (listener) => {
+      receive = listener;
+      return () => {};
+    },
+  );
+  const state = { status: "signedIn", accessToken: "a" } as const;
+  client.subscribeAuthState(() => {});
+  const hello = outbound.shift();
+  receive(
+    JSON.stringify({
+      v: 2,
+      seq: 0,
+      sessionId: "s",
+      type: "hello.ack",
+      payload: { version: 2, sessionId: "s", clientId: hello.payload.clientId, authState: state },
+    }),
+  );
+  const a = client.requestAppCode();
+  const b = client.requestAppCode();
+  expect(a).toBe(b);
+  await vi.waitFor(() => expect(outbound.some((m) => m.type === "auth.appCode")).toBe(true));
+  const request = outbound.find((m) => m.type === "auth.appCode");
+  receive(
+    JSON.stringify({
+      v: 2,
+      seq: 1,
+      sessionId: "s",
+      type: "auth.appCode.result",
+      payload: { requestSeq: request.seq, code: "code-1" },
+    }),
+  );
+  expect(await a).toBe("code-1");
+  const c = client.requestAppCode();
+  await vi.waitFor(() =>
+    expect(outbound.filter((m) => m.type === "auth.appCode")).toHaveLength(2),
+  );
+  receive(
+    JSON.stringify({
+      v: 2,
+      seq: 2,
+      sessionId: "s",
+      type: "auth.appCode.result",
+      payload: { requestSeq: outbound.filter((m) => m.type === "auth.appCode")[1].seq, code: null },
+    }),
+  );
+  expect(await c).toBeNull();
+  client.dispose();
+});
+
 it("integrates real channels across a reload and does not acknowledge failed consumers", async () => {
   let receive = (_raw: string) => {};
   const state = { status: "signedOut", accessToken: null } as const;

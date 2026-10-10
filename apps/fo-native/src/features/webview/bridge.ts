@@ -6,6 +6,7 @@ import { InteractionManager } from "react-native";
 import {
   beginReauth,
   clearSession,
+  getSessionState,
   pinGate,
   sessionState,
   storeSessionTokens,
@@ -87,6 +88,26 @@ const signOut = async (router: Router) => {
   router.replace("/auth");
 };
 
+const issueWebSessionCode = async (channel: NativeChannel, requestSeq: number) => {
+  let code: string | null = null;
+  const state = await getSessionState();
+  if (state.status === "signedIn") {
+    const res = await ky
+      .post(`${WEB_BASE_URL}/api/auth/app-code`, {
+        headers: { Authorization: `Bearer ${state.accessToken}` },
+        throwHttpErrors: false,
+      })
+      .catch(() => null);
+    if (res?.ok) {
+      code = ((await res.json()) as { code?: string }).code ?? null;
+    }
+  }
+  channel.send({
+    type: "auth.appCode.result",
+    payload: { requestSeq, code },
+  });
+};
+
 const reauthWaiters: { channel: NativeChannel; requestSeq: number }[] = [];
 let reauthInFlight = false;
 
@@ -164,6 +185,9 @@ export function handleBridgeMessage(event: WebViewMessageEvent, deps: BridgeDeps
       break;
     case "auth.reauth":
       handleReauth(deps.channel, msg.seq, deps.router);
+      break;
+    case "auth.appCode":
+      void issueWebSessionCode(deps.channel, msg.seq);
       break;
     case "auth.signOut":
       void signOut(deps.router);

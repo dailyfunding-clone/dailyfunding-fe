@@ -16,6 +16,7 @@ export const createWebBridge = (
   let disposed = false;
   let retry: ReturnType<typeof setInterval> | undefined;
   let reauth: Promise<string | null> | null = null;
+  let appCode: Promise<string | null> | null = null;
   let receiving = Promise.resolve();
   const queued: BridgeEnvelope[] = [];
   const received = new Set<number>();
@@ -64,6 +65,8 @@ export const createWebBridge = (
             requests.get(message.payload.requestSeq)?.resolve(message.payload.authState);
           if (message.type === "auth.reauth.result")
             requests.get(message.payload.requestSeq)?.resolve(message.payload.token);
+          if (message.type === "auth.appCode.result")
+            requests.get(message.payload.requestSeq)?.resolve(message.payload.code);
           received.add(message.seq);
         }
         emit({
@@ -91,7 +94,7 @@ export const createWebBridge = (
     }
     return envelope.seq;
   };
-  const request = (type: "auth.getState" | "auth.reauth") =>
+  const request = (type: "auth.getState" | "auth.reauth" | "auth.appCode") =>
     new Promise<AuthState | string | null>((resolve, reject) => {
       const number = seq + 1;
       const finish = () => {
@@ -133,6 +136,14 @@ export const createWebBridge = (
           reauth = null;
         });
       return reauth;
+    },
+    requestAppCode: () => {
+      appCode ??= (request("auth.appCode") as Promise<string | null>)
+        .catch(() => null)
+        .finally(() => {
+          appCode = null;
+        });
+      return appCode;
     },
     replay: () => {
       if (sessionId) post({ type: "replay", payload: { after: 0, sessionId } });
