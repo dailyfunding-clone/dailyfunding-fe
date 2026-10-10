@@ -80,13 +80,49 @@ type RequestOptions<P extends PathKey, M extends Method> = (keyof PathParams<P, 
   ? { path?: never }
   : { path: PathParams<P, M> }) &
   (keyof QueryParams<P, M> extends never
-    ? { query?: Record<string, unknown> }
+    ? { query?: never }
     : { query?: QueryParams<P, M> }) & {
     reauthToken?: string;
     idempotencyKey?: string;
   };
 
 const IDEMPOTENT_METHODS = new Set(["post", "put", "patch", "delete"]);
+
+const buildUrl = (
+  baseUrl: string,
+  path: string,
+  params?: { path?: Record<string, unknown>; query?: Record<string, unknown> },
+) => {
+  let url = `${baseUrl}${path}`;
+  for (const [k, v] of Object.entries(params?.path ?? {})) {
+    url = url.replaceAll(`{${k}}`, encodeURIComponent(String(v)));
+  }
+  const unfilled = url.match(/\{[^}/]+\}/);
+  if (unfilled) {
+    throw new Error(`missing path param: ${unfilled[0]}`);
+  }
+  const query = new URLSearchParams();
+  for (const [k, v] of Object.entries(params?.query ?? {})) {
+    if (v === undefined || v === null) continue;
+    if (Array.isArray(v)) {
+      for (const item of v) query.append(k, String(item));
+      continue;
+    }
+    if (typeof v === "object") {
+      query.set(k, JSON.stringify(v));
+      continue;
+    }
+    query.set(k, String(v));
+  }
+  const qs = query.toString();
+  return qs ? `${url}?${qs}` : url;
+};
+
+const csrfToken = () => {
+  if (typeof document === "undefined") return undefined;
+  const m = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+  return m ? decodeURIComponent(m[1]) : undefined;
+};
 
 export const createClient = (options: ApiClientOptions = {}) => {
   const { baseUrl = "", accessToken, reauthToken, beforeRequest, onUnauthorized } = options;
@@ -126,6 +162,10 @@ export const createClient = (options: ApiClientOptions = {}) => {
     if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
     if (reauth) headers["X-Reauth-Token"] = reauth;
     if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+    if (method !== "get") {
+      const csrf = csrfToken();
+      if (csrf) headers["X-CSRF-Token"] = csrf;
+    }
     const opts: Options = {
       method: method.toUpperCase(),
       headers,
@@ -155,16 +195,7 @@ export const createClient = (options: ApiClientOptions = {}) => {
     const idempotencyKey = IDEMPOTENT_METHODS.has(method)
       ? (opts?.idempotencyKey ?? crypto.randomUUID())
       : undefined;
-    let url = `${baseUrl}${path as string}`;
-    for (const [k, v] of Object.entries(opts?.path ?? {})) {
-      url = url.replace(`{${k}}`, encodeURIComponent(String(v)));
-    }
-    const query = new URLSearchParams();
-    for (const [k, v] of Object.entries(opts?.query ?? {})) {
-      if (v !== undefined && v !== null) query.set(k, String(v));
-    }
-    const qs = query.toString();
-    if (qs) url += `?${qs}`;
+    const url = buildUrl(baseUrl, path as string, opts);
     return send(method, url, body, idempotencyKey, opts?.reauthToken ?? reauthToken ?? undefined);
   };
 
@@ -172,14 +203,19 @@ export const createClient = (options: ApiClientOptions = {}) => {
     method: "get" | "post" | "put" | "patch" | "delete",
     path: string,
     body?: unknown,
-    opts?: { reauthToken?: string; idempotencyKey?: string },
+    opts?: {
+      path?: Record<string, unknown>;
+      query?: Record<string, unknown>;
+      reauthToken?: string;
+      idempotencyKey?: string;
+    },
   ): Promise<T> => {
     const idempotencyKey = IDEMPOTENT_METHODS.has(method)
       ? (opts?.idempotencyKey ?? crypto.randomUUID())
       : undefined;
     return send(
       method,
-      `${baseUrl}${path}`,
+      buildUrl(baseUrl, path, opts),
       body,
       idempotencyKey,
       opts?.reauthToken ?? reauthToken ?? undefined,
