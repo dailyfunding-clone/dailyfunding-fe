@@ -38,6 +38,8 @@ export const INVEST_ERROR: Record<string, string> = {
   BORROWER_LIMIT_EXCEEDED: "동일 차입자 한도를 초과했어요",
   INSUFFICIENT_DEPOSIT: "예치금이 부족해요",
   INSUFFICIENT_REMAINING: "잔여 모집금액을 초과했어요",
+  PRODUCT_CLOSED: "모집이 마감된 상품이에요",
+  REAUTH_REQUIRED: "비밀번호를 다시 확인해 주세요",
   RECRUITMENT_CLOSED: "모집이 마감된 상품이에요",
   SUITABILITY_REQUIRED: "투자적합성 테스트를 먼저 완료해 주세요",
   IDEMPOTENCY_KEY_REQUIRED: "요청이 올바르지 않아요. 다시 시도해 주세요",
