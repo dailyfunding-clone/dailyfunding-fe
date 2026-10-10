@@ -5,8 +5,14 @@ import { useActionState, useState } from "react";
 import { z } from "zod";
 
 import { api } from "@/shared/api";
-import { contentFieldSchema, parseForm, toIso, toLocalInput, type FormState } from "@/shared/lib";
-import { errMsg } from "@/shared/lib";
+import {
+  contentFieldSchema,
+  errMsg,
+  parseForm,
+  toIso,
+  toLocalInput,
+  type FormState,
+} from "@/shared/lib";
 
 import { AdminModal } from "../_components";
 
@@ -15,7 +21,7 @@ type Row = { id: number } & Record<string, unknown>;
 type FieldDef = {
   name: string;
   label: string;
-  kind: "text" | "textarea" | "number" | "select" | "date" | "datetime" | "json";
+  kind: "text" | "textarea" | "number" | "select" | "date" | "datetime" | "json" | "url";
   options?: { value: string; label: string }[];
   required?: boolean;
   jsonDefault?: unknown;
@@ -97,7 +103,7 @@ const TABS: ContentDef[] = [
           { value: "ended", label: "종료" },
         ],
       },
-      { name: "thumbnail_url", label: "썸네일 URL", kind: "text" },
+      { name: "thumbnail_url", label: "썸네일 URL", kind: "url" },
       { name: "reward_points", label: "리워드 포인트", kind: "number" },
       { name: "start_at", label: "시작일시", kind: "datetime" },
       { name: "end_at", label: "종료일시", kind: "datetime" },
@@ -147,8 +153,8 @@ const TABS: ContentDef[] = [
     fields: [
       { name: "title", label: "제목", kind: "text", required: true },
       { name: "source", label: "매체명", kind: "text" },
-      { name: "url", label: "기사 URL", kind: "text", required: true },
-      { name: "thumbnail_url", label: "썸네일 URL", kind: "text" },
+      { name: "url", label: "기사 URL", kind: "url", required: true },
+      { name: "thumbnail_url", label: "썸네일 URL", kind: "url" },
       { name: "published_at", label: "게재일", kind: "date", required: true },
     ],
   },
@@ -189,36 +195,43 @@ const ContentForm = ({
       const body: Record<string, unknown> = {};
       for (const f of def.fields) {
         const raw = parsed.data[f.name].trim();
+        let next: unknown;
         if (f.kind === "number") {
           if (raw === "") continue;
           const n = Number(raw);
           if (!Number.isFinite(n)) {
             return { error: `${f.label}을(를) 숫자로 입력해 주세요` };
           }
-          body[f.name] = n;
-          continue;
-        }
-        if (f.kind === "json") {
-          body[f.name] = raw === "" ? (f.jsonDefault ?? {}) : JSON.parse(raw);
-          continue;
-        }
-        if (f.kind === "datetime") {
+          next = n;
+        } else if (f.kind === "json") {
+          next = raw === "" ? (f.jsonDefault ?? {}) : JSON.parse(raw);
+        } else if (f.kind === "datetime") {
           if (raw === "") {
-            body[f.name] = null;
-            continue;
+            next = null;
+          } else {
+            const iso = toIso(raw);
+            if (!iso) {
+              return { error: `${f.label}의 일시 형식을 확인해 주세요` };
+            }
+            next = iso;
           }
-          const iso = toIso(raw);
-          if (!iso) {
-            return { error: `${f.label}의 일시 형식을 확인해 주세요` };
-          }
-          body[f.name] = iso;
-          continue;
+        } else if (f.kind === "date") {
+          next = raw === "" ? null : raw;
+        } else if (f.kind === "select") {
+          if (raw === "") continue;
+          next = raw;
+        } else {
+          next = raw;
         }
-        if (f.kind === "date") {
-          body[f.name] = raw === "" ? null : raw;
-          continue;
+        if (row) {
+          if (!(f.name in row)) continue;
+          if (raw === fieldDefault(f, row)) continue;
         }
-        body[f.name] = raw;
+        body[f.name] = next;
+      }
+      if (row && Object.keys(body).length === 0) {
+        onClose();
+        return null;
       }
       try {
         if (row) {
@@ -259,9 +272,10 @@ const ContentForm = ({
                 <select
                   className="input"
                   name={f.name}
-                  defaultValue={fieldDefault(f, row) || f.options?.[0]?.value}
+                  defaultValue={fieldDefault(f, row)}
                   required={f.required}
                 >
+                  {!f.required && <option value="">선택 안 함</option>}
                   {fieldDefault(f, row) !== "" &&
                     !(f.options ?? []).some((o) => o.value === fieldDefault(f, row)) && (
                       <option value={fieldDefault(f, row)}>{fieldDefault(f, row)}</option>
@@ -310,7 +324,7 @@ const ContentSection = ({ def }: { def: ContentDef }) => {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<Row | "new" | null>(null);
   const [error, setError] = useState("");
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
     queryKey: ["admin", "contents", def.key],
     queryFn: () => api.get(`/api/admin/${def.key}`),
   });
@@ -333,6 +347,19 @@ const ContentSection = ({ def }: { def: ContentDef }) => {
       {error && <p className="form-error">{error}</p>}
       {isLoading ? (
         <div className="empty">불러오는 중이에요</div>
+      ) : listError ? (
+        <div className="empty">
+          <p>{errMsg(listError)}</p>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            style={{ margin: "8px auto 0" }}
+            disabled={isFetching}
+            onClick={() => void refetch()}
+          >
+            다시 시도
+          </button>
+        </div>
       ) : rows.length === 0 ? (
         <div className="empty">등록된 {def.itemLabel}이(가) 없어요</div>
       ) : (

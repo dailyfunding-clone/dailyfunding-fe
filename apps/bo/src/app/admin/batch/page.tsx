@@ -35,6 +35,21 @@ const BatchPage = () => {
   });
 
   const pending = repay.isPending || expire.isPending || reconcile.isPending || advance.isPending;
+  const dateValid = date !== "" && !Number.isNaN(new Date(date).getTime());
+
+  const confirmRun = (label: string, run: () => void) => {
+    if (window.confirm(`${date} 기준으로 ${label}을(를) 실행할까요?`)) run();
+  };
+  const runAdvance = (next: string) => {
+    if (window.confirm(`${next} 기준으로 시간을 진행할까요?`)) advance.mutate(next);
+  };
+  const shift = (days: number) => {
+    const d = new Date(date);
+    d.setDate(d.getDate() + days);
+    const next = d.toISOString().slice(0, 10);
+    setDate(next);
+    runAdvance(next);
+  };
 
   return (
     <>
@@ -56,8 +71,8 @@ const BatchPage = () => {
           <p className="admin-card-desc">기준일의 상환 스케줄을 실행하고 연체를 전환해요</p>
           <button
             className="btn btn-primary btn-sm"
-            disabled={pending}
-            onClick={() => repay.mutate()}
+            disabled={pending || !dateValid}
+            onClick={() => confirmRun("상환 배치", () => repay.mutate())}
           >
             실행
           </button>
@@ -73,8 +88,8 @@ const BatchPage = () => {
           <p className="admin-card-desc">유효기간이 지난 포인트를 소멸해요</p>
           <button
             className="btn btn-primary btn-sm"
-            disabled={pending}
-            onClick={() => expire.mutate()}
+            disabled={pending || !dateValid}
+            onClick={() => confirmRun("포인트 소멸", () => expire.mutate())}
           >
             실행
           </button>
@@ -88,8 +103,8 @@ const BatchPage = () => {
           <p className="admin-card-desc">원장 잔액과 계정 합계를 대사해요</p>
           <button
             className="btn btn-primary btn-sm"
-            disabled={pending}
-            onClick={() => reconcile.mutate()}
+            disabled={pending || !dateValid}
+            onClick={() => confirmRun("원장 대사", () => reconcile.mutate())}
           >
             실행
           </button>
@@ -104,38 +119,22 @@ const BatchPage = () => {
           <div className="admin-actions">
             <button
               className="btn btn-primary btn-sm"
-              disabled={pending}
-              onClick={() => {
-                if (window.confirm(`${date} 기준으로 시간을 진행할까요?`)) {
-                  advance.mutate(date);
-                }
-              }}
+              disabled={pending || !dateValid}
+              onClick={() => runAdvance(date)}
             >
               날짜 진행
             </button>
             <button
               className="btn btn-outline btn-sm"
-              disabled={pending}
-              onClick={() => {
-                const d = new Date(date);
-                d.setDate(d.getDate() + 1);
-                const next = d.toISOString().slice(0, 10);
-                setDate(next);
-                advance.mutate(next);
-              }}
+              disabled={pending || !dateValid}
+              onClick={() => shift(1)}
             >
               +1일 진행
             </button>
             <button
               className="btn btn-outline btn-sm"
-              disabled={pending}
-              onClick={() => {
-                const d = new Date(date);
-                d.setDate(d.getDate() + 7);
-                const next = d.toISOString().slice(0, 10);
-                setDate(next);
-                advance.mutate(next);
-              }}
+              disabled={pending || !dateValid}
+              onClick={() => shift(7)}
             >
               +7일 진행
             </button>

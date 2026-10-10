@@ -24,12 +24,17 @@ export const adminSeedSchema = z.object({
 
 const optStr = z.string().default("");
 
+const optRate = optStr.refine(
+  (v) => v === "" || (!Number.isNaN(Number(v)) && Number(v) >= 0),
+  "금리를 숫자로 입력해 주세요",
+);
+
 export const adminLoanApproveSchema = z.object({
   name: optStr,
   type: optStr,
-  annual_rate: optStr,
+  annual_rate: optRate,
   repay_type: optStr,
-  platform_fee_rate: optStr,
+  platform_fee_rate: optRate,
   borrower_id: optStr,
 });
 
@@ -37,11 +42,14 @@ export const adminProductSchema = z.object({
   name: z.string().min(1, "상품명을 입력해 주세요"),
   product_no: z.string().default(""),
   type: z.string().min(1, "유형을 선택해 주세요"),
-  annual_rate: z.string().min(1, "연금리를 입력해 주세요"),
+  annual_rate: z
+    .string()
+    .min(1, "연금리를 입력해 주세요")
+    .refine((v) => !Number.isNaN(Number(v)) && Number(v) >= 0, "연금리를 숫자로 입력해 주세요"),
   term_months: z.coerce.number().int("기간을 확인해 주세요").positive("기간을 입력해 주세요"),
   target_amount: z.coerce.number().positive("모집금액을 입력해 주세요"),
   repay_type: optStr,
-  platform_fee_rate: optStr,
+  platform_fee_rate: optRate,
   repay_day: z.preprocess(
     (v) => (v === "" || v === null || v === undefined ? undefined : v),
     z.coerce
@@ -59,6 +67,12 @@ export const adminProductSchema = z.object({
 
 export const contentFieldSchema = (label: string, kind: string, required?: boolean) => {
   const base = required ? z.string().min(1, `${label}을(를) 입력해 주세요`) : z.string();
+  if (kind === "url") {
+    return base.refine(
+      (v) => v === "" || /^https?:\/\//.test(v),
+      `${label}은(는) http(s)로 시작하는 URL이어야 해요`,
+    );
+  }
   if (kind === "json") {
     return base.refine((v) => {
       if (v === "") return true;
