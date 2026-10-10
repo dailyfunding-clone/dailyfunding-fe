@@ -12,8 +12,10 @@ export type SessionTokens = {
 
 const SIGNED_OUT: AuthState = { status: "signedOut", accessToken: null };
 
+type StoredSession = { token: string | null } | null;
+
 let current: AuthState | null = null;
-let refreshing = false;
+let refreshPromise: Promise<StoredSession> | null = null;
 let generation = 0;
 const listeners = new Set<(state: AuthState) => void>();
 
@@ -31,21 +33,33 @@ export const subscribeSession = (listener: (state: AuthState) => void) => {
 
 export const sessionState = (): AuthState => current ?? SIGNED_OUT;
 
+export const sessionGeneration = () => generation;
+
 export const getSessionState = async (): Promise<AuthState> => {
   if (current) return current;
+  const at = generation;
   const access = await SecureStore.getItemAsync("access_token");
+  if (generation !== at) return sessionState();
   current = access ? { status: "signedIn", accessToken: access } : SIGNED_OUT;
   return current;
 };
 
-export const isRefreshingSession = () => refreshing;
+export const isRefreshingSession = () => refreshPromise !== null;
 
 export const storeSessionTokens = async (data: SessionTokens) => {
+  const at = generation;
   if (data.refresh_token) {
     await SecureStore.setItemAsync("refresh_token", data.refresh_token);
   }
   if (data.access_token) {
     await SecureStore.setItemAsync("access_token", data.access_token);
+  }
+  if (generation !== at) {
+    if (data.refresh_token) await SecureStore.deleteItemAsync("refresh_token");
+    if (data.access_token) await SecureStore.deleteItemAsync("access_token");
+    return;
+  }
+  if (data.access_token) {
     publish({ status: "signedIn", accessToken: data.access_token });
   }
 };
@@ -78,11 +92,10 @@ export const storeUserProfile = async (accessToken: string) => {
   }
 };
 
-export const validateStoredSession = async (): Promise<{ token: string } | null> => {
-  const refresh = await SecureStore.getItemAsync("refresh_token");
-  if (!refresh) return null;
+const refreshStoredSession = async (): Promise<StoredSession> => {
   const at = generation;
-  refreshing = true;
+  const refresh = await SecureStore.getItemAsync("refresh_token");
+  if (!refresh || generation !== at) return null;
   try {
     const res = await ky.post(`${WEB_BASE_URL}/api/auth/refresh`, {
       json: { refresh },
@@ -101,8 +114,13 @@ export const validateStoredSession = async (): Promise<{ token: string } | null>
     }
     return { token: data.refresh_token ?? refresh };
   } catch {
-    return generation === at ? { token: refresh } : null;
-  } finally {
-    refreshing = false;
+    return generation === at ? { token: null } : null;
   }
+};
+
+export const validateStoredSession = (): Promise<StoredSession> => {
+  refreshPromise ??= refreshStoredSession().finally(() => {
+    refreshPromise = null;
+  });
+  return refreshPromise;
 };

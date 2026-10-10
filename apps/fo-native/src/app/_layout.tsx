@@ -13,17 +13,25 @@ const RootLayout = () => {
 
   useEffect(() => {
     configureNotifications();
+    const openTarget = (data: unknown) => {
+      const target = notificationTargetPath(data);
+      if (target) {
+        router.push({
+          pathname: "/webview",
+          params: { path: target },
+        });
+      }
+    };
     let sub: { remove: () => void } | null = null;
     try {
       sub = Notifications.addNotificationResponseReceivedListener((response) => {
-        const target = notificationTargetPath(response.notification.request.content.data);
-        if (target) {
-          router.push({
-            pathname: "/webview",
-            params: { path: target },
-          });
-        }
+        openTarget(response.notification.request.content.data);
       });
+      void Notifications.getLastNotificationResponseAsync()
+        .then((response) => {
+          if (response) openTarget(response.notification.request.content.data);
+        })
+        .catch(() => {});
     } catch {
       return;
     }

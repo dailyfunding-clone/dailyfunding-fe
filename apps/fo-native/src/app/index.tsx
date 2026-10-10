@@ -8,9 +8,9 @@ import { validateStoredSession } from "@/features/auth";
 
 const GateScreen = () => {
   const navState = useRootNavigationState();
-  const [session, setSession] = useState<{ token: string } | null | undefined>(
-    undefined,
-  );
+  const [session, setSession] = useState<
+    { token: string | null } | null | undefined
+  >(undefined);
 
   const mounted = useRef(true);
 

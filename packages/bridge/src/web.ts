@@ -4,6 +4,8 @@ import type { AuthState, BridgeEnvelope, WebToNativeMessage } from "./messages";
 type AuthListener = (state: AuthState) => void | Promise<void>;
 const REQUEST_TIMEOUT_MS = 15_000;
 const HELLO_RETRY_MS = 1_000;
+const MAX_QUEUED = 200;
+const MAX_RECEIVED = 1_000;
 
 export const createWebBridge = (
   deliver: (raw: string) => void,
@@ -14,6 +16,7 @@ export const createWebBridge = (
   let sessionId: string | null = null;
   let started = false;
   let disposed = false;
+  let rejected = false;
   let retry: ReturnType<typeof setInterval> | undefined;
   let reauth: Promise<string | null> | null = null;
   let appCode: Promise<string | null> | null = null;
@@ -34,7 +37,13 @@ export const createWebBridge = (
       payload: { versions: [BRIDGE_VERSION], clientId },
     });
   const publish = async (state: AuthState) => {
-    for (const listener of listeners) await listener(state);
+    for (const listener of listeners) {
+      try {
+        await listener(state);
+      } catch (error) {
+        console.warn("bridge: auth listener failed", error);
+      }
+    }
   };
   const unlisten = listen((raw) => {
     receiving = receiving
@@ -47,15 +56,27 @@ export const createWebBridge = (
           for (const request of requests.values())
             request.reject(new Error("Unsupported bridge version"));
           queued.length = 0;
+          sessionId = null;
+          started = false;
+          rejected = true;
           return;
         }
         if (message.type === "hello.ack") {
           if (message.payload.clientId !== clientId) return;
-          await publish(message.payload.authState);
-          if (sessionId !== message.sessionId) received.clear();
+          if (sessionId !== message.sessionId) {
+            received.clear();
+            const queuedSeqs = new Set(queued.map((envelope) => envelope.seq));
+            for (const [number, request] of requests) {
+              if (!queuedSeqs.has(number)) {
+                request.reject(new Error("Bridge session changed"));
+              }
+            }
+          }
           sessionId = message.sessionId;
+          rejected = false;
           clearInterval(retry);
           queued.splice(0).forEach(emit);
+          await publish(message.payload.authState);
           return;
         }
         if (message.sessionId !== sessionId) return;
@@ -68,6 +89,12 @@ export const createWebBridge = (
           if (message.type === "auth.appCode.result")
             requests.get(message.payload.requestSeq)?.resolve(message.payload.code);
           received.add(message.seq);
+          if (received.size > MAX_RECEIVED) {
+            for (const stale of received) {
+              if (received.size <= MAX_RECEIVED / 2) break;
+              received.delete(stale);
+            }
+          }
         }
         emit({
           v: BRIDGE_VERSION,
@@ -76,7 +103,9 @@ export const createWebBridge = (
           payload: { seq: message.seq, sessionId },
         });
       })
-      .catch(() => undefined);
+      .catch((error) => {
+        console.warn("bridge: message handling failed", error);
+      });
   });
   const start = () => {
     if (started) return;
@@ -86,9 +115,11 @@ export const createWebBridge = (
   };
   const post = (message: WebToNativeMessage) => {
     if (disposed) throw new Error("Bridge disposed");
+    if (rejected) throw new Error("Unsupported bridge version");
     const envelope: BridgeEnvelope = { ...message, v: BRIDGE_VERSION, seq: ++seq };
     if (sessionId) emit(envelope);
     else {
+      if (queued.length >= MAX_QUEUED) queued.shift();
       queued.push(envelope);
       start();
     }
@@ -117,9 +148,14 @@ export const createWebBridge = (
           reject(error);
         },
       });
-      post({ type });
+      try {
+        post({ type });
+      } catch (error) {
+        finish();
+        reject(error as Error);
+      }
     });
-  return {
+  const api = {
     post,
     getAuthState: () => request("auth.getState") as Promise<AuthState>,
     subscribeAuthState: (listener: AuthListener) => {
@@ -155,8 +191,11 @@ export const createWebBridge = (
       for (const request of requests.values()) request.reject(new Error("Bridge disposed"));
       listeners.clear();
       queued.length = 0;
+      received.clear();
+      if (client === api) client = undefined;
     },
   };
+  return api;
 };
 
 type ReactNativeWebViewHost = { ReactNativeWebView?: { postMessage: (data: string) => void } };

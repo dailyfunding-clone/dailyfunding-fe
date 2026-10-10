@@ -1,6 +1,8 @@
 import { BRIDGE_VERSION, parseBridgeMessage } from "./messages";
 import type { AuthState, NativeEnvelope, NativeToWebMessage } from "./messages";
 
+const MAX_PENDING = 200;
+
 export const createNativeChannel = (
   deliver: (message: NativeEnvelope) => void,
   sessionId: string,
@@ -21,6 +23,10 @@ export const createNativeChannel = (
   };
   const send = (message: NativeToWebMessage) => {
     const next = envelope(message, ++seq);
+    if (pending.size >= MAX_PENDING) {
+      const oldest = pending.keys().next().value;
+      if (oldest !== undefined) pending.delete(oldest);
+    }
     pending.set(next.seq, next);
     if (connected) deliver(next);
   };
@@ -31,6 +37,9 @@ export const createNativeChannel = (
         pending.set(number, { ...message, payload: { ...message.payload, authState: state } });
       if (state.status === "signedOut" && message.type === "auth.reauth.result") {
         pending.set(number, { ...message, payload: { ...message.payload, token: null } });
+      }
+      if (state.status === "signedOut" && message.type === "auth.appCode.result") {
+        pending.set(number, { ...message, payload: { ...message.payload, code: null } });
       }
     }
     send({ type: "auth.changed", payload: state });

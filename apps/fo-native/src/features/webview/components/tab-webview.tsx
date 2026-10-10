@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import { ActivityIndicator, BackHandler, Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { subscribeSession } from "@/features/auth";
+
 import { createBridgeChannel, handleBridgeMessage, releaseBridgeChannel } from "../bridge";
 import { webViewPool } from "../pool";
 import AppWebView from "./app-webview";
@@ -43,6 +45,24 @@ const TabWebView = ({ path }: Props) => {
   useEffect(() => {
     if (isFocused) webViewPool.touch(poolKey);
   }, [isFocused, poolKey]);
+
+  const [wasPooled, setWasPooled] = useState(pooled);
+  if (wasPooled !== pooled) {
+    setWasPooled(pooled);
+    setReady(false);
+  }
+
+  useEffect(() => {
+    if (!pooled) return;
+    mounted.current = true;
+    canGoBackRef.current = false;
+  }, [pooled]);
+
+  useEffect(() => {
+    return subscribeSession((state) => {
+      if (state.status === "signedOut") webViewPool.clearScroll(poolKey);
+    });
+  }, [poolKey]);
 
   const goBack = useCallback(() => {
     webViewRef.current?.goBack();

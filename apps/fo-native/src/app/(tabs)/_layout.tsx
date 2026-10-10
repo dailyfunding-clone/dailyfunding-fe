@@ -2,11 +2,19 @@ import { tokens } from "@dailyfunding/design-system";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { useEffect } from "react";
 
-import { registerPushToken } from "@/shared";
+import { subscribeSession } from "@/features/auth";
+import { registerPushToken, unregisterPushToken } from "@/shared";
 
 const TabsLayout = () => {
   useEffect(() => {
     void registerPushToken();
+    return subscribeSession((state) => {
+      if (state.status === "signedIn") {
+        void registerPushToken();
+      } else {
+        void unregisterPushToken();
+      }
+    });
   }, []);
 
   return (

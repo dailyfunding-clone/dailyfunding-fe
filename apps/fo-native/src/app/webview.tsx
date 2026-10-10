@@ -32,7 +32,6 @@ const WebViewScreen = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [channel, setChannel] = useState<NativeChannel | null>(null);
   const [ready, setReady] = useState(false);
-  const currentTitle = useRef<string | undefined>(title);
 
   useEffect(() => {
     const created = createBridgeChannel(webViewRef, `webview-${Date.now()}-${Math.random()}`);
@@ -76,7 +75,6 @@ const WebViewScreen = () => {
       channel,
       goBack,
       setTitle: (t) => {
-        currentTitle.current = t;
         navigation.setOptions({ title: t });
       },
       onReady: () => setReady(true),
@@ -92,8 +90,8 @@ const WebViewScreen = () => {
         onLoadEnd={() => setReady(true)}
         onNavigationStateChange={(navState) => {
           setCanGoBack(navState.canGoBack);
+          navigation.setOptions({ gestureEnabled: !navState.canGoBack });
           if (!title && navState.title) {
-            currentTitle.current = navState.title;
             navigation.setOptions({ title: navState.title });
           }
         }}

@@ -20,6 +20,21 @@ import {
 } from "@/features/auth";
 import { WEB_BASE_URL } from "@/shared";
 
+const MAX_ATTEMPTS = 5;
+const BLOCK_MS = 30_000;
+
+const pinPost = async (path: string, pin: string, access: string | null) => {
+  try {
+    return await ky.post(`${WEB_BASE_URL}${path}`, {
+      json: { pin },
+      headers: access ? { Authorization: `Bearer ${access}` } : undefined,
+      throwHttpErrors: false,
+    });
+  } catch {
+    return null;
+  }
+};
+
 const PinScreen = () => {
   const router = useRouter();
   const navigation = useNavigation();
@@ -34,6 +49,8 @@ const PinScreen = () => {
   const unlocked = useRef(false);
   const bioTried = useRef(false);
   const bioLinkPending = useRef(false);
+  const fails = useRef(0);
+  const blockedUntil = useRef(0);
 
   useEffect(() => {
     pinGate.setOpen(true);
@@ -57,6 +74,7 @@ const PinScreen = () => {
 
   useEffect(() => {
     const sub = navigation.addListener("beforeRemove", (e) => {
+      if (e.data.action.type === "DISMISS") return;
       if (!unlocked.current) e.preventDefault();
     });
     return sub;
@@ -83,70 +101,93 @@ const PinScreen = () => {
 
   const verify = useCallback(
     async (pin: string) => {
-      const access = await SecureStore.getItemAsync("access_token");
-      const res = await ky.post(`${WEB_BASE_URL}/api/auth/reauth`, {
-        json: { pin },
-        headers: access ? { Authorization: `Bearer ${access}` } : undefined,
-        throwHttpErrors: false,
-      });
-      if (res.ok) {
-        const data = (await res.json()) as {
-          reauth_token?: string;
-          expires_in?: number;
-        };
-        if (data.reauth_token) {
-          cacheReauth(data.reauth_token, data.expires_in ?? 300);
-        }
-        if (bioLinkPending.current) {
-          bioLinkPending.current = false;
-          void enableBiometric(pin);
-        } else {
-          void offerBiometric(pin);
-        }
-        done();
+      if (Date.now() < blockedUntil.current) {
+        setError("잠시 후 다시 시도해 주세요");
+        setValue("");
         return;
       }
-      setError(
-        res.status === 401
-          ? "간편비밀번호가 맞지 않아요"
-          : "잠시 후 다시 시도해 주세요",
-      );
-      setValue("");
-    },
-    [done, offerBiometric],
-  );
-
-  const register = useCallback(
-    async (pin: string) => {
-      const access = await SecureStore.getItemAsync("access_token");
-      const res = await ky.post(`${WEB_BASE_URL}/api/auth/pin`, {
-        json: { pin },
-        headers: access ? { Authorization: `Bearer ${access}` } : undefined,
-        throwHttpErrors: false,
-      });
-      if (res.ok) {
-        await SecureStore.setItemAsync("pin_registered", "true");
-        const ra = await ky.post(`${WEB_BASE_URL}/api/auth/reauth`, {
-          json: { pin },
-          headers: access ? { Authorization: `Bearer ${access}` } : undefined,
-          throwHttpErrors: false,
-        });
-        if (ra.ok) {
-          const data = (await ra.json()) as {
+      try {
+        const access = await SecureStore.getItemAsync("access_token");
+        if (!access) {
+          setError("로그인 세션이 만료됐어요. 다시 로그인해 주세요");
+          setValue("");
+          return;
+        }
+        const res = await pinPost("/api/auth/reauth", pin, access);
+        if (res?.ok) {
+          const data = (await res.json()) as {
             reauth_token?: string;
             expires_in?: number;
           };
           if (data.reauth_token) {
             cacheReauth(data.reauth_token, data.expires_in ?? 300);
           }
+          fails.current = 0;
+          if (bioLinkPending.current) {
+            bioLinkPending.current = false;
+            void enableBiometric(pin);
+          } else {
+            void offerBiometric(pin);
+          }
+          done();
+          return;
         }
-        void offerBiometric(pin);
-        done();
-        return;
+        fails.current += 1;
+        if (fails.current >= MAX_ATTEMPTS) {
+          fails.current = 0;
+          blockedUntil.current = Date.now() + BLOCK_MS;
+          setError("너무 많이 틀렸어요. 잠시 후 다시 시도해 주세요");
+        } else {
+          setError(
+            res === null
+              ? "네트워크 상태를 확인해 주세요"
+              : res.status === 401
+                ? "간편비밀번호가 맞지 않아요"
+                : "잠시 후 다시 시도해 주세요",
+          );
+        }
+        setValue("");
+      } catch {
+        setError("잠시 후 다시 시도해 주세요");
+        setValue("");
       }
-      setError("등록에 실패했어요. 다시 시도해 주세요");
-      setFirst("");
-      setValue("");
+    },
+    [done, offerBiometric],
+  );
+
+  const register = useCallback(
+    async (pin: string) => {
+      try {
+        const access = await SecureStore.getItemAsync("access_token");
+        const res = await pinPost("/api/auth/pin", pin, access);
+        if (res?.ok) {
+          await SecureStore.setItemAsync("pin_registered", "true");
+          const ra = await pinPost("/api/auth/reauth", pin, access);
+          if (ra?.ok) {
+            const data = (await ra.json()) as {
+              reauth_token?: string;
+              expires_in?: number;
+            };
+            if (data.reauth_token) {
+              cacheReauth(data.reauth_token, data.expires_in ?? 300);
+            }
+          }
+          void offerBiometric(pin);
+          done();
+          return;
+        }
+        setError(
+          res === null
+            ? "네트워크 상태를 확인해 주세요"
+            : "등록에 실패했어요. 다시 시도해 주세요",
+        );
+        setFirst("");
+        setValue("");
+      } catch {
+        setError("등록에 실패했어요. 다시 시도해 주세요");
+        setFirst("");
+        setValue("");
+      }
     },
     [done, offerBiometric],
   );
@@ -214,7 +255,7 @@ const PinScreen = () => {
         </Text>
         {!!error && <Text style={styles.error}>{error}</Text>}
         {!!notice && <Text style={styles.notice}>{notice}</Text>}
-        <PinKeypad value={value} onChange={onChange} />
+        <PinKeypad value={value} onChange={onChange} disabled={registered === null} />
         {registered === true && bioUsable && (
           <Pressable
             style={styles.forgot}

@@ -22,18 +22,22 @@ export const webViewPool = {
   touch: (key: string) => {
     entries.delete(key);
     entries.set(key, Date.now());
+    while (entries.size > POOL_LIMIT) {
+      const oldest = entries.keys().next().value;
+      if (oldest === undefined) break;
+      entries.delete(oldest);
+    }
     notify();
   },
   release: (key: string) => {
     if (entries.delete(key)) notify();
   },
-  mounted: (key: string) => {
-    const keys = [...entries.keys()];
-    const index = keys.indexOf(key);
-    return index >= 0 && index >= keys.length - POOL_LIMIT;
-  },
+  mounted: (key: string) => entries.has(key),
   saveScroll: (key: string, y: number) => {
     scrollSnapshots.set(key, y);
   },
   snapshot: (key: string) => scrollSnapshots.get(key) ?? 0,
+  clearScroll: (key: string) => {
+    scrollSnapshots.delete(key);
+  },
 };

@@ -8,6 +8,7 @@ import {
   clearSession,
   getSessionState,
   pinGate,
+  sessionGeneration,
   sessionState,
   storeSessionTokens,
   storeUserProfile,
@@ -40,6 +41,7 @@ const wireSessionBroadcast = () => {
   if (sessionBroadcastWired) return;
   sessionBroadcastWired = true;
   subscribeSession((state) => {
+    if (state.status === "signedOut") finishReauth(null);
     for (const channel of channels) channel.updateAuth(state);
   });
 };
@@ -61,67 +63,116 @@ export const releaseBridgeChannel = (channel: NativeChannel) => {
 };
 
 const exchangeAuthCode = async (code: string, next: string | undefined, router: Router) => {
-  const res = await ky.post(`${WEB_BASE_URL}/api/auth/app-code/exchange`, {
-    json: { code },
-    throwHttpErrors: false,
-  });
-  if (!res.ok) return;
-  const data = (await res.json()) as {
-    refresh_token?: string;
-    access_token?: string;
-  };
-  if (!data.refresh_token) return;
-  await storeSessionTokens(data);
-  if (data.access_token) {
-    await storeUserProfile(data.access_token);
-  }
-  router.dismissAll();
-  router.replace("/(tabs)");
-  if (next) {
-    InteractionManager.runAfterInteractions(() => router.push(next as Href));
+  const at = sessionGeneration();
+  try {
+    const res = await ky.post(`${WEB_BASE_URL}/api/auth/app-code/exchange`, {
+      json: { code },
+      throwHttpErrors: false,
+    });
+    if (!res.ok) return;
+    const data = (await res.json()) as {
+      refresh_token?: string;
+      access_token?: string;
+    };
+    if (!data.refresh_token) return;
+    await storeSessionTokens(data);
+    if (sessionGeneration() !== at) return;
+    if (data.access_token) {
+      await storeUserProfile(data.access_token);
+    }
+    if (sessionGeneration() !== at) return;
+    router.dismissAll();
+    router.replace("/(tabs)");
+    if (next) {
+      InteractionManager.runAfterInteractions(() => router.push(next as Href));
+    }
+  } catch {
+    return;
   }
 };
 
 const signOut = async (router: Router) => {
-  await clearSession();
-  router.dismissAll();
-  router.replace("/auth");
+  try {
+    await clearSession();
+  } finally {
+    router.dismissAll();
+    router.replace("/auth");
+  }
 };
 
 const issueWebSessionCode = async (channel: NativeChannel, requestSeq: number) => {
+  const at = sessionGeneration();
   let code: string | null = null;
-  const state = await getSessionState();
-  if (state.status === "signedIn") {
-    const res = await ky
-      .post(`${WEB_BASE_URL}/api/auth/app-code`, {
-        headers: { Authorization: `Bearer ${state.accessToken}` },
-        throwHttpErrors: false,
-      })
-      .catch(() => null);
-    if (res?.ok) {
-      code = ((await res.json()) as { code?: string }).code ?? null;
+  try {
+    const state = await getSessionState();
+    if (state.status === "signedIn" && sessionGeneration() === at) {
+      const res = await ky
+        .post(`${WEB_BASE_URL}/api/auth/app-code`, {
+          headers: { Authorization: `Bearer ${state.accessToken}` },
+          throwHttpErrors: false,
+        })
+        .catch(() => null);
+      if (res?.ok) {
+        code = ((await res.json()) as { code?: string }).code ?? null;
+      }
     }
+  } catch {
+    code = null;
   }
   channel.send({
     type: "auth.appCode.result",
-    payload: { requestSeq, code },
+    payload: { requestSeq, code: sessionGeneration() === at ? code : null },
   });
 };
 
-const reauthWaiters: { channel: NativeChannel; requestSeq: number }[] = [];
+const REAUTH_WAITER_TTL_MS = 60_000;
+const MAX_REAUTH_WAITERS = 50;
+
+type ReauthWaiter = {
+  channel: NativeChannel;
+  requestSeq: number;
+  at: number;
+  expiresAt: number;
+};
+
+const reauthWaiters: ReauthWaiter[] = [];
 let reauthInFlight = false;
+
+const sendReauthResult = (waiter: ReauthWaiter, token: string | null) => {
+  waiter.channel.send({
+    type: "auth.reauth.result",
+    payload: { requestSeq: waiter.requestSeq, token },
+  });
+};
 
 const finishReauth = (token: string | null) => {
   for (const waiter of reauthWaiters.splice(0)) {
-    waiter.channel.send({
-      type: "auth.reauth.result",
-      payload: { requestSeq: waiter.requestSeq, token },
-    });
+    sendReauthResult(waiter, sessionGeneration() === waiter.at ? token : null);
   }
 };
 
+const pushReauthWaiter = (channel: NativeChannel, requestSeq: number) => {
+  const now = Date.now();
+  for (let i = reauthWaiters.length - 1; i >= 0; i--) {
+    if (reauthWaiters[i].expiresAt <= now) {
+      sendReauthResult(reauthWaiters[i], null);
+      reauthWaiters.splice(i, 1);
+    }
+  }
+  if (reauthWaiters.length >= MAX_REAUTH_WAITERS) {
+    const oldest = reauthWaiters.shift();
+    if (oldest) sendReauthResult(oldest, null);
+  }
+  reauthWaiters.push({
+    channel,
+    requestSeq,
+    at: sessionGeneration(),
+    expiresAt: now + REAUTH_WAITER_TTL_MS,
+  });
+};
+
 const handleReauth = (channel: NativeChannel, requestSeq: number, router: Router) => {
-  reauthWaiters.push({ channel, requestSeq });
+  pushReauthWaiter(channel, requestSeq);
   if (reauthInFlight) return;
   reauthInFlight = true;
   void (async () => {
@@ -139,6 +190,8 @@ const handleReauth = (channel: NativeChannel, requestSeq: number, router: Router
       }
       router.push("/auth/pin-reauth");
       finishReauth(await beginReauth());
+    } catch {
+      finishReauth(null);
     } finally {
       reauthInFlight = false;
     }

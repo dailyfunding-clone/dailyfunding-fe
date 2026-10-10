@@ -88,6 +88,21 @@ describe("bridge v2", () => {
     expect(sent).toEqual([]);
   });
 
+  it("scrubs buffered app codes on signout", () => {
+    const sent: any[] = [];
+    const channel = createNativeChannel((m) => sent.push(m), "session-1");
+    channel.send({
+      type: "auth.appCode.result",
+      payload: { requestSeq: 7, code: "secret-code" },
+    });
+    channel.updateAuth(signedOut);
+    channel.receive(JSON.stringify(hello()), signedOut);
+    expect(JSON.stringify(sent)).not.toContain("secret-code");
+    expect(sent.some((m) => m.type === "auth.appCode.result" && m.payload.code === null)).toBe(
+      true,
+    );
+  });
+
   it("replaces buffered credentials on signout before replaying every WebView", () => {
     for (let tab = 0; tab < 3; tab++) {
       const sent: any[] = [];

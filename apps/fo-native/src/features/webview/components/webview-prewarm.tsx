@@ -20,6 +20,10 @@ const WebViewPrewarm = () => {
     return () => releaseBridgeChannel(created);
   }, []);
 
+  useEffect(() => {
+    if (warmed && channel) releaseBridgeChannel(channel);
+  }, [warmed, channel]);
+
   if (warmed) return null;
 
   return (

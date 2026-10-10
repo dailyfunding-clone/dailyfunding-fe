@@ -15,35 +15,67 @@ import {
 } from "@/features/auth";
 import { WEB_BASE_URL } from "@/shared";
 
+const MAX_ATTEMPTS = 5;
+const BLOCK_MS = 30_000;
+
 const PinReauthScreen = () => {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
   const [bioLabel, setBioLabel] = useState("");
   const bioTried = useRef(false);
+  const fails = useRef(0);
+  const blockedUntil = useRef(0);
 
   useEffect(() => () => resolveReauth(null), []);
 
   const submit = useCallback(
     async (pin: string) => {
-      const access = await SecureStore.getItemAsync("access_token");
-      const res = await ky.post(`${WEB_BASE_URL}/api/auth/reauth`, {
-        json: { pin },
-        headers: access ? { Authorization: `Bearer ${access}` } : undefined,
-        throwHttpErrors: false,
-      });
-      if (res.ok) {
-        const data = (await res.json()) as { reauth_token?: string };
-        resolveReauth(data.reauth_token ?? null);
-        router.back();
+      if (Date.now() < blockedUntil.current) {
+        setError("잠시 후 다시 시도해 주세요");
+        setValue("");
         return;
       }
-      setError(
-        res.status === 401
-          ? "간편비밀번호가 맞지 않아요"
-          : "잠시 후 다시 시도해 주세요",
-      );
-      setValue("");
+      try {
+        const access = await SecureStore.getItemAsync("access_token");
+        if (!access) {
+          setError("로그인 세션이 만료됐어요. 다시 로그인해 주세요");
+          setValue("");
+          return;
+        }
+        const res = await ky
+          .post(`${WEB_BASE_URL}/api/auth/reauth`, {
+            json: { pin },
+            headers: { Authorization: `Bearer ${access}` },
+            throwHttpErrors: false,
+          })
+          .catch(() => null);
+        if (res?.ok) {
+          const data = (await res.json()) as { reauth_token?: string };
+          fails.current = 0;
+          resolveReauth(data.reauth_token ?? null);
+          router.back();
+          return;
+        }
+        fails.current += 1;
+        if (fails.current >= MAX_ATTEMPTS) {
+          fails.current = 0;
+          blockedUntil.current = Date.now() + BLOCK_MS;
+          setError("너무 많이 틀렸어요. 잠시 후 다시 시도해 주세요");
+        } else {
+          setError(
+            res === null
+              ? "네트워크 상태를 확인해 주세요"
+              : res.status === 401
+                ? "간편비밀번호가 맞지 않아요"
+                : "잠시 후 다시 시도해 주세요",
+          );
+        }
+        setValue("");
+      } catch {
+        setError("잠시 후 다시 시도해 주세요");
+        setValue("");
+      }
     },
     [router],
   );

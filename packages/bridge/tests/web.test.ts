@@ -138,7 +138,100 @@ it("shares in-flight appCode requests and resolves with the issued code", async 
   client.dispose();
 });
 
-it("integrates real channels across a reload and does not acknowledge failed consumers", async () => {
+it("rejects in-flight requests when the session changes", async () => {
+  const outbound: any[] = [];
+  let receive = (_raw: string) => {};
+  const client = createWebBridge(
+    (raw) => outbound.push(JSON.parse(raw)),
+    (listener) => {
+      receive = listener;
+      return () => {};
+    },
+  );
+  const state = { status: "signedOut", accessToken: null } as const;
+  client.subscribeAuthState(() => {});
+  const hello = outbound.find((m) => m.type === "hello");
+  const ack = (sessionId: string) =>
+    JSON.stringify({
+      v: 2,
+      seq: 0,
+      sessionId,
+      type: "hello.ack",
+      payload: { version: 2, sessionId, clientId: hello.payload.clientId, authState: state },
+    });
+  receive(ack("s1"));
+  const pending = client.getAuthState();
+  const assertion = expect(pending).rejects.toThrow("Bridge session changed");
+  await vi.waitFor(() => expect(outbound.some((m) => m.type === "auth.getState")).toBe(true));
+  receive(ack("s2"));
+  await assertion;
+  client.dispose();
+});
+
+it("rejects new requests fast after hello.reject", async () => {
+  vi.useFakeTimers();
+  const outbound: any[] = [];
+  let receive = (_raw: string) => {};
+  const client = createWebBridge(
+    (raw) => outbound.push(JSON.parse(raw)),
+    (listener) => {
+      receive = listener;
+      return () => {};
+    },
+  );
+  client.subscribeAuthState(() => {});
+  receive(
+    JSON.stringify({
+      v: 2,
+      seq: 0,
+      sessionId: "s",
+      type: "hello.reject",
+      payload: { versions: [1] },
+    }),
+  );
+  const pending = client.getAuthState();
+  const assertion = expect(pending).rejects.toThrow("Unsupported bridge version");
+  await vi.advanceTimersByTimeAsync(0);
+  await assertion;
+  client.dispose();
+  vi.useRealTimers();
+});
+
+it("still flushes the queue when an auth listener throws during hello.ack", async () => {
+  const outbound: any[] = [];
+  let receive = (_raw: string) => {};
+  const client = createWebBridge(
+    (raw) => outbound.push(JSON.parse(raw)),
+    (listener) => {
+      receive = listener;
+      return () => {};
+    },
+  );
+  const state = { status: "signedIn", accessToken: "a" } as const;
+  const observed: unknown[] = [];
+  client.subscribeAuthState(() => {
+    throw new Error("bad listener");
+  });
+  client.subscribeAuthState((next) => {
+    observed.push(next);
+  });
+  client.post({ type: "app.ready" });
+  const hello = outbound.find((m) => m.type === "hello");
+  receive(
+    JSON.stringify({
+      v: 2,
+      seq: 0,
+      sessionId: "s",
+      type: "hello.ack",
+      payload: { version: 2, sessionId: "s", clientId: hello.payload.clientId, authState: state },
+    }),
+  );
+  await vi.waitFor(() => expect(outbound.some((m) => m.type === "app.ready")).toBe(true));
+  await vi.waitFor(() => expect(observed).toEqual([state]));
+  client.dispose();
+});
+
+it("integrates real channels across a reload and isolates failed consumers", async () => {
   let receive = (_raw: string) => {};
   const state = { status: "signedOut", accessToken: null } as const;
   const native = createNativeChannel((message) => receive(JSON.stringify(message)), "s");
@@ -168,6 +261,6 @@ it("integrates real channels across a reload and does not acknowledge failed con
     observed.push(next);
   });
   second.post({ type: "app.ready" });
-  await vi.waitFor(() => expect(observed).toEqual([state, state]));
+  await vi.waitFor(() => expect(observed).toEqual([state]));
   second.dispose();
 });
