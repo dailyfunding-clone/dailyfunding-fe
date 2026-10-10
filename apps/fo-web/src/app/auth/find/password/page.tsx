@@ -27,8 +27,9 @@ const FindPasswordPage = () => {
 const FindPasswordInner = () => {
   const nav = useAppNavigate();
   const params = useSearchParams();
-  const [token, setToken] = useState(params.get("token") ?? "");
+  const token = params.get("token") ?? "";
   const [done, setDone] = useState(false);
+  const [requested, setRequested] = useState(false);
 
   const [requestState, requestAction, requestPending] = useActionState<
     FormState,
@@ -42,17 +43,12 @@ const FindPasswordInner = () => {
           throwHttpErrors: false,
         });
       const body = (await res.json().catch(() => null)) as {
-        dev_token?: string;
         message?: string;
       } | null;
       if (!res.ok) {
         return { error: body?.message ?? "재설정 요청에 실패했어요" };
       }
-      if (body?.dev_token) {
-        setToken(body.dev_token);
-      } else {
-        setDone(true);
-      }
+      setRequested(true);
       return null;
     } catch {
       return { error: "잠시 후 다시 시도해 주세요" };
@@ -100,6 +96,24 @@ const FindPasswordInner = () => {
         <div className="auth-links">
           <button type="button" onClick={() => nav.replace("/auth/signin", "로그인")}>
             로그인하기
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (requested && !token) {
+    return (
+      <div className="auth-page">
+        <header className="auth-header">
+          <h1>비밀번호 재설정</h1>
+        </header>
+        <div className="card">
+          <p>재설정 링크를 이메일로 보냈어요. 메일을 확인해 주세요.</p>
+        </div>
+        <div className="auth-links">
+          <button type="button" onClick={() => nav.replace("/auth/signin", "로그인")}>
+            로그인으로 돌아가기
           </button>
         </div>
       </div>

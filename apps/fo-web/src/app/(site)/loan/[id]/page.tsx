@@ -5,7 +5,7 @@ import { fetchJson } from "@/entities/content/index.server";
 import { fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
 
-import { CATEGORY_LABEL, faqOf, textOf } from "../types";
+import { CATEGORY_LABEL, faqOf, rateText, textOf } from "../types";
 
 import type { LoanDetail } from "../types";
 import type { Metadata } from "next";
@@ -45,9 +45,7 @@ const LoanDetailContent = async ({ params }: { params: Promise<{ id: string }> }
         <h1>{loan.name}</h1>
         <p>{loan.summary || loan.target}</p>
         <div className="loan-hero-rate">
-          <strong>
-            연 {loan.rate_range[0]}~{loan.rate_range[1]}%
-          </strong>
+          <strong>{rateText(loan.rate_range)}</strong>
           <span>최대 {fmtMan(loan.max_limit)}</span>
         </div>
         <div className="loan-cta">
@@ -97,9 +95,7 @@ const LoanDetailContent = async ({ params }: { params: Promise<{ id: string }> }
             </tr>
             <tr>
               <th>금리</th>
-              <td>
-                연 {loan.rate_range[0]}~{loan.rate_range[1]}%
-              </td>
+              <td>{rateText(loan.rate_range)}</td>
             </tr>
             <tr>
               <th>기간</th>

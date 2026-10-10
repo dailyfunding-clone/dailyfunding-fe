@@ -5,6 +5,7 @@ import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
 import ApplyForm from "./apply-form";
+import { rateText } from "../../types";
 
 import type { LoanProduct } from "../../types";
 import type { Metadata } from "next";
@@ -25,7 +26,7 @@ const LoanApplyContent = async ({
     <main className="container apply-shell">
       <h1 className="page-title">대출 신청</h1>
       <p className="loan-sub">
-        {loan.name} · 연 {loan.rate_range[0]}~{loan.rate_range[1]}% ·{" "}
+        {loan.name} · {rateText(loan.rate_range)} ·{" "}
         <AppLink href={`/loan/${loan.id}`}>상품 상세 보기</AppLink>
       </p>
       <ApplyForm />

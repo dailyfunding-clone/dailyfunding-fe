@@ -35,11 +35,11 @@ const ReauthProvider = ({ title, description, children }: Props) => {
   const inApp = isInWebView();
   const [token, setToken] = useState<string | null>(null);
   const [webOpen, setWebOpen] = useState(false);
-  const resolver = useRef<((t: string | null) => void) | null>(null);
+  const resolvers = useRef<Set<(t: string | null) => void>>(new Set());
 
   const settle = useCallback((t: string | null) => {
-    resolver.current?.(t);
-    resolver.current = null;
+    for (const resolve of resolvers.current) resolve(t);
+    resolvers.current.clear();
     if (t) setToken(t);
     setWebOpen(false);
   }, []);
@@ -53,7 +53,7 @@ const ReauthProvider = ({ title, description, children }: Props) => {
         return t;
       }
       return new Promise<string | null>((resolve) => {
-        resolver.current = resolve;
+        resolvers.current.add(resolve);
         setWebOpen(true);
       });
     },

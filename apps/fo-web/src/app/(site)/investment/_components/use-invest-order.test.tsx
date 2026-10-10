@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ApiRequestError, api } from "@/shared/api";
 
+import { ATTEMPT_STALE_MS, claimAttempt } from "./lib/order-attempt-store";
 import { useInvestOrder } from "./use-invest-order";
 
 import type { ReactNode } from "react";
@@ -172,6 +173,87 @@ describe("useInvestOrder", () => {
         ([method, url]) => method === "get" && url === "/api/investments/42",
       ).length,
     ).toBeGreaterThanOrEqual(2);
+  });
+
+  it("posts once when a second hook resubmits while the owner's post is pending", async () => {
+    const submitted = Promise.withResolvers<typeof orderResult>();
+    const request = vi
+      .spyOn(api, "request")
+      .mockImplementation(async (method) => (method === "post" ? submitted.promise : orderResult));
+    const first = setup();
+    const second = setup();
+    let followed: Promise<void>;
+    act(() => {
+      void first.result.current.submit(input);
+    });
+    await waitFor(() => expect(request).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      followed = second.result.current.submit(input);
+    });
+    expect(request.mock.calls.filter(([method]) => method === "post")).toHaveLength(1);
+    await act(async () => {
+      submitted.resolve(orderResult);
+      await followed;
+    });
+    await waitFor(() => expect(second.result.current.state.status).toBe("done"));
+    expect(request.mock.calls.filter(([method]) => method === "post")).toHaveLength(1);
+  });
+
+  it("treats a 5xx submit failure as ambiguous and recoverable", async () => {
+    const request = vi.spyOn(api, "request").mockRejectedValue(
+      new ApiRequestError({ status: 500, code: "INTERNAL", details: {} }),
+    );
+    const { result } = setup();
+    await act(() => result.current.submit(input));
+    expect(result.current.state).toMatchObject({ status: "failed", recoverable: true });
+    const posts = request.mock.calls.filter(([method]) => method === "post");
+    expect(posts).toHaveLength(2);
+    expect(posts[1][3]?.idempotencyKey).toBe(posts[0][3]?.idempotencyKey);
+  });
+
+  it("keeps a failed confirm ambiguous and resumes without reposting", async () => {
+    const request = vi
+      .spyOn(api, "request")
+      .mockResolvedValueOnce(orderResult)
+      .mockRejectedValueOnce(new ApiRequestError({ status: 500, code: "INTERNAL", details: {} }));
+    const { result } = setup();
+    await act(() => result.current.submit(input));
+    expect(result.current.state).toMatchObject({ status: "failed", recoverable: true });
+    request.mockResolvedValue(orderResult);
+    await act(() => result.current.submit(input));
+    expect(result.current.state.status).toBe("done");
+    expect(request.mock.calls.filter(([method]) => method === "post")).toHaveLength(1);
+  });
+
+  it("treats a 404 confirm as a definitive failure", async () => {
+    const request = vi
+      .spyOn(api, "request")
+      .mockResolvedValueOnce(orderResult)
+      .mockRejectedValueOnce(new ApiRequestError({ status: 404, code: "NOT_FOUND", details: {} }));
+    const { result } = setup();
+    await act(() => result.current.submit(input));
+    expect(result.current.state).toMatchObject({ status: "failed", recoverable: false });
+    expect(request).toHaveBeenCalledTimes(2);
+  });
+
+  it("adopts an abandoned attempt past its staleness window", async () => {
+    await claimAttempt("1:7", {
+      tabId: "dead-tab",
+      idempotencyKey: "stale-key",
+      input: { product_id: 7, amount: 100000, use_points: 0, confirm: "네" },
+      phase: "open",
+    });
+    vi.spyOn(Date, "now").mockReturnValue(Date.now() + ATTEMPT_STALE_MS + 1_000);
+    const request = vi.spyOn(api, "request").mockResolvedValue(orderResult);
+    const { result } = setup();
+    await waitFor(() =>
+      expect(result.current.state).toMatchObject({ status: "failed", recoverable: true }),
+    );
+    await act(() => result.current.submit(input));
+    const posts = request.mock.calls.filter(([method]) => method === "post");
+    expect(posts).toHaveLength(1);
+    expect(posts[0][3]?.idempotencyKey).toBe("stale-key");
+    expect(result.current.state.status).toBe("done");
   });
 
   it("confirmation failure never posts the confirmed order again", async () => {

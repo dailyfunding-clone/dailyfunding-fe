@@ -16,6 +16,7 @@ const DepositWithdraw = () => {
   const reauth = useReauth();
   const queryClient = useQueryClient();
   const [all, setAll] = useState(false);
+  const [key, setKey] = useState(idempotencyKey);
   const [result, setResult] = useState<{ fee: number; status: string } | null>(
     null,
   );
@@ -38,10 +39,11 @@ const DepositWithdraw = () => {
             "post",
             "/api/deposit/withdraw",
             body,
-            { idempotencyKey: idempotencyKey(), reauthToken: token },
+            { idempotencyKey: key, reauthToken: token },
           );
           setResult(res);
-          queryClient.invalidateQueries({ queryKey: ["deposit-account"] });
+          setKey(idempotencyKey());
+          queryClient.invalidateQueries({ queryKey: ["deposit", "account"] });
           queryClient.invalidateQueries({ queryKey: ["deposit-history"] });
           queryClient.invalidateQueries({ queryKey: ["me-dashboard"] });
           return null;

@@ -21,9 +21,16 @@ export type ClaimResult =
 const DB_NAME = "df-invest-orders";
 const STORE = "attempts";
 
+export const ATTEMPT_STALE_MS = 120_000;
+
 const mem = new Map<string, OrderAttempt>();
 
 const isActive = (a: OrderAttempt) => a.phase === "open" || a.phase === "confirming";
+
+const isStale = (a: OrderAttempt) => Date.now() - a.updatedAt > ATTEMPT_STALE_MS;
+
+const prior = (a: OrderAttempt | undefined): OrderAttempt | undefined =>
+  a && isActive(a) ? { ...a, phase: "ambiguous" } : a;
 
 const merge = (existing: OrderAttempt | undefined, claim: OrderAttempt): OrderAttempt =>
   existing?.phase === "ambiguous"
@@ -50,7 +57,11 @@ let dbCache: { factory: IDBFactory; db: Promise<IDBDatabase> } | null = null;
 const db = () => {
   if (typeof indexedDB === "undefined") return null;
   if (!dbCache || dbCache.factory !== indexedDB) {
-    dbCache = { factory: indexedDB, db: openDb(indexedDB) };
+    const opened = openDb(indexedDB);
+    dbCache = { factory: indexedDB, db: opened };
+    opened.catch(() => {
+      if (dbCache?.db === opened) dbCache = null;
+    });
   }
   return dbCache.db;
 };
@@ -76,21 +87,21 @@ export const claimAttempt = async (
   const d = await db();
   if (!d) {
     const existing = mem.get(key);
-    if (existing && isActive(existing) && existing.tabId !== claim.tabId) {
+    if (existing && isActive(existing) && !isStale(existing)) {
       return { role: "follower", attempt: existing };
     }
-    const attempt = merge(existing, base);
+    const attempt = merge(prior(existing), base);
     mem.set(key, attempt);
     return { role: "owner", attempt };
   }
   const tx = d.transaction(STORE, "readwrite");
   const store = tx.objectStore(STORE);
   const existing = (await request(store.get(key))) as OrderAttempt | undefined;
-  if (existing && isActive(existing) && existing.tabId !== claim.tabId) {
+  if (existing && isActive(existing) && !isStale(existing)) {
     await txDone(tx);
     return { role: "follower", attempt: existing };
   }
-  const attempt = merge(existing, base);
+  const attempt = merge(prior(existing), base);
   store.put(attempt);
   await txDone(tx);
   return { role: "owner", attempt };

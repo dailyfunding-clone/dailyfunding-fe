@@ -9,6 +9,7 @@ import {
   parseForm,
   signupAccountSchema,
   signupVerifySchema,
+  useAppNavigate,
   type FormState,
 } from "@/shared/lib";
 
@@ -32,8 +33,10 @@ type Props = {
 };
 
 const SignupFlow = ({ memberType, role = "investor" }: Props) => {
+  const nav = useAppNavigate();
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
+  const [taken, setTaken] = useState(false);
   const [account, setAccount] = useState<{
     email: string;
     password: string;
@@ -73,6 +76,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
     FormData
   >(async (_prev, formData) => {
     if (!account) return { error: "계정 정보를 다시 입력해 주세요" };
+    setTaken(false);
     const parsed = parseForm(signupVerifySchema, formData);
     if ("error" in parsed) return { error: parsed.error };
     try {
@@ -109,9 +113,15 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
         },
       );
       if (!signupRes.ok) {
-        setAccount(null);
-        setStep(0);
-        return { error: "가입에 실패했어요. 이메일을 확인해 주세요" };
+        const signupBody = (await signupRes.json().catch(() => null)) as {
+          code?: string;
+        } | null;
+        if (signupBody?.code !== "EMAIL_TAKEN") {
+          setAccount(null);
+          setStep(0);
+          return { error: "가입에 실패했어요. 이메일을 확인해 주세요" };
+        }
+        setTaken(true);
       }
       const res = await ky.post("/api/auth/identity/verify", {
         json: { ...parsed.data, email: account.email },
@@ -255,6 +265,18 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
             placeholder="- 없이 숫자 10자리"
             required
           />
+        )}
+        {taken && (
+          <p className="form-error">
+            이미 가입된 이메일이에요. 본인인증을 이어서 진행하거나{" "}
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => nav.push("/auth/signin", "로그인")}
+            >
+              로그인하기
+            </button>
+          </p>
         )}
         {verifyState?.error && (
           <p className="form-error">{verifyState.error}</p>

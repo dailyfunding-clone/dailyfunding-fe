@@ -1,4 +1,5 @@
-import { API_URL, fmtMan } from "@/shared/api";
+import { fetchJson } from "@/entities/content/index.server";
+import { fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
 
 import type { Metadata } from "next";
@@ -24,18 +25,9 @@ const TYPE_LABEL: Record<string, string> = {
   personal_credit: "개인신용",
 };
 
-const fetchJson = async <T,>(path: string): Promise<T | null> => {
-  try {
-    const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 30 } });
-    return res.ok ? ((await res.json()) as T) : null;
-  } catch {
-    return null;
-  }
-};
-
 const HomePage = async () => {
   const [products, notices] = await Promise.all([
-    fetchJson<{ results: Product[] }>("/products?status=recruiting&sort=latest"),
+    fetchJson<{ results: Product[] }>("/products?status=recruiting&sort=latest", "products"),
     fetchJson<{ results: { id: number; title: string }[] }>("/notices?page_size=4"),
   ]);
   return (

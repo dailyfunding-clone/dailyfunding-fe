@@ -22,7 +22,7 @@ export const useMe = () =>
   useQuery<Me | null>({
     queryKey: ["me"],
     queryFn: () => {
-      if (!hasSessionHint()) {
+      if (!hasSessionHint() && !isInWebView()) {
         return null;
       }
       return api
@@ -34,8 +34,9 @@ export const useMe = () =>
         .catch((e: unknown) => {
           if (e instanceof ApiRequestError && e.status === 401) {
             markSession(false);
+            return null;
           }
-          return null;
+          throw e;
         });
     },
     staleTime: 60_000,

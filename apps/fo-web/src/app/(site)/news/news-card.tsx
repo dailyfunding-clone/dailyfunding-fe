@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { safeHttpUrl } from "@/shared/lib/safe-url";
+
 export type NewsItem = {
   id: number;
   title: string;
@@ -12,7 +14,7 @@ export type NewsItem = {
 const NewsCard = ({ item }: { item: NewsItem }) => (
   <a
     className="card news-card"
-    href={item.url}
+    href={safeHttpUrl(item.url) ?? undefined}
     target="_blank"
     rel="noopener noreferrer"
   >

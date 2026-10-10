@@ -29,7 +29,7 @@ export type DepositAccount = {
 
 export const useDepositAccount = () =>
   useQuery<DepositAccount>({
-    queryKey: ["deposit-account"],
+    queryKey: ["deposit", "account"],
     queryFn: () =>
       api.request<DepositAccount>("get", "/api/deposit/account"),
     retry: false,
@@ -64,7 +64,7 @@ const DepositCharge = () => {
         });
         setDone(true);
         setKey(idempotencyKey());
-        queryClient.invalidateQueries({ queryKey: ["deposit-account"] });
+        queryClient.invalidateQueries({ queryKey: ["deposit", "account"] });
         queryClient.invalidateQueries({ queryKey: ["deposit-history"] });
         return null;
       } catch (err) {

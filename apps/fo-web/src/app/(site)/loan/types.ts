@@ -23,6 +23,9 @@ export const CATEGORY_LABEL: Record<string, string> = {
   business: "기업대출",
 };
 
+export const rateText = (range?: string[]) =>
+  range && range.length >= 2 ? `연 ${range[0]}~${range[1]}%` : "금리 문의";
+
 export const textOf = (v: unknown): string => {
   if (typeof v === "string") return v;
   if (typeof v === "number") return String(v);

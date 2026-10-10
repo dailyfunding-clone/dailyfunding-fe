@@ -7,7 +7,7 @@ import { fetchJson } from "@/entities/content/index.server";
 import { fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
 
-import { CATEGORY_LABEL } from "./types";
+import { CATEGORY_LABEL, rateText } from "./types";
 
 import type { LoanProduct } from "./types";
 import "./loan.scss";
@@ -26,10 +26,10 @@ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 const LoanListContent = async ({ searchParams }: { searchParams: SearchParams }) => {
   const params = await searchParams;
   const category = firstParam(params.category) ?? "all";
-  const data = await fetchJson<{ results: LoanProduct[] }>(
-    `/loans?category=${category}`,
-  );
-  const loans = data?.results ?? [];
+  const data = await fetchJson<{ results: LoanProduct[] }>("/loans");
+  const all = data?.results ?? [];
+  const loans =
+    category === "all" ? all : all.filter((l) => l.category === category);
   return (
     <main className="container">
       <div className="loan-head">
@@ -68,9 +68,7 @@ const LoanListContent = async ({ searchParams }: { searchParams: SearchParams })
               <h3>{l.name}</h3>
               <p className="loan-card-target">{l.target}</p>
               <div className="loan-card-rate">
-                <strong>
-                  연 {l.rate_range[0]}~{l.rate_range[1]}%
-                </strong>
+                <strong>{rateText(l.rate_range)}</strong>
               </div>
               <div className="loan-card-meta">
                 <span>

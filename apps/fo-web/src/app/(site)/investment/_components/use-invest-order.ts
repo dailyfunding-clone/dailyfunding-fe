@@ -6,7 +6,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiRequestError, api } from "@/shared/api";
 
 import { mapError } from "./lib/map-error";
-import { claimAttempt, clearAttempt, getAttempt, putAttempt } from "./lib/order-attempt-store";
+import {
+  ATTEMPT_STALE_MS,
+  claimAttempt,
+  clearAttempt,
+  getAttempt,
+  putAttempt,
+} from "./lib/order-attempt-store";
 import { revalidateProducts } from "./revalidate-products";
 
 import type { OrderError } from "./lib/map-error";
@@ -14,8 +20,8 @@ import type { OrderAttempt } from "./lib/order-attempt-store";
 import type { InvestmentResponse } from "./types";
 
 const CHANNEL = "df-invest-order";
-const STALE_MS = 60_000;
 const FOLLOW_POLL_MS = 250;
+const FOLLOW_TIMEOUT_MS = ATTEMPT_STALE_MS + 30_000;
 
 export type OrderInput = { amount: number; use_points: number };
 
@@ -46,6 +52,8 @@ type ChannelMessage = {
 };
 
 const isActivePhase = (a: OrderAttempt) => a.phase === "open" || a.phase === "confirming";
+
+const isDefinitive = (e: unknown) => e instanceof ApiRequestError && e.status === 404;
 
 const failed = (error: OrderError, recoverable: boolean): OrderState => ({
   status: "failed",
@@ -79,80 +87,98 @@ export const useInvestOrder = ({ accountId, productId, reauth }: Options) => {
       setState({ status: "done", result });
     } catch (e) {
       const mapped = mapError(e);
-      setState(failed(mapped, mapped.kind === "network"));
+      setState(failed(mapped, !isDefinitive(e)));
     }
   }, []);
 
   const follow = useCallback(
-    (attempt: OrderAttempt) => {
-      setState({ status: "confirming" });
-      if (attempt.investmentId !== undefined) {
-        void confirmOrder(attempt.investmentId);
-        return;
-      }
-      let settled = false;
-      const ch = typeof BroadcastChannel === "undefined" ? null : new BroadcastChannel(CHANNEL);
-      const cleanup = () => {
-        clearInterval(iv);
-        ch?.close();
-        followCleanup.current = null;
-      };
-      const finishWith = (investmentId: number) => {
-        if (settled) return;
-        settled = true;
-        cleanup();
-        void confirmOrder(investmentId);
-      };
-      const failWith = (recoverable: boolean) => {
-        if (settled) return;
-        settled = true;
-        cleanup();
-        setState(
-          failed(
-            {
-              kind: recoverable ? "network" : "unknown",
-              text: "다른 탭에서 진행 중인 주문이 완료되지 않았어요",
-            },
-            recoverable,
-          ),
-        );
-      };
-      ch?.addEventListener("message", (e: MessageEvent) => {
-        const m = e.data as ChannelMessage;
-        if (m?.key !== storeKey) return;
-        if (m.type === "submitted" && m.investmentId !== undefined) {
-          finishWith(m.investmentId);
-        } else if (m.type === "failed") {
-          failWith(m.recoverable ?? false);
-        } else if (m.type === "done" && m.investmentId !== undefined) {
-          finishWith(m.investmentId);
+    (attempt: OrderAttempt) =>
+      new Promise<void>((resolve) => {
+        setState({ status: "confirming" });
+        if (attempt.investmentId !== undefined) {
+          void confirmOrder(attempt.investmentId).finally(resolve);
+          return;
         }
-      });
-      const iv = setInterval(() => {
-        void getAttempt(storeKey).then((rec) => {
+        let settled = false;
+        const ch = typeof BroadcastChannel === "undefined" ? null : new BroadcastChannel(CHANNEL);
+        const deadline = Date.now() + FOLLOW_TIMEOUT_MS;
+        const cleanup = () => {
+          clearInterval(iv);
+          ch?.close();
+          followCleanup.current = null;
+        };
+        const finishWith = (investmentId: number) => {
           if (settled) return;
-          if (!rec || rec.phase === "failed") {
-            failWith(false);
-            return;
-          }
-          if (rec.investmentId !== undefined) {
-            finishWith(rec.investmentId);
+          settled = true;
+          cleanup();
+          void confirmOrder(investmentId).finally(resolve);
+        };
+        const failWith = (recoverable: boolean) => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          setState(
+            failed(
+              {
+                kind: recoverable ? "network" : "unknown",
+                text: "다른 탭에서 진행 중인 주문이 완료되지 않았어요",
+              },
+              recoverable,
+            ),
+          );
+          resolve();
+        };
+        ch?.addEventListener("message", (e: MessageEvent) => {
+          const m = e.data as ChannelMessage;
+          if (m?.key !== storeKey) return;
+          if (m.type === "submitted" && m.investmentId !== undefined) {
+            finishWith(m.investmentId);
+          } else if (m.type === "failed") {
+            failWith(m.recoverable ?? false);
+          } else if (m.type === "done" && m.investmentId !== undefined) {
+            finishWith(m.investmentId);
           }
         });
-      }, FOLLOW_POLL_MS);
-      followCleanup.current = cleanup;
-    },
+        const iv = setInterval(() => {
+          void getAttempt(storeKey).then((rec) => {
+            if (settled) return;
+            if (Date.now() > deadline) {
+              failWith(true);
+              return;
+            }
+            if (!rec || rec.phase === "failed") {
+              failWith(false);
+              return;
+            }
+            if (rec.investmentId !== undefined) {
+              finishWith(rec.investmentId);
+              return;
+            }
+            if (
+              rec.phase === "ambiguous" ||
+              (isActivePhase(rec) && Date.now() - rec.updatedAt > ATTEMPT_STALE_MS)
+            ) {
+              if (isActivePhase(rec)) {
+                void putAttempt({ ...rec, phase: "ambiguous" }).catch(() => undefined);
+              }
+              failWith(true);
+            }
+          });
+        }, FOLLOW_POLL_MS);
+        followCleanup.current = cleanup;
+      }),
     [confirmOrder, storeKey],
   );
 
   useEffect(() => {
+    if (!accountId) return;
     let alive = true;
     if (typeof BroadcastChannel !== "undefined") {
       channel.current = new BroadcastChannel(CHANNEL);
     }
     void getAttempt(storeKey).then((rec) => {
       if (!alive || !rec) return;
-      const stale = Date.now() - rec.updatedAt > STALE_MS;
+      const stale = Date.now() - rec.updatedAt > ATTEMPT_STALE_MS;
       if (rec.phase === "ambiguous" || (isActivePhase(rec) && stale)) {
         setState(
           failed(
@@ -163,8 +189,8 @@ export const useInvestOrder = ({ accountId, productId, reauth }: Options) => {
             true,
           ),
         );
-      } else if (isActivePhase(rec) && rec.tabId !== tabId) {
-        follow(rec);
+      } else if (isActivePhase(rec)) {
+        void follow(rec);
       }
     });
     return () => {
@@ -173,10 +199,10 @@ export const useInvestOrder = ({ accountId, productId, reauth }: Options) => {
       channel.current?.close();
       channel.current = null;
     };
-  }, [storeKey, tabId, follow]);
+  }, [accountId, storeKey, follow]);
 
   const submit = async (input: OrderInput) => {
-    if (busy.current) return;
+    if (!accountId || busy.current) return;
     busy.current = true;
     try {
       const claim = await claimAttempt(storeKey, {
@@ -191,7 +217,7 @@ export const useInvestOrder = ({ accountId, productId, reauth }: Options) => {
         phase: "open",
       });
       if (claim.role === "follower") {
-        follow(claim.attempt);
+        await follow(claim.attempt);
         return;
       }
       let attempt = claim.attempt;
@@ -273,13 +299,13 @@ export const useInvestOrder = ({ accountId, productId, reauth }: Options) => {
         setState({ status: "done", result: confirmed });
       } catch (e) {
         const mapped = mapError(e);
-        if (mapped.kind === "network") {
-          await putAttempt({ ...attempt, phase: "ambiguous" });
-          setState(failed(mapped, true));
-        } else {
+        if (isDefinitive(e)) {
           await putAttempt({ ...attempt, phase: "failed" });
           broadcast({ type: "failed", key: storeKey, recoverable: false });
           setState(failed(mapped, false));
+        } else {
+          await putAttempt({ ...attempt, phase: "ambiguous" });
+          setState(failed(mapped, true));
         }
       }
     } finally {

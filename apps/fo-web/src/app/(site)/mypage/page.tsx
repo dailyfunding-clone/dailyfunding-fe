@@ -63,11 +63,28 @@ const MyPage = () => {
 };
 
 const Dashboard = () => {
-  const { data } = useQuery<Dashboard>({
+  const { data, isError, refetch } = useQuery<Dashboard>({
     queryKey: ["me-dashboard"],
     queryFn: () => api.request<Dashboard>("get", "/api/me/dashboard"),
   });
   const [copied, setCopied] = useState(false);
+
+  if (isError) {
+    return (
+      <div className="container">
+        <div className="empty">
+          <p>정보를 불러오지 못했어요</p>
+          <button
+            type="button"
+            className="btn btn-outline"
+            onClick={() => void refetch()}
+          >
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!data) {
     return (

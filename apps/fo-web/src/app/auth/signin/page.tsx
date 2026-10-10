@@ -40,7 +40,7 @@ const SignInPage = () => {
       if ("error" in parsed) return { error: parsed.error };
       try {
         const res = await ky.post("/api/auth/login", {
-          json: { ...parsed.data, keep_login: true },
+          json: { ...parsed.data, keep_login: keepLogin },
           throwHttpErrors: false,
         });
         if (!res.ok) return { error: "이메일 또는 비밀번호가 맞지 않아요" };

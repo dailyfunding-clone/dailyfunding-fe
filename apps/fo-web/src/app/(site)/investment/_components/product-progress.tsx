@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { memo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { memo, useEffect, useRef } from "react";
 
 import { fmtMan } from "@/shared/api";
 
@@ -15,6 +15,16 @@ type Props = {
 };
 
 const ProductProgress = memo(({ product }: Props) => {
+  const queryClient = useQueryClient();
+  const lastRaised = useRef(product.raised_amount);
+  useEffect(() => {
+    if (lastRaised.current === product.raised_amount) return;
+    lastRaised.current = product.raised_amount;
+    queryClient.setQueryData<ProductProgressData>(
+      productProgressKey(product.id),
+      (prev) => ({ ...prev, raised_amount: product.raised_amount }),
+    );
+  }, [product.id, product.raised_amount, queryClient]);
   const live = useQuery<ProductProgressData>({
     queryKey: productProgressKey(product.id),
     enabled: false,

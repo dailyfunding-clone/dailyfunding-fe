@@ -46,9 +46,9 @@ export const useProductStream = (ids: number[]) => {
       flushTimer = null;
       for (const [id, patch] of buffer) {
         queryClient.setQueryData<ProductProgressData>(productProgressKey(id), (prev) => ({
+          ...prev,
+          ...patch,
           raised_amount: patch.raised_amount ?? prev?.raised_amount ?? 0,
-          remaining: patch.remaining ?? prev?.remaining,
-          status: patch.status ?? prev?.status,
         }));
       }
       buffer.clear();
@@ -58,6 +58,7 @@ export const useProductStream = (ids: number[]) => {
       const id = e.id ?? e.product_id;
       if (id === undefined) return;
       buffer.set(id, {
+        ...buffer.get(id),
         ...(e.raised_amount !== undefined ? { raised_amount: e.raised_amount } : {}),
         ...(e.remaining !== undefined ? { remaining: e.remaining } : {}),
         ...(e.status !== undefined ? { status: e.status } : {}),

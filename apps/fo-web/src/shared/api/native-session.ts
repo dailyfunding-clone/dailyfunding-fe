@@ -17,24 +17,27 @@ const listeners = new Set<(state: AuthState) => void>();
 const getBridge = () => {
   const wv = webViewApi();
   if (!wv) return null;
-  bridge ??= createWebBridge(
-    (raw) => wv.postMessage(raw),
-    (receive) => {
-      const onMessage = (event: MessageEvent) => {
-        receive(typeof event.data === "string" ? event.data : JSON.stringify(event.data));
-      };
-      document.addEventListener("message", onMessage as EventListener);
-      window.addEventListener("message", onMessage);
-      return () => {
-        document.removeEventListener("message", onMessage as EventListener);
-        window.removeEventListener("message", onMessage);
-      };
-    },
-  );
-  bridge.subscribeAuthState((state) => {
-    if (state.status === "signedOut") minted = false;
-    for (const listener of listeners) void listener(state);
-  });
+  bridge ??= (() => {
+    const created = createWebBridge(
+      (raw) => wv.postMessage(raw),
+      (receive) => {
+        const onMessage = (event: MessageEvent) => {
+          receive(typeof event.data === "string" ? event.data : JSON.stringify(event.data));
+        };
+        document.addEventListener("message", onMessage as EventListener);
+        window.addEventListener("message", onMessage);
+        return () => {
+          document.removeEventListener("message", onMessage as EventListener);
+          window.removeEventListener("message", onMessage);
+        };
+      },
+    );
+    created.subscribeAuthState((state) => {
+      if (state.status === "signedOut") minted = false;
+      for (const listener of listeners) void listener(state);
+    });
+    return created;
+  })();
   return bridge;
 };
 

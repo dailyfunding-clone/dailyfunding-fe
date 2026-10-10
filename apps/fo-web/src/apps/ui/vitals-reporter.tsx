@@ -1,16 +1,16 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { onCLS, onFCP, onINP, onLCP } from "web-vitals";
 
 const ENDPOINT = "/api/metrics/vitals";
 
-const report = (path: string) => (metric: { name: string; value: number }) => {
+const report = (getPath: () => string) => (metric: { name: string; value: number }) => {
   const body = JSON.stringify({
     name: metric.name,
     value: metric.value,
-    path,
+    path: getPath(),
     ts: Date.now(),
   });
   if (navigator.sendBeacon) {
@@ -20,13 +20,17 @@ const report = (path: string) => (metric: { name: string; value: number }) => {
 
 const VitalsReporter = () => {
   const pathname = usePathname();
+  const pathRef = useRef(pathname);
   useEffect(() => {
-    const send = report(pathname);
+    pathRef.current = pathname;
+  }, [pathname]);
+  useEffect(() => {
+    const send = report(() => pathRef.current);
     onCLS(send);
     onFCP(send);
     onINP(send);
     onLCP(send);
-  }, [pathname]);
+  }, []);
   return null;
 };
 

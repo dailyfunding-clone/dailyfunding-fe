@@ -14,9 +14,14 @@ export const mapError = (e: unknown): OrderError => {
   ) {
     return { kind: "network", text: "연결이 끊겼어요. 같은 주문으로 결과를 다시 확인해 주세요" };
   }
-  if (!(e instanceof ApiRequestError) || e.status >= 500)
+  if (!(e instanceof ApiRequestError))
     return {
       kind: "unknown",
+      text: "주문 결과를 확인하지 못했어요. 같은 주문으로 다시 확인해 주세요",
+    };
+  if (e.status >= 500)
+    return {
+      kind: "network",
       text: "주문 결과를 확인하지 못했어요. 같은 주문으로 다시 확인해 주세요",
     };
   const kind = "rejected";

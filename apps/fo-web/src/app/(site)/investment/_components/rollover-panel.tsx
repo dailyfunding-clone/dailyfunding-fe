@@ -68,15 +68,17 @@ const RolloverPanel = () => {
   });
 
   const patch = useMutation({
-    mutationFn: ({ id, amount }: { id: number; amount: number }) =>
+    mutationFn: ({ id, amount }: { id: number; amount: number; investmentId: number }) =>
       api.request("patch", `/api/reservations/${id}`, { amount }),
     onSuccess: invalidate,
+    onError: (e, vars) => setError(vars.investmentId, e),
   });
 
   const cancel = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: ({ id }: { id: number; investmentId: number }) =>
       api.delete("/api/reservations/{id}", { path: { id } }),
     onSuccess: invalidate,
+    onError: (e, vars) => setError(vars.investmentId, e),
   });
 
   if (me.isLoading || (me.data && (eligible.isLoading || list.isLoading))) {
@@ -163,7 +165,11 @@ const RolloverPanel = () => {
                           className="btn btn-outline"
                           disabled={patch.isPending || won <= 0}
                           onClick={() =>
-                            patch.mutate({ id: r.id, amount: won })
+                            patch.mutate({
+                              id: r.id,
+                              amount: won,
+                              investmentId: item.investment_id,
+                            })
                           }
                         >
                           금액 변경
@@ -172,7 +178,12 @@ const RolloverPanel = () => {
                           type="button"
                           className="btn btn-outline"
                           disabled={cancel.isPending}
-                          onClick={() => cancel.mutate(r.id)}
+                          onClick={() =>
+                            cancel.mutate({
+                              id: r.id,
+                              investmentId: item.investment_id,
+                            })
+                          }
                         >
                           취소
                         </button>

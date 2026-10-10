@@ -71,6 +71,7 @@ const Points = () => {
   const [range, setRange] = useState("1m");
   const [convertDone, setConvertDone] = useState<number | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [convertKey, setConvertKey] = useState(idempotencyKey);
 
   const balance = useQuery<PointBalance>({
     queryKey: ["points"],
@@ -114,9 +115,10 @@ const Points = () => {
     if ("error" in parsed) return { error: parsed.error };
     try {
       await api.post("/api/points/convert", parsed.data, {
-        idempotencyKey: idempotencyKey(),
+        idempotencyKey: convertKey,
       });
       setConvertDone(parsed.data.amount);
+      setConvertKey(idempotencyKey());
       queryClient.invalidateQueries({ queryKey: ["points"] });
       queryClient.invalidateQueries({ queryKey: ["points-history"] });
       queryClient.invalidateQueries({ queryKey: ["me-dashboard"] });

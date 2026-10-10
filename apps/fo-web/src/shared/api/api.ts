@@ -72,7 +72,7 @@ export const api = createClient({
 
 export const apiFetch = (path: string, init?: RequestInit) => http(path, init);
 
-export const API_URL = process.env.API_INTERNAL_URL ?? "http://localhost:8000/api";
+export const API_URL = `${process.env.API_INTERNAL_URL ?? "http://localhost:8000"}/api`;
 
 export const idempotencyKey = () => crypto.randomUUID();
 

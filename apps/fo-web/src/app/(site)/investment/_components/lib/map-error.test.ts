@@ -29,10 +29,13 @@ describe("mapError", () => {
     expect(mapError(error).kind).toBe("network");
   });
 
-  it("does not retry programmer errors or 5xx automatically", () => {
+  it("does not retry programmer errors automatically", () => {
     expect(mapError(new Error("bug")).kind).toBe("unknown");
-    expect(mapError(new ApiRequestError({ status: 500, code: "INTERNAL", details: {} })).kind).toBe(
-      "unknown",
+  });
+
+  it.each([500, 502, 503])("treats HTTP %s as ambiguous like a transport failure", (status) => {
+    expect(mapError(new ApiRequestError({ status, code: "INTERNAL", details: {} })).kind).toBe(
+      "network",
     );
   });
 

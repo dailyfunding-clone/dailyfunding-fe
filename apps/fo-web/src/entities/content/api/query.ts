@@ -1,4 +1,5 @@
 import { API_URL } from "@/shared/api";
+import { safeHttpUrl } from "@/shared/lib/safe-url";
 
 export const firstParam = (v: string | string[] | undefined) =>
   Array.isArray(v) ? v[0] : v;
@@ -14,7 +15,9 @@ export const qs = (params: Record<string, string | undefined>) => {
 
 export const fileUrl = (url: string) => {
   if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return `${API_URL.replace(/\/api\/?$/, "")}${url}`;
-  return url;
+  if (safeHttpUrl(url)) return url;
+  if (url.startsWith("/")) {
+    return url.startsWith("//") ? "" : `${API_URL.replace(/\/api\/?$/, "")}${url}`;
+  }
+  return url.includes(":") ? "" : url;
 };

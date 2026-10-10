@@ -7,6 +7,8 @@ import { api, fmtWon } from "@/shared/api";
 import { limitCheckSchema, parseForm } from "@/shared/lib";
 import { AppLink } from "@/shared/ui";
 
+import { rateText } from "../types";
+
 type LimitResult = {
   limit: number;
   rate_range: string[];
@@ -65,7 +67,7 @@ const LimitCheckInner = ({
           <dd>{fmtWon(result.limit)}</dd>
         </dl>
         <p className="limit-result-rate">
-          예상 금리 연 {result.rate_range[0]}~{result.rate_range[1]}%
+          예상 금리 {rateText(result.rate_range)}
         </p>
         <p className="limit-result-note">
           모의 조회 결과예요. 신용도에는 영향이 없어요.
