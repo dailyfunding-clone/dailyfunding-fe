@@ -4600,6 +4600,8 @@ components:
       properties:
         count:
           type: integer
+          maximum: 500
+          minimum: 1
           default: 10
         status:
           $ref: '#/components/schemas/StatusEnum'
