@@ -129,7 +129,7 @@ const DepositCharge = () => {
           placeholder="금액을 입력해 주세요"
           required
         />
-        {state?.error && <p className="form-error">{state.error}</p>}
+        {state?.error && <p className="form-error" role="alert">{state.error}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "등록 중…" : "입금 알리기"}
         </Button>

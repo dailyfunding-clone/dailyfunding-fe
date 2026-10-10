@@ -118,11 +118,16 @@ const buildUrl = (
   return qs ? `${url}?${qs}` : url;
 };
 
-const csrfToken = () => {
-  if (typeof document === "undefined") return undefined;
-  const m = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
-  return m ? decodeURIComponent(m[1]) : undefined;
-};
+const CSRF_COOKIE = "csrf";
+const CSRF_HEADER = "X-CSRF-Token";
+
+export const readCsrfToken = () =>
+  typeof document === "undefined"
+    ? undefined
+    : document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(`${CSRF_COOKIE}=`))
+        ?.slice(CSRF_COOKIE.length + 1);
 
 export const createClient = (options: ApiClientOptions = {}) => {
   const { baseUrl = "", accessToken, reauthToken, beforeRequest, onUnauthorized } = options;
@@ -163,8 +168,8 @@ export const createClient = (options: ApiClientOptions = {}) => {
     if (reauth) headers["X-Reauth-Token"] = reauth;
     if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
     if (method !== "get") {
-      const csrf = csrfToken();
-      if (csrf) headers["X-CSRF-Token"] = csrf;
+      const csrf = readCsrfToken();
+      if (csrf) headers[CSRF_HEADER] = csrf;
     }
     const opts: Options = {
       method: method.toUpperCase(),

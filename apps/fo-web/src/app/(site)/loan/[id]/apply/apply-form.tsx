@@ -3,7 +3,7 @@
 import { Field, Steps } from "@dailyfunding/design-system/components";
 import { useActionState, useState } from "react";
 
-import { apiFetch } from "@/shared/api";
+import { apiFetch, idempotencyKey } from "@/shared/api";
 import {
   loanApplyFundsSchema,
   loanApplyInfoSchema,
@@ -32,6 +32,7 @@ const ApplyForm = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState("");
   const [doneId, setDoneId] = useState<number | null>(null);
+  const [submitKey, setSubmitKey] = useState(idempotencyKey);
 
   const [infoState, infoAction] = useActionState<FormState, FormData>(
     (_prev, formData) => {
@@ -82,6 +83,7 @@ const ApplyForm = () => {
       const res = await apiFetch("/api/loans/applications", {
         method: "POST",
         body,
+        idempotencyKey: submitKey,
       });
       const json = (await res.json()) as {
         application_id?: number;
@@ -94,6 +96,7 @@ const ApplyForm = () => {
         };
       }
       setDoneId(json.application_id ?? 0);
+      setSubmitKey(idempotencyKey());
       return null;
     } catch {
       return { error: "네트워크 오류가 발생했어요. 다시 시도해 주세요" };
@@ -175,7 +178,7 @@ const ApplyForm = () => {
             </label>
           </div>
           {infoState?.error && (
-            <p className="form-error">{infoState.error}</p>
+            <p className="form-error" role="alert">{infoState.error}</p>
           )}
           <button type="submit" className="btn btn-primary">
             다음
@@ -236,10 +239,10 @@ const ApplyForm = () => {
                 {files.map((f) => f.name).join(", ")}
               </p>
             )}
-            {fileError && <p className="form-error">{fileError}</p>}
+            {fileError && <p className="form-error" role="alert">{fileError}</p>}
           </div>
           {fundsState?.error && (
-            <p className="form-error">{fundsState.error}</p>
+            <p className="form-error" role="alert">{fundsState.error}</p>
           )}
           <div className="apply-nav">
             <button

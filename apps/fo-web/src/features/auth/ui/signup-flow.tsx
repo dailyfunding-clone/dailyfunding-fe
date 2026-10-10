@@ -5,6 +5,7 @@ import { Button, Field, Steps } from "@dailyfunding/design-system/components";
 import ky from "ky";
 import { useActionState, useState } from "react";
 
+import { csrfHeaders } from "@/shared/api";
 import {
   parseForm,
   signupAccountSchema,
@@ -88,6 +89,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
         }
         const bizRes = await ky.post("/api/auth/business-number/verify", {
           json: { business_number: biz },
+          headers: csrfHeaders(),
           throwHttpErrors: false,
         });
         const bizBody = (await bizRes.json().catch(() => null)) as {
@@ -110,6 +112,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
             referrer_email: account.referrer,
             agreements: account.agreements,
           },
+          headers: csrfHeaders(),
           throwHttpErrors: false,
         },
       );
@@ -127,6 +130,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
       const res = await ky.post("/api/auth/identity/verify", {
         json: { ...parsed.data, email: account.email },
         credentials: "include",
+        headers: csrfHeaders(),
         throwHttpErrors: false,
       });
       if (!res.ok) {
@@ -144,11 +148,13 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
     const loginRes = await ky.post("/api/auth/login", {
       json: { email: account.email, password: account.password },
       credentials: "include",
+      headers: csrfHeaders(),
       throwHttpErrors: false,
     });
     if (!loginRes.ok) return;
     const codeRes = await ky.post("/api/auth/app-code", {
       credentials: "include",
+      headers: csrfHeaders(),
       throwHttpErrors: false,
     });
     if (!codeRes.ok) return;
@@ -214,7 +220,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
           )}
           <SignupTerms borrower={role === "borrower"} />
           {(nextState?.error ?? verifyState?.error) && (
-            <p className="form-error">
+            <p className="form-error" role="alert">
               {nextState?.error ?? verifyState?.error}
             </p>
           )}
@@ -268,7 +274,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
           />
         )}
         {taken && (
-          <p className="form-error">
+          <p className="form-error" role="alert">
             이미 가입된 이메일이에요. 본인인증을 이어서 진행하거나{" "}
             <button
               type="button"
@@ -280,7 +286,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
           </p>
         )}
         {verifyState?.error && (
-          <p className="form-error">{verifyState.error}</p>
+          <p className="form-error" role="alert">{verifyState.error}</p>
         )}
         <Button type="submit" disabled={pending}>
           인증하고 가입하기

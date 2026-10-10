@@ -5,6 +5,7 @@ import { ReauthProvider } from "@/features/auth";
 import { API_URL } from "@/shared/api";
 
 import { OrderForm } from "../../_components";
+import { ProductDetailSkeleton } from "../../_components";
 import { TYPE_LABEL } from "../../_components";
 
 import type { ProductDetail } from "../../_components";
@@ -15,15 +16,14 @@ export const metadata: Metadata = { title: "투자하기" };
 
 
 const fetchProduct = async (id: string): Promise<ProductDetail | null> => {
-  try {
-    const res = await fetch(`${API_URL}/products/${id}`, {
-      next: { revalidate: 15 },
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as ProductDetail;
-  } catch {
-    return null;
+  const res = await fetch(`${API_URL}/products/${id}`, {
+    next: { revalidate: 15 },
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`fetchProduct ${id} failed: ${res.status}`);
   }
+  return (await res.json()) as ProductDetail;
 };
 
 type Props = {
@@ -56,7 +56,7 @@ const OrderContent = async ({ params }: Props) => {
 };
 
 const OrderPage = (props: Props) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductDetailSkeleton />}>
     <OrderContent {...props} />
   </Suspense>
 );

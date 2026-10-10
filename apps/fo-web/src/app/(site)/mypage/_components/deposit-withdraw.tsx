@@ -125,7 +125,7 @@ const DepositWithdraw = () => {
           />
           전액 출금
         </label>
-        {state?.error && <p className="form-error">{state.error}</p>}
+        {state?.error && <p className="form-error" role="alert">{state.error}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "요청 중…" : "출금하기"}
         </Button>

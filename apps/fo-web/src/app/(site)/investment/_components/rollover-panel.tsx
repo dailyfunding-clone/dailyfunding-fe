@@ -1,9 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-import { ApiRequestError, api, fmtWon } from "@/shared/api";
+import { ApiRequestError, api, fmtWon, idempotencyKey } from "@/shared/api";
 import { useAppNavigate } from "@/shared/lib";
 import { useMe } from "@/shared/session";
 
@@ -24,20 +24,29 @@ const RolloverPanel = () => {
   const [drafts, setDrafts] = useState<Record<number, string>>({});
   const [errors, setErrors] = useState<Record<number, string>>({});
 
+  const keys = useRef(new Map<number, string>());
+  const draftKey = (id: number) => {
+    let k = keys.current.get(id);
+    if (!k) {
+      k = idempotencyKey();
+      keys.current.set(id, k);
+    }
+    return k;
+  };
+  const resetKey = (id: number) => keys.current.delete(id);
+
   const eligible = useQuery<{ results: EligibleInvestment[] }>({
     queryKey: ["reservations", "eligible"],
-    queryFn: () =>
-      api.request<{ results: EligibleInvestment[] }>(
-        "get",
-        "/api/reservations/eligible",
-      ),
+    queryFn: () => api.get("/api/reservations/eligible"),
     enabled: !!me.data,
   });
 
   const list = useQuery<ServerReservation[]>({
     queryKey: ["reservations", "list"],
     queryFn: () =>
-      api.request<ServerReservation[]>("get", "/api/reservations"),
+      api
+        .get("/api/reservations")
+        .then((rows) => rows as ServerReservation[]),
     enabled: !!me.data,
   });
 
@@ -56,11 +65,16 @@ const RolloverPanel = () => {
 
   const create = useMutation({
     mutationFn: ({ investmentId, amount }: { investmentId: number; amount: number }) =>
-      api.post("/api/reservations", {
-        investment_id: investmentId,
-        amount,
-      }),
+      api.post(
+        "/api/reservations",
+        {
+          investment_id: investmentId,
+          amount,
+        },
+        { idempotencyKey: draftKey(investmentId) },
+      ),
     onSuccess: (_r, vars) => {
+      resetKey(vars.investmentId);
       setErrors((prev) => ({ ...prev, [vars.investmentId]: "" }));
       invalidate();
     },
@@ -69,15 +83,28 @@ const RolloverPanel = () => {
 
   const patch = useMutation({
     mutationFn: ({ id, amount }: { id: number; amount: number; investmentId: number }) =>
-      api.request("patch", `/api/reservations/${id}`, { amount }),
-    onSuccess: invalidate,
+      api.patch(
+        "/api/reservations/{id}",
+        { amount },
+        { path: { id }, idempotencyKey: draftKey(id) },
+      ),
+    onSuccess: (_r, vars) => {
+      resetKey(vars.id);
+      invalidate();
+    },
     onError: (e, vars) => setError(vars.investmentId, e),
   });
 
   const cancel = useMutation({
     mutationFn: ({ id }: { id: number; investmentId: number }) =>
-      api.delete("/api/reservations/{id}", { path: { id } }),
-    onSuccess: invalidate,
+      api.delete("/api/reservations/{id}", {
+        path: { id },
+        idempotencyKey: draftKey(id),
+      }),
+    onSuccess: (_r, vars) => {
+      resetKey(vars.id);
+      invalidate();
+    },
     onError: (e, vars) => setError(vars.investmentId, e),
   });
 
@@ -210,7 +237,7 @@ const RolloverPanel = () => {
                     </p>
                   )}
                   {errors[item.investment_id] && (
-                    <p className="form-error">{errors[item.investment_id]}</p>
+                    <p className="form-error" role="alert">{errors[item.investment_id]}</p>
                   )}
                 </div>
               );

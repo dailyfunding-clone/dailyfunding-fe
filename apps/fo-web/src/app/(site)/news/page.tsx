@@ -27,9 +27,7 @@ const NewsPage = async () => {
           ))}
         </div>
       )}
-      <NewsMore
-        initialCursor={items.length >= 20 ? (data?.next_cursor ?? null) : null}
-      />
+      <NewsMore initialCursor={data?.next_cursor ?? null} />
     </main>
   );
 };

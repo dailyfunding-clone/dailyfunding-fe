@@ -55,7 +55,7 @@ const EnterButton = ({ eventId }: { eventId: number }) => {
 
   return (
     <>
-      {error && <p className="form-error">{error}</p>}
+      {error && <p className="form-error" role="alert">{error}</p>}
       <button
         type="button"
         className="btn btn-primary"

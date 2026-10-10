@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import ProductListSkeleton from "@/app/(site)/investment/_components/product-list-skeleton";
 import {
   Pagination,
 } from "@/entities/content";
@@ -107,7 +108,7 @@ const NoticeListContent = async ({
 const NoticeListPage = (props: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductListSkeleton />}>
     <NoticeListContent {...props} />
   </Suspense>
 );

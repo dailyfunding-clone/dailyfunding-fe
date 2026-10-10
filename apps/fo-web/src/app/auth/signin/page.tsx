@@ -6,7 +6,7 @@ import ky from "ky";
 import { useRouter } from "next/navigation";
 import { useActionState, useState, useSyncExternalStore } from "react";
 
-import { markSession } from "@/shared/api";
+import { csrfHeaders, markSession } from "@/shared/api";
 import { parseForm, signInSchema, type FormState } from "@/shared/lib";
 import { useAppNavigate } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
@@ -41,6 +41,7 @@ const SignInPage = () => {
       try {
         const res = await ky.post("/api/auth/login", {
           json: { ...parsed.data, keep_login: keepLogin },
+          headers: csrfHeaders(),
           throwHttpErrors: false,
         });
         if (!res.ok) return { error: "이메일 또는 비밀번호가 맞지 않아요" };
@@ -53,6 +54,7 @@ const SignInPage = () => {
         if (isInWebView()) {
           const codeRes = await ky.post("/api/auth/app-code", {
             credentials: "include",
+            headers: csrfHeaders(),
             throwHttpErrors: false,
           });
           if (codeRes.ok) {
@@ -110,7 +112,7 @@ const SignInPage = () => {
           />
           로그인 유지
         </label>
-        {state?.error && <p className="form-error">{state.error}</p>}
+        {state?.error && <p className="form-error" role="alert">{state.error}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "로그인 중…" : "로그인"}
         </Button>

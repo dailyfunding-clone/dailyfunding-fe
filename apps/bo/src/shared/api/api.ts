@@ -1,4 +1,4 @@
-import { createClient } from "@dailyfunding/api-client";
+import { createClient, readCsrfToken } from "@dailyfunding/api-client";
 import ky from "ky";
 
 export { ApiRequestError } from "@dailyfunding/api-client";
@@ -6,10 +6,12 @@ export { ApiRequestError } from "@dailyfunding/api-client";
 let refreshing: Promise<boolean> | null = null;
 
 export const refreshSession = () => {
+  const csrf = readCsrfToken();
   refreshing ??= ky
     .post("/api/auth/refresh", {
       credentials: "include",
       throwHttpErrors: false,
+      ...(csrf ? { headers: { "X-CSRF-Token": csrf } } : {}),
     })
     .then((res) => res.ok)
     .catch(() => false)

@@ -105,7 +105,7 @@ const ReauthProvider = ({ title, description, children }: Props) => {
                 autoComplete="current-password"
                 required
               />
-              {state?.error && <p className="form-error">{state.error}</p>}
+              {state?.error && <p className="form-error" role="alert">{state.error}</p>}
               <Button type="submit" disabled={pending}>
                 {pending ? "확인 중…" : "확인"}
               </Button>

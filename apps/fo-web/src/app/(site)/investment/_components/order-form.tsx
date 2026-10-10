@@ -241,7 +241,7 @@ const OrderForm = ({ product }: Props) => {
           />
         </label>
         {(state?.error || orderError) && (
-          <p className="form-error">
+          <p className="form-error" role="alert">
             {state?.error ?? orderError?.text}{" "}
             {orderError?.code === "SUITABILITY_REQUIRED" && (
               <AppLink href="/investment/suitability">테스트 하러가기</AppLink>

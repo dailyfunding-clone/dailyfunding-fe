@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import ProductDetailSkeleton from "@/app/(site)/investment/_components/product-detail-skeleton";
 import {
   fileUrl,
   fmtDate,
@@ -96,7 +97,7 @@ const NoticeDetailContent = async ({
 };
 
 const NoticeDetailPage = (props: { params: Promise<{ id: string }> }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductDetailSkeleton />}>
     <NoticeDetailContent {...props} />
   </Suspense>
 );

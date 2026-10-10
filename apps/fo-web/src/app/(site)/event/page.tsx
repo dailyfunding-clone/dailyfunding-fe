@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Suspense } from "react";
 
+import ProductListSkeleton from "@/app/(site)/investment/_components/product-list-skeleton";
 import {
   Pagination,
 } from "@/entities/content";
@@ -117,7 +118,7 @@ const EventListContent = async ({
 const EventListPage = (props: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductListSkeleton />}>
     <EventListContent {...props} />
   </Suspense>
 );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 
@@ -106,9 +107,10 @@ const ProductBrowser = ({ products }: Props) => {
   const sp = useSearchParams();
   const me = useMe();
   const mounted = useMounted();
+  const queryClient = useQueryClient();
   const [f, setF] = useState<Filters>(() => fromParams(sp));
   const [expanded, setExpanded] = useState(false);
-  const [notifyOn, setNotifyOn] = useState(false);
+  const [localNotify, setLocalNotify] = useState<boolean | null>(null);
   const [notifyMsg, setNotifyMsg] = useState("");
   const notifyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [refetching, startRefetch] = useTransition();
@@ -161,16 +163,24 @@ const ProductBrowser = ({ products }: Props) => {
 
   useProductStream(open.map((p) => p.id));
 
+  const notifySettings = useQuery({
+    queryKey: ["notifications", "settings"],
+    queryFn: () => api.get("/api/notifications/settings"),
+    enabled: !!me.data,
+  });
+  const notifyOn = localNotify ?? notifySettings.data?.enabled ?? false;
+
   const toggleNotify = async () => {
     try {
       const next = !notifyOn;
-      const res = await api.request<{ new_product?: boolean }>(
-        "post",
-        "/api/notifications/settings",
-        { new_product: next },
-      );
-      const on = res?.new_product ?? next;
-      setNotifyOn(on);
+      const res = await api.post("/api/notifications/settings", {
+        new_product: next,
+      });
+      const on = res.new_product ?? next;
+      setLocalNotify(on);
+      queryClient.setQueryData(["notifications", "settings"], {
+        enabled: on,
+      });
       flashNotify(on ? "신규 상품 알림을 켰어요" : "신규 상품 알림을 껐어요");
     } catch {
       flashNotify("알림 설정에 실패했어요");

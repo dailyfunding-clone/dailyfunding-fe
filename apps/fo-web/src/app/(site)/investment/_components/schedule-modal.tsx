@@ -113,14 +113,14 @@ const ScheduleModal = ({ productId, open, onClose }: Props) => {
               </button>
             ))}
           </div>
-          {state?.error && <p className="form-error">{state.error}</p>}
+          {state?.error && <p className="form-error" role="alert">{state.error}</p>}
           <button type="submit" className="btn btn-primary" style={{ width: "100%" }}>
             계산하기
           </button>
         </form>
 
         {preview.isFetching && <p className="field-hint">계산 중이에요…</p>}
-        {preview.isError && <p className="form-error">예상 수익을 불러오지 못했어요</p>}
+        {preview.isError && <p className="form-error" role="alert">예상 수익을 불러오지 못했어요</p>}
         {preview.data && (
           <>
             <div className="preview-summary" style={{ marginTop: 20 }}>
