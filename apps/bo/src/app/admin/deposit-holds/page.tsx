@@ -4,32 +4,21 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { api, fmtWon } from "@/shared/api";
-import { apiPatch } from "@/shared/api";
 import { errMsg, fmtDateTime } from "@/shared/lib";
-
-type DepositHold = {
-  id: string;
-  user_id: number;
-  email: string;
-  amount: number;
-  sender_name: string;
-  held_reason: string;
-  created_at: string;
-};
 
 const DepositHoldsPage = () => {
   const qc = useQueryClient();
   const [error, setError] = useState("");
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "deposit-holds"],
-    queryFn: () =>
-      api.request<{ results: DepositHold[] }>("get", "/api/admin/deposit/holds"),
+    queryFn: () => api.get("/api/admin/deposit/holds"),
   });
   const match = useMutation({
     mutationFn: (id: string) =>
-      apiPatch(`/api/admin/deposit/holds/${id}`, {}),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["admin", "deposit-holds"] }),
+      api.patch("/api/admin/deposit/holds/{id}", undefined, {
+        path: { id },
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "deposit-holds"] }),
     onError: (e) => setError(errMsg(e)),
   });
 

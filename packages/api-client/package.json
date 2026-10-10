@@ -14,7 +14,6 @@
     "typescript": "^5.8.0"
   },
   "dependencies": {
-    "effect": "^4.0.1",
     "ky": "^2.1.0"
   }
 }

@@ -6,19 +6,9 @@ import { useState } from "react";
 import { api } from "@/shared/api";
 import { errMsg, today } from "@/shared/lib";
 
-type RepaySummary = { date: string; paid: number; overdue: number };
-type ExpireSummary = { expired_lots: number };
-type ReconcileSummary = {
-  ok: boolean;
-  diffs: Record<string, unknown>[];
-  report_id: number;
-};
-type TimeAdvanceResult = {
-  date: string;
-  repay: RepaySummary;
-  expire: ExpireSummary;
-  reconcile: ReconcileSummary;
-};
+import type { components } from "@dailyfunding/api-client";
+
+type ReconcileSummary = components["schemas"]["ReconcileSummary"];
 
 const renderReconcile = (r: ReconcileSummary) =>
   r.ok
@@ -29,36 +19,22 @@ const BatchPage = () => {
   const [date, setDate] = useState(today());
 
   const repay = useMutation({
-    mutationFn: () =>
-      api.request<RepaySummary>("post", "/api/admin/batch/repay", { date }),
+    mutationFn: () => api.post("/api/admin/batch/repay", undefined, { query: { date } }),
   });
   const expire = useMutation({
     mutationFn: () =>
-      api.request<ExpireSummary>(
-        "post",
-        "/api/admin/batch/expire-points",
-        { date },
-      ),
+      api.post("/api/admin/batch/expire-points", undefined, {
+        query: { date },
+      }),
   });
   const reconcile = useMutation({
-    mutationFn: () =>
-      api.request<ReconcileSummary>(
-        "post",
-        "/api/admin/batch/reconcile",
-        { date },
-      ),
+    mutationFn: () => api.post("/api/admin/batch/reconcile", undefined, { query: { date } }),
   });
   const advance = useMutation({
-    mutationFn: (d: string) =>
-      api.request<TimeAdvanceResult>(
-        "post",
-        "/api/admin/time/advance",
-        { date: d },
-      ),
+    mutationFn: (d: string) => api.post("/api/admin/time/advance", { date: d }),
   });
 
-  const pending =
-    repay.isPending || expire.isPending || reconcile.isPending || advance.isPending;
+  const pending = repay.isPending || expire.isPending || reconcile.isPending || advance.isPending;
 
   return (
     <>
@@ -77,9 +53,7 @@ const BatchPage = () => {
       <div className="admin-grid">
         <div className="card">
           <h2 className="admin-card-title">상환 배치</h2>
-          <p className="admin-card-desc">
-            기준일의 상환 스케줄을 실행하고 연체를 전환해요
-          </p>
+          <p className="admin-card-desc">기준일의 상환 스케줄을 실행하고 연체를 전환해요</p>
           <button
             className="btn btn-primary btn-sm"
             disabled={pending}
@@ -87,9 +61,7 @@ const BatchPage = () => {
           >
             실행
           </button>
-          {repay.isError && (
-            <p className="form-error">{errMsg(repay.error)}</p>
-          )}
+          {repay.isError && <p className="form-error">{errMsg(repay.error)}</p>}
           {repay.data && (
             <pre className="admin-result">
               {`실행일 ${repay.data.date}\n상환 처리 ${repay.data.paid}건 · 연체 전환 ${repay.data.overdue}건`}
@@ -106,13 +78,9 @@ const BatchPage = () => {
           >
             실행
           </button>
-          {expire.isError && (
-            <p className="form-error">{errMsg(expire.error)}</p>
-          )}
+          {expire.isError && <p className="form-error">{errMsg(expire.error)}</p>}
           {expire.data && (
-            <pre className="admin-result">
-              {`소멸된 포인트 로트 ${expire.data.expired_lots}건`}
-            </pre>
+            <pre className="admin-result">{`소멸된 포인트 로트 ${expire.data.expired_lots}건`}</pre>
           )}
         </div>
         <div className="card">
@@ -125,18 +93,13 @@ const BatchPage = () => {
           >
             실행
           </button>
-          {reconcile.isError && (
-            <p className="form-error">{errMsg(reconcile.error)}</p>
-          )}
-          {reconcile.data && (
-            <pre className="admin-result">{renderReconcile(reconcile.data)}</pre>
-          )}
+          {reconcile.isError && <p className="form-error">{errMsg(reconcile.error)}</p>}
+          {reconcile.data && <pre className="admin-result">{renderReconcile(reconcile.data)}</pre>}
         </div>
         <div className="card">
           <h2 className="admin-card-title">날짜 진행</h2>
           <p className="admin-card-desc">
-            기준일 기준으로 상환 배치·포인트 소멸·원장 대사를 순차 실행해요
-            (데모용)
+            기준일 기준으로 상환 배치·포인트 소멸·원장 대사를 순차 실행해요 (데모용)
           </p>
           <div className="admin-actions">
             <button
@@ -177,9 +140,7 @@ const BatchPage = () => {
               +7일 진행
             </button>
           </div>
-          {advance.isError && (
-            <p className="form-error">{errMsg(advance.error)}</p>
-          )}
+          {advance.isError && <p className="form-error">{errMsg(advance.error)}</p>}
           {advance.data && (
             <pre className="admin-result">
               {`기준일 ${advance.data.date}\n[상환] 처리 ${advance.data.repay.paid}건 · 연체 ${advance.data.repay.overdue}건\n[포인트] 소멸 ${advance.data.expire.expired_lots}건\n[대사] ${renderReconcile(advance.data.reconcile)}`}

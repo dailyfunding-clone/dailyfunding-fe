@@ -1,27 +1,32 @@
 "use client";
 
 import { Button, Field } from "@dailyfunding/design-system/components";
-import ky from "ky";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 
+import { api, ApiRequestError } from "@/shared/api";
 import { signInSchema, parseForm, type FormState } from "@/shared/lib";
 
 const SigninPage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [state, formAction, pending] = useActionState<FormState, FormData>(
     async (_prev, formData) => {
       const parsed = parseForm(signInSchema, formData);
       if ("error" in parsed) return { error: parsed.error };
       try {
-        const res = await ky.post("/api/auth/login", {
-          json: { ...parsed.data, keep_login: true },
-          throwHttpErrors: false,
+        await api.post("/api/auth/login", {
+          ...parsed.data,
+          keep_login: true,
         });
-        if (!res.ok) return { error: "이메일 또는 비밀번호가 맞지 않아요" };
+        queryClient.removeQueries({ queryKey: ["me"] });
         router.push("/admin/products");
         return null;
-      } catch {
+      } catch (e) {
+        if (e instanceof ApiRequestError && (e.status === 400 || e.status === 401)) {
+          return { error: "이메일 또는 비밀번호가 맞지 않아요" };
+        }
         return { error: "잠시 후 다시 시도해 주세요" };
       }
     },

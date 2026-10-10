@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 const AdminModal = ({
   title,
   onClose,
@@ -8,13 +10,29 @@ const AdminModal = ({
   title: string;
   onClose: () => void;
   children: React.ReactNode;
-}) => (
-  <div className="modal-backdrop" onClick={onClose}>
-    <div className="modal" onClick={(e) => e.stopPropagation()}>
-      <h2 className="admin-modal-title">{title}</h2>
-      {children}
+}) => {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div
+        className="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="admin-modal-title">{title}</h2>
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default AdminModal;

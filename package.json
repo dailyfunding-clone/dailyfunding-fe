@@ -9,12 +9,10 @@
     "lint": "turbo lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "pnpm --filter @dailyfunding/fo-web test"
+    "test": "pnpm -r test"
   },
   "devDependencies": {
-    "@feature-sliced/steiger-plugin": "^0.8.0",
     "prettier": "^3.6.2",
-    "steiger": "^0.7.0",
     "turbo": "^2.5.0"
   }
 }

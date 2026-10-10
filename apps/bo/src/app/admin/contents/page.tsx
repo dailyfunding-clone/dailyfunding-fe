@@ -5,12 +5,7 @@ import { useActionState, useState } from "react";
 import { z } from "zod";
 
 import { api } from "@/shared/api";
-import { apiDelete, apiPatch } from "@/shared/api";
-import {
-  contentFieldSchema,
-  parseForm,
-  type FormState,
-} from "@/shared/lib";
+import { contentFieldSchema, parseForm, toIso, toLocalInput, type FormState } from "@/shared/lib";
 import { errMsg } from "@/shared/lib";
 
 import { AdminModal } from "../_components";
@@ -27,7 +22,7 @@ type FieldDef = {
 };
 
 type ContentDef = {
-  key: string;
+  key: "notices" | "faqs" | "events" | "disclosures" | "news";
   label: string;
   itemLabel: string;
   columns: { key: string; label: string }[];
@@ -167,9 +162,8 @@ const cellText = (v: unknown) => {
 
 const fieldDefault = (f: FieldDef, row: Row | null) => {
   const v = row?.[f.name];
-  if (f.kind === "json")
-    return JSON.stringify(v ?? f.jsonDefault ?? {}, null, 2);
-  if (f.kind === "datetime" && typeof v === "string") return v.slice(0, 16);
+  if (f.kind === "json") return JSON.stringify(v ?? f.jsonDefault ?? {}, null, 2);
+  if (f.kind === "datetime" && typeof v === "string") return toLocalInput(v);
   return v === null || v === undefined ? "" : String(v);
 };
 
@@ -187,10 +181,7 @@ const ContentForm = ({
     async (_prev, formData) => {
       const schema = z.object(
         Object.fromEntries(
-          def.fields.map((f) => [
-            f.name,
-            contentFieldSchema(f.name, f.label, f.kind, f.required),
-          ]),
+          def.fields.map((f) => [f.name, contentFieldSchema(f.label, f.kind, f.required)]),
         ),
       );
       const parsed = parseForm(schema, formData);
@@ -199,14 +190,31 @@ const ContentForm = ({
       for (const f of def.fields) {
         const raw = parsed.data[f.name].trim();
         if (f.kind === "number") {
-          if (raw !== "") body[f.name] = Number(raw);
+          if (raw === "") continue;
+          const n = Number(raw);
+          if (!Number.isFinite(n)) {
+            return { error: `${f.label}을(를) 숫자로 입력해 주세요` };
+          }
+          body[f.name] = n;
           continue;
         }
         if (f.kind === "json") {
           body[f.name] = raw === "" ? (f.jsonDefault ?? {}) : JSON.parse(raw);
           continue;
         }
-        if (f.kind === "date" || f.kind === "datetime") {
+        if (f.kind === "datetime") {
+          if (raw === "") {
+            body[f.name] = null;
+            continue;
+          }
+          const iso = toIso(raw);
+          if (!iso) {
+            return { error: `${f.label}의 일시 형식을 확인해 주세요` };
+          }
+          body[f.name] = iso;
+          continue;
+        }
+        if (f.kind === "date") {
           body[f.name] = raw === "" ? null : raw;
           continue;
         }
@@ -214,9 +222,11 @@ const ContentForm = ({
       }
       try {
         if (row) {
-          await apiPatch(`/api/admin/${def.key}/${row.id}`, body);
+          await api.patch(`/api/admin/${def.key}/{id}`, body, {
+            path: { id: row.id },
+          });
         } else {
-          await api.request("post", `/api/admin/${def.key}`, body);
+          await api.post(`/api/admin/${def.key}`, body);
         }
         qc.invalidateQueries({ queryKey: ["admin", "contents", def.key] });
         onClose();
@@ -229,10 +239,7 @@ const ContentForm = ({
   );
 
   return (
-    <AdminModal
-      title={row ? `${def.itemLabel} 수정` : `${def.itemLabel} 등록`}
-      onClose={onClose}
-    >
+    <AdminModal title={row ? `${def.itemLabel} 수정` : `${def.itemLabel} 등록`} onClose={onClose}>
       <form action={formAction}>
         {def.fields.map((f) => (
           <div className="form-row" key={f.name}>
@@ -255,6 +262,10 @@ const ContentForm = ({
                   defaultValue={fieldDefault(f, row) || f.options?.[0]?.value}
                   required={f.required}
                 >
+                  {fieldDefault(f, row) !== "" &&
+                    !(f.options ?? []).some((o) => o.value === fieldDefault(f, row)) && (
+                      <option value={fieldDefault(f, row)}>{fieldDefault(f, row)}</option>
+                    )}
                   {(f.options ?? []).map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
@@ -283,19 +294,10 @@ const ContentForm = ({
         ))}
         {state?.error && <p className="form-error">{state.error}</p>}
         <div className="admin-modal-actions">
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={onClose}
-            disabled={pending}
-          >
+          <button type="button" className="btn btn-outline" onClick={onClose} disabled={pending}>
             취소
           </button>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={pending}
-          >
+          <button type="submit" className="btn btn-primary" disabled={pending}>
             {row ? "수정" : "등록"}
           </button>
         </div>
@@ -310,26 +312,21 @@ const ContentSection = ({ def }: { def: ContentDef }) => {
   const [error, setError] = useState("");
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "contents", def.key],
-    queryFn: () =>
-      api.request<{ results: Row[] }>("get", `/api/admin/${def.key}`),
+    queryFn: () => api.get(`/api/admin/${def.key}`),
   });
   const del = useMutation({
-    mutationFn: (id: number) => apiDelete(`/api/admin/${def.key}/${id}`),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["admin", "contents", def.key] }),
+    mutationFn: (id: number) => api.delete(`/api/admin/${def.key}/{id}`, { path: { id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "contents", def.key] }),
     onError: (e) => setError(errMsg(e)),
   });
 
-  const rows = data?.results ?? [];
+  const rows = (data?.results ?? []) as Row[];
 
   return (
     <>
       <div className="admin-head">
         <h1>{def.itemLabel}</h1>
-        <button
-          className="btn btn-primary btn-sm"
-          onClick={() => setEditing("new")}
-        >
+        <button className="btn btn-primary btn-sm" onClick={() => setEditing("new")}>
           등록
         </button>
       </div>
@@ -359,10 +356,7 @@ const ContentSection = ({ def }: { def: ContentDef }) => {
                   ))}
                   <td>
                     <div className="admin-actions">
-                      <button
-                        className="btn btn-outline btn-sm"
-                        onClick={() => setEditing(r)}
-                      >
+                      <button className="btn btn-outline btn-sm" onClick={() => setEditing(r)}>
                         수정
                       </button>
                       <button

@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { api, fmtMan } from "@/shared/api";
-import { apiPatch } from "@/shared/api";
 import { errMsg } from "@/shared/lib";
 
 import {
@@ -16,6 +15,8 @@ import {
   badgeClass,
 } from "../_components";
 
+import type { components } from "@dailyfunding/api-client";
+
 const ProductsPage = () => {
   const qc = useQueryClient();
   const [modal, setModal] = useState<AdminProduct | "new" | null>(null);
@@ -23,15 +24,17 @@ const ProductsPage = () => {
   const [notice, setNotice] = useState("");
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "products"],
-    queryFn: () =>
-      api.request<{ results: AdminProduct[] }>("get", "/api/admin/products"),
+    queryFn: () => api.get("/api/admin/products"),
   });
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ["admin", "products"] });
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["admin", "products"] });
 
   const statusMut = useMutation({
     mutationFn: ({ id, status }: { id: number; status: string }) =>
-      apiPatch(`/api/admin/products/${id}/status`, { status }),
+      api.patch(
+        "/api/admin/products/{id}/status",
+        { status: status as components["schemas"]["StatusEnum"] },
+        { path: { id } },
+      ),
     onSuccess: invalidate,
     onError: (e) => setError(errMsg(e)),
   });
@@ -50,8 +53,7 @@ const ProductsPage = () => {
   const transition = (id: number, to: string, danger?: boolean) => {
     setError("");
     setNotice("");
-    if (danger && !window.confirm(`정말 '${STATUS_LABEL[to]}'(으)로 전환할까요?`))
-      return;
+    if (danger && !window.confirm(`정말 '${STATUS_LABEL[to]}'(으)로 전환할까요?`)) return;
     statusMut.mutate({ id, status: to });
   };
   const execute = (id: number) => {
@@ -120,10 +122,7 @@ const ProductsPage = () => {
                     <td>
                       <div className="admin-actions">
                         {(p.status === "draft" || p.status === "scheduled") && (
-                          <button
-                            className="btn btn-outline btn-sm"
-                            onClick={() => setModal(p)}
-                          >
+                          <button className="btn btn-outline btn-sm" onClick={() => setModal(p)}>
                             수정
                           </button>
                         )}
@@ -156,10 +155,7 @@ const ProductsPage = () => {
         </div>
       )}
       {modal && (
-        <ProductForm
-          product={modal === "new" ? null : modal}
-          onClose={() => setModal(null)}
-        />
+        <ProductForm product={modal === "new" ? null : modal} onClose={() => setModal(null)} />
       )}
     </>
   );

@@ -4,27 +4,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
 import { api, fmtWon } from "@/shared/api";
-import { apiPatch } from "@/shared/api";
 import { adminLoanApproveSchema, parseForm } from "@/shared/lib";
 import { errMsg, fmtDateTime } from "@/shared/lib";
 
 import { AdminModal } from "../_components";
-import {
-  DECISION_LABEL,
-  REPAY_LABEL,
-  TYPE_LABEL,
-  badgeClass,
-} from "../_components";
+import { DECISION_LABEL, REPAY_LABEL, TYPE_LABEL, badgeClass } from "../_components";
 
-type LoanApplication = {
-  id: number;
-  name: string;
-  company: string;
-  amount: number;
-  term_months: number;
-  status: string;
-  created_at: string;
-};
+import type { components } from "@dailyfunding/api-client";
+
+type LoanApplication = components["schemas"]["AdminLoanApplicationItem"];
 
 const FILTERS = [
   { value: "", label: "전체" },
@@ -43,17 +31,18 @@ const LoanApplicationsPage = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "loan-applications", status],
     queryFn: () =>
-      api.request<{ results: LoanApplication[] }>(
-        "get",
-        `/api/admin/loan-applications${status ? `?status=${status}` : ""}`,
-      ),
+      api.get("/api/admin/loan-applications", {
+        query: { status: status || undefined },
+      }),
   });
   const decide = useMutation({
-    mutationFn: ({ id, body }: { id: number; body: Record<string, unknown> }) =>
-      apiPatch<{ id: number; status: string; product_id: number | null }>(
-        `/api/admin/loan-applications/${id}`,
-        body,
-      ),
+    mutationFn: ({
+      id,
+      body,
+    }: {
+      id: number;
+      body: components["schemas"]["PatchedLoanDecision"];
+    }) => api.patch("/api/admin/loan-applications/{id}", body, { path: { id } }),
     onSuccess: (res) => {
       qc.invalidateQueries({ queryKey: ["admin", "loan-applications"] });
       qc.invalidateQueries({ queryKey: ["admin", "products"] });
@@ -66,20 +55,26 @@ const LoanApplicationsPage = () => {
     onError: (e) => setError(errMsg(e)),
   });
 
-  const [approveState, approveAction] = useActionState<
-    { error: string } | null,
-    FormData
-  >((_prev, formData) => {
-    if (!selected) return { error: "신청을 선택해 주세요" };
-    const parsed = parseForm(adminLoanApproveSchema, formData);
-    if ("error" in parsed) return { error: parsed.error };
-    const body: Record<string, unknown> = { action: "approve" };
-    for (const [k, v] of Object.entries(parsed.data)) {
-      if (v !== "") body[k] = v;
-    }
-    decide.mutate({ id: selected.id, body });
-    return null;
-  }, null);
+  const [approveState, approveAction] = useActionState<{ error: string } | null, FormData>(
+    (_prev, formData) => {
+      if (!selected) return { error: "신청을 선택해 주세요" };
+      const parsed = parseForm(adminLoanApproveSchema, formData);
+      if ("error" in parsed) return { error: parsed.error };
+      const body: components["schemas"]["PatchedLoanDecision"] = {
+        action: "approve",
+      };
+      if (parsed.data.name) body.name = parsed.data.name;
+      if (parsed.data.type) body.type = parsed.data.type as components["schemas"]["TypeEnum"];
+      if (parsed.data.annual_rate) body.annual_rate = parsed.data.annual_rate;
+      if (parsed.data.repay_type)
+        body.repay_type = parsed.data.repay_type as components["schemas"]["RepayTypeEnum"];
+      if (parsed.data.platform_fee_rate) body.platform_fee_rate = parsed.data.platform_fee_rate;
+      if (parsed.data.borrower_id) body.borrower_id = parsed.data.borrower_id;
+      decide.mutate({ id: selected.id, body });
+      return null;
+    },
+    null,
+  );
 
   const onReject = () => {
     if (!selected) return;
@@ -158,10 +153,7 @@ const LoanApplicationsPage = () => {
         </div>
       )}
       {selected && (
-        <AdminModal
-          title={`대출 신청 #${selected.id}`}
-          onClose={() => setSelected(null)}
-        >
+        <AdminModal title={`대출 신청 #${selected.id}`} onClose={() => setSelected(null)}>
           <dl>
             <div className="admin-kv">
               <dt>신청자</dt>
@@ -221,13 +213,7 @@ const LoanApplicationsPage = () => {
               <div className="form-row">
                 <label className="field">
                   <span className="field-label">연금리 (%) — 기본 12.00</span>
-                  <input
-                    className="input"
-                    name="annual_rate"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                  />
+                  <input className="input" name="annual_rate" type="number" step="0.01" min="0" />
                 </label>
               </div>
               <div className="form-row">
@@ -245,9 +231,7 @@ const LoanApplicationsPage = () => {
               </div>
               <div className="form-row">
                 <label className="field">
-                  <span className="field-label">
-                    플랫폼 수수료율 (%) — 기본 1.00
-                  </span>
+                  <span className="field-label">플랫폼 수수료율 (%) — 기본 1.00</span>
                   <input
                     className="input"
                     name="platform_fee_rate"
@@ -275,11 +259,7 @@ const LoanApplicationsPage = () => {
                 >
                   거절
                 </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={decide.isPending}
-                >
+                <button type="submit" className="btn btn-primary" disabled={decide.isPending}>
                   승인 후 상품화
                 </button>
               </div>

@@ -5,22 +5,16 @@ import { useRouter } from "next/navigation";
 
 import { api } from "@/shared/api";
 
-export type Me = {
-  id: number;
-  email: string;
-  name: string;
-  role: string;
-  grade: string;
-  is_staff: boolean;
-  member_type: string;
-  identity_verified: boolean;
-};
+import type { components } from "@dailyfunding/api-client";
+
+export type Me = components["schemas"]["User"];
 
 export const useMe = () =>
   useQuery<Me | null>({
     queryKey: ["me"],
-    queryFn: () => api.request<Me>("get", "/api/me").catch(() => null),
+    queryFn: () => api.get("/api/me"),
     staleTime: 60_000,
+    retry: false,
   });
 
 export const useSignOut = () => {
