@@ -8,12 +8,9 @@ import { useMounted } from "@/shared/lib";
 import { useMe } from "@/shared/session";
 import { FilterRow } from "@/shared/ui";
 
-import {
-  HIDDEN_STATUSES,
-  OPEN_STATUSES,
-  TYPE_OPTIONS,
-} from "./constants";
+import { HIDDEN_STATUSES, OPEN_STATUSES, TYPE_OPTIONS } from "./constants";
 import ProductCard from "./product-card";
+import { useProductStream } from "./use-product-stream";
 
 import type { ProductListItem } from "./types";
 
@@ -66,8 +63,7 @@ const toParams = (f: Filters) => {
   return qs.toString();
 };
 
-const fmtAmountCap = (n: number, max: number) =>
-  n >= max ? `${fmtMan(max)}+` : fmtMan(n);
+const fmtAmountCap = (n: number, max: number) => (n >= max ? `${fmtMan(max)}+` : fmtMan(n));
 
 type Props = {
   products: ProductListItem[];
@@ -103,13 +99,11 @@ const ProductBrowser = ({ products }: Props) => {
   );
   const closed = visible.filter((p) => !OPEN_STATUSES.has(p.status));
 
+  useProductStream(open.map((p) => p.id));
+
   const toggleNotify = async () => {
     try {
-      await api.request(
-        "post",
-        "/api/notifications/settings",
-        { new_product: true },
-      );
+      await api.request("post", "/api/notifications/settings", { new_product: true });
       setNotifyMsg("신규 상품 알림을 켰어요");
     } catch {
       setNotifyMsg("알림 설정에 실패했어요");
@@ -152,9 +146,7 @@ const ProductBrowser = ({ products }: Props) => {
                 key={t.value}
                 type="button"
                 className={`chip${f.type === t.value ? " is-active" : ""}`}
-                onClick={() =>
-                  commit({ ...f, type: f.type === t.value ? "" : t.value })
-                }
+                onClick={() => commit({ ...f, type: f.type === t.value ? "" : t.value })}
               >
                 {t.label}
               </button>
@@ -235,9 +227,7 @@ const ProductBrowser = ({ products }: Props) => {
               onBlur={commitRange}
               aria-label="최대 금액"
             />
-            <span className="inv-range-val">
-              {fmtAmountCap(f.max_amount, AMOUNT_MAX)}
-            </span>
+            <span className="inv-range-val">{fmtAmountCap(f.max_amount, AMOUNT_MAX)}</span>
           </div>
         </FilterRow>
       </div>
