@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
-  weight: "45 920",
+  weight: "400 800",
   display: "swap",
   variable: "--font-pretendard",
 });
