@@ -7,6 +7,7 @@ import { DevDomGuard, VitalsReporter, WebViewBridge } from "@/apps/ui";
 
 import type { Metadata, Viewport } from "next";
 import "@dailyfunding/design-system/tokens.css";
+import "@dailyfunding/design-system/components.css";
 import "./globals.scss";
 
 export const metadata: Metadata = {
