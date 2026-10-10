@@ -9,7 +9,7 @@ import { errMsg, fmtDateTime } from "@/shared/lib";
 const DepositHoldsPage = () => {
   const qc = useQueryClient();
   const [error, setError] = useState("");
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
     queryKey: ["admin", "deposit-holds"],
     queryFn: () => api.get("/api/admin/deposit/holds"),
   });
@@ -32,6 +32,19 @@ const DepositHoldsPage = () => {
       {error && <p className="form-error">{error}</p>}
       {isLoading ? (
         <div className="empty">불러오는 중이에요</div>
+      ) : listError ? (
+        <div className="empty">
+          <p>{errMsg(listError)}</p>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            style={{ margin: "8px auto 0" }}
+            disabled={isFetching}
+            onClick={() => void refetch()}
+          >
+            다시 시도
+          </button>
+        </div>
       ) : rows.length === 0 ? (
         <div className="empty">보류된 입금이 없어요</div>
       ) : (

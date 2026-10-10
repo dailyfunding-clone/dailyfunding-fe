@@ -2915,7 +2915,9 @@ export interface operations {
     };
     api_admin_grade_requests_retrieve: {
         parameters: {
-            query?: never;
+            query?: {
+                status?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2961,7 +2963,9 @@ export interface operations {
     };
     api_admin_loan_applications_retrieve: {
         parameters: {
-            query?: never;
+            query?: {
+                status?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;

@@ -18,9 +18,9 @@ const SigninPage = () => {
       try {
         await api.post("/api/auth/login", {
           ...parsed.data,
-          keep_login: true,
+          keep_login: false,
         });
-        queryClient.removeQueries({ queryKey: ["me"] });
+        queryClient.clear();
         router.push("/admin/products");
         return null;
       } catch (e) {

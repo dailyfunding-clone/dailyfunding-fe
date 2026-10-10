@@ -23,7 +23,11 @@ export const api = createClient({ onUnauthorized: refreshSession });
 
 export const fmtWon = (n: number) => `${n.toLocaleString("ko-KR")}원`;
 
-export const fmtMan = (n: number) =>
-  n >= 100_000_000
-    ? `${(n / 100_000_000).toLocaleString("ko-KR", { maximumFractionDigits: 1 })}억`
-    : `${(n / 10_000).toLocaleString("ko-KR", { maximumFractionDigits: 0 })}만원`;
+export const fmtMan = (n: number) => {
+  const abs = Math.abs(n);
+  if (abs >= 100_000_000)
+    return `${(n / 100_000_000).toLocaleString("ko-KR", { maximumFractionDigits: 1 })}억`;
+  if (abs >= 10_000)
+    return `${(n / 10_000).toLocaleString("ko-KR", { maximumFractionDigits: 0 })}만원`;
+  return `${n.toLocaleString("ko-KR")}원`;
+};

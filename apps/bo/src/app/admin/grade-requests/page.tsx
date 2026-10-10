@@ -27,7 +27,7 @@ const GradeRequestsPage = () => {
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
     queryKey: ["admin", "grade-requests", status],
     queryFn: () =>
       api.get("/api/admin/grade-requests", {
@@ -79,6 +79,19 @@ const GradeRequestsPage = () => {
       </div>
       {isLoading ? (
         <div className="empty">불러오는 중이에요</div>
+      ) : listError ? (
+        <div className="empty">
+          <p>{errMsg(listError)}</p>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            style={{ margin: "8px auto 0" }}
+            disabled={isFetching}
+            onClick={() => void refetch()}
+          >
+            다시 시도
+          </button>
+        </div>
       ) : rows.length === 0 ? (
         <div className="empty">신청 내역이 없어요</div>
       ) : (

@@ -350,6 +350,11 @@ paths:
   /api/admin/grade-requests:
     get:
       operationId: api_admin_grade_requests_retrieve
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
       tags:
       - api
       security:
@@ -395,6 +400,11 @@ paths:
   /api/admin/loan-applications:
     get:
       operationId: api_admin_loan_applications_retrieve
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
       tags:
       - api
       security:

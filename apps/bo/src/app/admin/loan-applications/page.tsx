@@ -4,8 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
 import { api, fmtWon } from "@/shared/api";
-import { adminLoanApproveSchema, parseForm } from "@/shared/lib";
-import { errMsg, fmtDateTime } from "@/shared/lib";
+import { adminLoanApproveSchema, errMsg, fmtDateTime, parseForm } from "@/shared/lib";
 
 import { AdminModal } from "../_components";
 import { DECISION_LABEL, REPAY_LABEL, TYPE_LABEL, badgeClass } from "../_components";
@@ -19,6 +18,7 @@ const FILTERS = [
   { value: "submitted", label: "심사대기" },
   { value: "approved", label: "승인" },
   { value: "rejected", label: "거절" },
+  { value: "converted", label: "상품전환" },
 ];
 
 const LoanApplicationsPage = () => {
@@ -28,7 +28,7 @@ const LoanApplicationsPage = () => {
   const [error, setError] = useState("");
   const [productId, setProductId] = useState<number | null>(null);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
     queryKey: ["admin", "loan-applications", status],
     queryFn: () =>
       api.get("/api/admin/loan-applications", {
@@ -55,7 +55,10 @@ const LoanApplicationsPage = () => {
     onError: (e) => setError(errMsg(e)),
   });
 
-  const [approveState, approveAction] = useActionState<{ error: string } | null, FormData>(
+  const [approveState, approveAction, approvePending] = useActionState<
+    { error: string } | null,
+    FormData
+  >(
     (_prev, formData) => {
       if (!selected) return { error: "신청을 선택해 주세요" };
       const parsed = parseForm(adminLoanApproveSchema, formData);
@@ -103,6 +106,19 @@ const LoanApplicationsPage = () => {
       </div>
       {isLoading ? (
         <div className="empty">불러오는 중이에요</div>
+      ) : listError ? (
+        <div className="empty">
+          <p>{errMsg(listError)}</p>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            style={{ margin: "8px auto 0" }}
+            disabled={isFetching}
+            onClick={() => void refetch()}
+          >
+            다시 시도
+          </button>
+        </div>
       ) : rows.length === 0 ? (
         <div className="empty">신청 내역이 없어요</div>
       ) : (
@@ -254,12 +270,16 @@ const LoanApplicationsPage = () => {
                 <button
                   type="button"
                   className="btn btn-outline"
-                  disabled={decide.isPending}
+                  disabled={decide.isPending || approvePending}
                   onClick={onReject}
                 >
                   거절
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={decide.isPending}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={decide.isPending || approvePending}
+                >
                   승인 후 상품화
                 </button>
               </div>
