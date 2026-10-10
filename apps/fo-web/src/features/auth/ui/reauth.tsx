@@ -2,14 +2,7 @@
 
 import { isInWebView, requestReauth } from "@dailyfunding/bridge";
 import { Button, Field } from "@dailyfunding/design-system/components";
-import {
-  createContext,
-  useActionState,
-  useCallback,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useActionState, useCallback, useContext, useRef, useState } from "react";
 
 import { ApiRequestError, api } from "@/shared/api";
 import { parseForm, reauthSchema, type FormState } from "@/shared/lib";
@@ -105,15 +98,15 @@ const ReauthProvider = ({ title, description, children }: Props) => {
                 autoComplete="current-password"
                 required
               />
-              {state?.error && <p className="form-error" role="alert">{state.error}</p>}
+              {state?.error && (
+                <p className="form-error" role="alert">
+                  {state.error}
+                </p>
+              )}
               <Button type="submit" disabled={pending}>
                 {pending ? "확인 중…" : "확인"}
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => settle(null)}
-              >
+              <Button type="button" variant="outline" onClick={() => settle(null)}>
                 취소
               </Button>
             </form>

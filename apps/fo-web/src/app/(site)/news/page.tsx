@@ -8,7 +8,6 @@ import "./news.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "언론보도" };
 
-
 const NewsPage = async () => {
   const data = await fetchJson<{
     results: NewsItem[];

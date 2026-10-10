@@ -7,735 +7,735 @@ paths:
     post:
       operationId: api_admin_batch_expire_points_create
       parameters:
-      - in: query
-        name: date
-        schema:
-          type: string
+        - in: query
+          name: date
+          schema:
+            type: string
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExpireSummary'
-          description: ''
+                $ref: "#/components/schemas/ExpireSummary"
+          description: ""
   /api/admin/batch/reconcile:
     post:
       operationId: api_admin_batch_reconcile_create
       parameters:
-      - in: query
-        name: date
-        schema:
-          type: string
+        - in: query
+          name: date
+          schema:
+            type: string
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReconcileSummary'
-          description: ''
+                $ref: "#/components/schemas/ReconcileSummary"
+          description: ""
   /api/admin/batch/repay:
     post:
       operationId: api_admin_batch_repay_create
       description: POST /api/admin/batch/repay?date= — 상환 배치 수동 트리거 (F-ADM-03/04).
       parameters:
-      - in: query
-        name: date
-        schema:
-          type: string
+        - in: query
+          name: date
+          schema:
+            type: string
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RepaySummary'
-          description: ''
+                $ref: "#/components/schemas/RepaySummary"
+          description: ""
   /api/admin/deposit/holds:
     get:
       operationId: api_admin_deposit_holds_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DepositHoldList'
-          description: ''
+                $ref: "#/components/schemas/DepositHoldList"
+          description: ""
   /api/admin/deposit/holds/{id}:
     patch:
       operationId: api_admin_deposit_holds_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdStatus'
-          description: ''
+                $ref: "#/components/schemas/IdStatus"
+          description: ""
   /api/admin/disclosures:
     get:
       operationId: api_admin_disclosures_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminDisclosureListResponse'
-          description: ''
+                $ref: "#/components/schemas/AdminDisclosureListResponse"
+          description: ""
     post:
       operationId: api_admin_disclosures_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminDisclosureUpsert'
+              $ref: "#/components/schemas/AdminDisclosureUpsert"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminDisclosureUpsert'
+              $ref: "#/components/schemas/AdminDisclosureUpsert"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminDisclosureUpsert'
+              $ref: "#/components/schemas/AdminDisclosureUpsert"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminDisclosureCreated'
-          description: ''
+                $ref: "#/components/schemas/AdminDisclosureCreated"
+          description: ""
   /api/admin/disclosures/{id}:
     patch:
       operationId: api_admin_disclosures_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedAdminDisclosurePatch'
+              $ref: "#/components/schemas/PatchedAdminDisclosurePatch"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedAdminDisclosurePatch'
+              $ref: "#/components/schemas/PatchedAdminDisclosurePatch"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedAdminDisclosurePatch'
+              $ref: "#/components/schemas/PatchedAdminDisclosurePatch"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminDisclosureDetail'
-          description: ''
+                $ref: "#/components/schemas/AdminDisclosureDetail"
+          description: ""
     delete:
       operationId: api_admin_disclosures_destroy
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '204':
+        "204":
           description: No response body
   /api/admin/events:
     get:
       operationId: api_admin_events_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminEventListResponse'
-          description: ''
+                $ref: "#/components/schemas/AdminEventListResponse"
+          description: ""
     post:
       operationId: api_admin_events_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminEventUpsert'
+              $ref: "#/components/schemas/AdminEventUpsert"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminEventUpsert'
+              $ref: "#/components/schemas/AdminEventUpsert"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminEventUpsert'
+              $ref: "#/components/schemas/AdminEventUpsert"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminEventCreated'
-          description: ''
+                $ref: "#/components/schemas/AdminEventCreated"
+          description: ""
   /api/admin/events/{id}:
     patch:
       operationId: api_admin_events_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedAdminEventPatch'
+              $ref: "#/components/schemas/PatchedAdminEventPatch"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedAdminEventPatch'
+              $ref: "#/components/schemas/PatchedAdminEventPatch"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedAdminEventPatch'
+              $ref: "#/components/schemas/PatchedAdminEventPatch"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminEventDetail'
-          description: ''
+                $ref: "#/components/schemas/AdminEventDetail"
+          description: ""
     delete:
       operationId: api_admin_events_destroy
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '204':
+        "204":
           description: No response body
   /api/admin/faqs:
     get:
       operationId: api_admin_faqs_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminFaqListResponse'
-          description: ''
+                $ref: "#/components/schemas/AdminFaqListResponse"
+          description: ""
     post:
       operationId: api_admin_faqs_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminFaqUpsert'
+              $ref: "#/components/schemas/AdminFaqUpsert"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminFaqUpsert'
+              $ref: "#/components/schemas/AdminFaqUpsert"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminFaqUpsert'
+              $ref: "#/components/schemas/AdminFaqUpsert"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminFaqCreated'
-          description: ''
+                $ref: "#/components/schemas/AdminFaqCreated"
+          description: ""
   /api/admin/faqs/{id}:
     patch:
       operationId: api_admin_faqs_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedAdminFaqPatch'
+              $ref: "#/components/schemas/PatchedAdminFaqPatch"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedAdminFaqPatch'
+              $ref: "#/components/schemas/PatchedAdminFaqPatch"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedAdminFaqPatch'
+              $ref: "#/components/schemas/PatchedAdminFaqPatch"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminFaqDetail'
-          description: ''
+                $ref: "#/components/schemas/AdminFaqDetail"
+          description: ""
     delete:
       operationId: api_admin_faqs_destroy
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '204':
+        "204":
           description: No response body
   /api/admin/grade-requests:
     get:
       operationId: api_admin_grade_requests_retrieve
       parameters:
-      - in: query
-        name: status
-        schema:
-          type: string
+        - in: query
+          name: status
+          schema:
+            type: string
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminGradeRequestList'
-          description: ''
+                $ref: "#/components/schemas/AdminGradeRequestList"
+          description: ""
   /api/admin/grade-requests/{id}:
     patch:
       operationId: api_admin_grade_requests_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedGradeDecision'
+              $ref: "#/components/schemas/PatchedGradeDecision"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedGradeDecision'
+              $ref: "#/components/schemas/PatchedGradeDecision"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedGradeDecision'
+              $ref: "#/components/schemas/PatchedGradeDecision"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdStatus'
-          description: ''
+                $ref: "#/components/schemas/IdStatus"
+          description: ""
   /api/admin/loan-applications:
     get:
       operationId: api_admin_loan_applications_retrieve
       parameters:
-      - in: query
-        name: status
-        schema:
-          type: string
+        - in: query
+          name: status
+          schema:
+            type: string
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminLoanApplicationList'
-          description: ''
+                $ref: "#/components/schemas/AdminLoanApplicationList"
+          description: ""
   /api/admin/loan-applications/{id}:
     patch:
       operationId: api_admin_loan_applications_partial_update
       description: 심사 → 승인 시 투자 상품 전환 (F-ADM).
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedLoanDecision'
+              $ref: "#/components/schemas/PatchedLoanDecision"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedLoanDecision'
+              $ref: "#/components/schemas/PatchedLoanDecision"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedLoanDecision'
+              $ref: "#/components/schemas/PatchedLoanDecision"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoanDecisionResponse'
-          description: ''
+                $ref: "#/components/schemas/LoanDecisionResponse"
+          description: ""
   /api/admin/news:
     get:
       operationId: api_admin_news_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminNewsListResponse'
-          description: ''
+                $ref: "#/components/schemas/AdminNewsListResponse"
+          description: ""
     post:
       operationId: api_admin_news_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminNewsUpsert'
+              $ref: "#/components/schemas/AdminNewsUpsert"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminNewsUpsert'
+              $ref: "#/components/schemas/AdminNewsUpsert"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminNewsUpsert'
+              $ref: "#/components/schemas/AdminNewsUpsert"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminNewsCreated'
-          description: ''
+                $ref: "#/components/schemas/AdminNewsCreated"
+          description: ""
   /api/admin/news/{id}:
     patch:
       operationId: api_admin_news_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedAdminNewsPatch'
+              $ref: "#/components/schemas/PatchedAdminNewsPatch"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedAdminNewsPatch'
+              $ref: "#/components/schemas/PatchedAdminNewsPatch"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedAdminNewsPatch'
+              $ref: "#/components/schemas/PatchedAdminNewsPatch"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminNewsDetail'
-          description: ''
+                $ref: "#/components/schemas/AdminNewsDetail"
+          description: ""
     delete:
       operationId: api_admin_news_destroy
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '204':
+        "204":
           description: No response body
   /api/admin/notices:
     get:
       operationId: api_admin_notices_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminNoticeListResponse'
-          description: ''
+                $ref: "#/components/schemas/AdminNoticeListResponse"
+          description: ""
     post:
       operationId: api_admin_notices_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminNoticeUpsert'
+              $ref: "#/components/schemas/AdminNoticeUpsert"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminNoticeUpsert'
+              $ref: "#/components/schemas/AdminNoticeUpsert"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminNoticeUpsert'
+              $ref: "#/components/schemas/AdminNoticeUpsert"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminNoticeCreated'
-          description: ''
+                $ref: "#/components/schemas/AdminNoticeCreated"
+          description: ""
   /api/admin/notices/{id}:
     patch:
       operationId: api_admin_notices_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedAdminNoticePatch'
+              $ref: "#/components/schemas/PatchedAdminNoticePatch"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedAdminNoticePatch'
+              $ref: "#/components/schemas/PatchedAdminNoticePatch"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedAdminNoticePatch'
+              $ref: "#/components/schemas/PatchedAdminNoticePatch"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminNoticeDetail'
-          description: ''
+                $ref: "#/components/schemas/AdminNoticeDetail"
+          description: ""
     delete:
       operationId: api_admin_notices_destroy
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '204':
+        "204":
           description: No response body
   /api/admin/products:
     get:
       operationId: api_admin_products_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminProductListResponse'
-          description: ''
+                $ref: "#/components/schemas/AdminProductListResponse"
+          description: ""
     post:
       operationId: api_admin_products_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductUpsert'
+              $ref: "#/components/schemas/ProductUpsert"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ProductUpsert'
+              $ref: "#/components/schemas/ProductUpsert"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ProductUpsert'
+              $ref: "#/components/schemas/ProductUpsert"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminProductCreateResponse'
-          description: ''
+                $ref: "#/components/schemas/AdminProductCreateResponse"
+          description: ""
   /api/admin/products/{id}:
     patch:
       operationId: api_admin_products_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedProductUpsert'
+              $ref: "#/components/schemas/PatchedProductUpsert"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedProductUpsert'
+              $ref: "#/components/schemas/PatchedProductUpsert"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedProductUpsert'
+              $ref: "#/components/schemas/PatchedProductUpsert"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdStatus'
-          description: ''
+                $ref: "#/components/schemas/IdStatus"
+          description: ""
   /api/admin/products/{id}/execute:
     post:
       operationId: api_admin_products_execute_create
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdStatus'
-          description: ''
+                $ref: "#/components/schemas/IdStatus"
+          description: ""
   /api/admin/products/{id}/status:
     patch:
       operationId: api_admin_products_status_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedProductStatusRequest'
+              $ref: "#/components/schemas/PatchedProductStatusRequest"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedProductStatusRequest'
+              $ref: "#/components/schemas/PatchedProductStatusRequest"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedProductStatusRequest'
+              $ref: "#/components/schemas/PatchedProductStatusRequest"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdStatus'
-          description: ''
+                $ref: "#/components/schemas/IdStatus"
+          description: ""
   /api/admin/seed/products:
     post:
       operationId: api_admin_seed_products_create
@@ -744,27 +744,27 @@ paths:
 
         실제 데이터를 긁어오지 않고 파라미터 범위에서 난수로 생성한다.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SeedProductsRequest'
+              $ref: "#/components/schemas/SeedProductsRequest"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SeedProductsRequest'
+              $ref: "#/components/schemas/SeedProductsRequest"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SeedProductsRequest'
+              $ref: "#/components/schemas/SeedProductsRequest"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeedProductsResponse'
-          description: ''
+                $ref: "#/components/schemas/SeedProductsResponse"
+          description: ""
   /api/admin/time/advance:
     post:
       operationId: api_admin_time_advance_create
@@ -773,1517 +773,1517 @@ paths:
 
         해당 날짜 기준으로 상환 배치·포인트 소멸·대사를 순차 실행한다.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TimeAdvanceRequest'
+              $ref: "#/components/schemas/TimeAdvanceRequest"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TimeAdvanceRequest'
+              $ref: "#/components/schemas/TimeAdvanceRequest"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TimeAdvanceRequest'
+              $ref: "#/components/schemas/TimeAdvanceRequest"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TimeAdvanceResponse'
-          description: ''
+                $ref: "#/components/schemas/TimeAdvanceResponse"
+          description: ""
   /api/auth/app-code:
     post:
       operationId: api_auth_app_code_create
       description: 앱(로그인 상태)이 발급하는 일회용 코드.
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppCodeIssueResponse'
-          description: ''
+                $ref: "#/components/schemas/AppCodeIssueResponse"
+          description: ""
   /api/auth/app-code/exchange:
     post:
       operationId: api_auth_app_code_exchange_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AppCodeExchange'
+              $ref: "#/components/schemas/AppCodeExchange"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AppCodeExchange'
+              $ref: "#/components/schemas/AppCodeExchange"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AppCodeExchange'
+              $ref: "#/components/schemas/AppCodeExchange"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
-          description: ''
+                $ref: "#/components/schemas/LoginResponse"
+          description: ""
   /api/auth/business-number/verify:
     post:
       operationId: api_auth_business_number_verify_create
       description: 사업자등록번호 인증 모의 (F-AUTH-01).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BusinessNumberVerify'
+              $ref: "#/components/schemas/BusinessNumberVerify"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BusinessNumberVerify'
+              $ref: "#/components/schemas/BusinessNumberVerify"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BusinessNumberVerify'
+              $ref: "#/components/schemas/BusinessNumberVerify"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BusinessNumberVerifyResponse'
-          description: ''
+                $ref: "#/components/schemas/BusinessNumberVerifyResponse"
+          description: ""
   /api/auth/find-id:
     post:
       operationId: api_auth_find_id_create
       description: 아이디 찾기 (F-AUTH-03). 모의 SMS 본인확인.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FindId'
+              $ref: "#/components/schemas/FindId"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/FindId'
+              $ref: "#/components/schemas/FindId"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/FindId'
+              $ref: "#/components/schemas/FindId"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FindIdResponse'
-          description: ''
+                $ref: "#/components/schemas/FindIdResponse"
+          description: ""
   /api/auth/identity/verify:
     post:
       operationId: api_auth_identity_verify_create
       description: 모의 본인인증 (F-AUTH-04). 서버가 CI를 발급한다.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IdentityVerify'
+              $ref: "#/components/schemas/IdentityVerify"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/IdentityVerify'
+              $ref: "#/components/schemas/IdentityVerify"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/IdentityVerify'
+              $ref: "#/components/schemas/IdentityVerify"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdentityVerifyResponse'
-          description: ''
+                $ref: "#/components/schemas/IdentityVerifyResponse"
+          description: ""
   /api/auth/login:
     post:
       operationId: api_auth_login_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Login'
+              $ref: "#/components/schemas/Login"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Login'
+              $ref: "#/components/schemas/Login"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Login'
+              $ref: "#/components/schemas/Login"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
-          description: ''
+                $ref: "#/components/schemas/LoginResponse"
+          description: ""
   /api/auth/login/pin:
     post:
       operationId: api_auth_login_pin_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PinLogin'
+              $ref: "#/components/schemas/PinLogin"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PinLogin'
+              $ref: "#/components/schemas/PinLogin"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PinLogin'
+              $ref: "#/components/schemas/PinLogin"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
-          description: ''
+                $ref: "#/components/schemas/LoginResponse"
+          description: ""
   /api/auth/logout:
     post:
       operationId: api_auth_logout_create
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OkResponse'
-          description: ''
+                $ref: "#/components/schemas/OkResponse"
+          description: ""
   /api/auth/password/reset:
     post:
       operationId: api_auth_password_reset_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PasswordReset'
+              $ref: "#/components/schemas/PasswordReset"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PasswordReset'
+              $ref: "#/components/schemas/PasswordReset"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PasswordReset'
+              $ref: "#/components/schemas/PasswordReset"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PasswordResetResponse'
-          description: ''
+                $ref: "#/components/schemas/PasswordResetResponse"
+          description: ""
   /api/auth/password/reset-request:
     post:
       operationId: api_auth_password_reset_request_create
       description: 비밀번호 재설정 링크 발송 모의 (F-AUTH-03). 이메일 존재 여부를 숨긴다.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PasswordResetRequest'
+              $ref: "#/components/schemas/PasswordResetRequest"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PasswordResetRequest'
+              $ref: "#/components/schemas/PasswordResetRequest"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PasswordResetRequest'
+              $ref: "#/components/schemas/PasswordResetRequest"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PasswordResetRequestResponse'
-          description: ''
+                $ref: "#/components/schemas/PasswordResetRequestResponse"
+          description: ""
   /api/auth/pin:
     post:
       operationId: api_auth_pin_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PinRegister'
+              $ref: "#/components/schemas/PinRegister"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PinRegister'
+              $ref: "#/components/schemas/PinRegister"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PinRegister'
+              $ref: "#/components/schemas/PinRegister"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PinRegisterResponse'
-          description: ''
+                $ref: "#/components/schemas/PinRegisterResponse"
+          description: ""
   /api/auth/reauth:
     post:
       operationId: api_auth_reauth_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Reauth'
+              $ref: "#/components/schemas/Reauth"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Reauth'
+              $ref: "#/components/schemas/Reauth"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Reauth'
+              $ref: "#/components/schemas/Reauth"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReauthResponse'
-          description: ''
+                $ref: "#/components/schemas/ReauthResponse"
+          description: ""
   /api/auth/refresh:
     post:
       operationId: api_auth_refresh_create
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
-          description: ''
+                $ref: "#/components/schemas/LoginResponse"
+          description: ""
   /api/auth/signup:
     post:
       operationId: api_auth_signup_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Signup'
+              $ref: "#/components/schemas/Signup"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Signup'
+              $ref: "#/components/schemas/Signup"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Signup'
+              $ref: "#/components/schemas/Signup"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignupResponse'
-          description: ''
+                $ref: "#/components/schemas/SignupResponse"
+          description: ""
   /api/auth/signup/borrower:
     post:
       operationId: api_auth_signup_borrower_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Signup'
+              $ref: "#/components/schemas/Signup"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Signup'
+              $ref: "#/components/schemas/Signup"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Signup'
+              $ref: "#/components/schemas/Signup"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignupResponse'
-          description: ''
+                $ref: "#/components/schemas/SignupResponse"
+          description: ""
   /api/cart:
     get:
       operationId: api_cart_retrieve
       description: GET/POST /api/cart (F-INV-06).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CartListResponse'
-          description: ''
+                $ref: "#/components/schemas/CartListResponse"
+          description: ""
     post:
       operationId: api_cart_create
       description: GET/POST /api/cart (F-INV-06).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CartAdd'
+              $ref: "#/components/schemas/CartAdd"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CartAdd'
+              $ref: "#/components/schemas/CartAdd"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CartAdd'
+              $ref: "#/components/schemas/CartAdd"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CartAddResponse'
-          description: ''
+                $ref: "#/components/schemas/CartAddResponse"
+          description: ""
   /api/cart/{id}:
     delete:
       operationId: api_cart_destroy
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '204':
+        "204":
           description: No response body
   /api/deposit/account:
     get:
       operationId: api_deposit_account_retrieve
       description: GET /api/deposit/account — 가상계좌 + 잔액 (F-DEP-01).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DepositAccount'
-          description: ''
+                $ref: "#/components/schemas/DepositAccount"
+          description: ""
   /api/deposit/auto-charge:
     put:
       operationId: api_deposit_auto_charge_update
       description: PUT /api/deposit/auto-charge — 간편충전 ON/OFF (F-DEP-05).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AutoCharge'
+              $ref: "#/components/schemas/AutoCharge"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AutoCharge'
+              $ref: "#/components/schemas/AutoCharge"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AutoCharge'
+              $ref: "#/components/schemas/AutoCharge"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EnabledResponse'
-          description: ''
+                $ref: "#/components/schemas/EnabledResponse"
+          description: ""
   /api/deposit/history:
     get:
       operationId: api_deposit_history_retrieve
       description: GET /api/deposit/history — 예치금 내역 (F-DEP-04, F-MY-04).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DepositHistory'
-          description: ''
+                $ref: "#/components/schemas/DepositHistory"
+          description: ""
   /api/deposit/linked-account:
     get:
       operationId: api_deposit_linked_account_retrieve
       description: GET/PUT /api/deposit/linked-account — 연결계좌 조회·등록 (F-DEP-05).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LinkedAccountResponse'
-          description: ''
+                $ref: "#/components/schemas/LinkedAccountResponse"
+          description: ""
     put:
       operationId: api_deposit_linked_account_update
       description: GET/PUT /api/deposit/linked-account — 연결계좌 조회·등록 (F-DEP-05).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LinkedAccount'
+              $ref: "#/components/schemas/LinkedAccount"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/LinkedAccount'
+              $ref: "#/components/schemas/LinkedAccount"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/LinkedAccount'
+              $ref: "#/components/schemas/LinkedAccount"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LinkedAccountResponse'
-          description: ''
+                $ref: "#/components/schemas/LinkedAccountResponse"
+          description: ""
   /api/deposit/notify-intent:
     post:
       operationId: api_deposit_notify_intent_create
       description: POST /api/deposit/notify-intent — 입금 알리기 (F-DEP-02).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NotifyIntent'
+              $ref: "#/components/schemas/NotifyIntent"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/NotifyIntent'
+              $ref: "#/components/schemas/NotifyIntent"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/NotifyIntent'
+              $ref: "#/components/schemas/NotifyIntent"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '202':
+        "202":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DepositIntentResponse'
-          description: ''
+                $ref: "#/components/schemas/DepositIntentResponse"
+          description: ""
   /api/deposit/withdraw:
     post:
       operationId: api_deposit_withdraw_create
       description: POST /api/deposit/withdraw — 출금 요청 (F-DEP-03).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Withdraw'
+              $ref: "#/components/schemas/Withdraw"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Withdraw'
+              $ref: "#/components/schemas/Withdraw"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Withdraw'
+              $ref: "#/components/schemas/Withdraw"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '202':
+        "202":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WithdrawResponse'
-          description: ''
+                $ref: "#/components/schemas/WithdrawResponse"
+          description: ""
   /api/devices:
     post:
       operationId: api_devices_create
       description: POST /api/devices — 푸시 토큰 등록.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Device'
+              $ref: "#/components/schemas/Device"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Device'
+              $ref: "#/components/schemas/Device"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Device'
+              $ref: "#/components/schemas/Device"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceResponse'
-          description: ''
+                $ref: "#/components/schemas/DeviceResponse"
+          description: ""
   /api/disclosures:
     get:
       operationId: api_disclosures_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DisclosureListResponse'
-          description: ''
+                $ref: "#/components/schemas/DisclosureListResponse"
+          description: ""
   /api/events:
     get:
       operationId: api_events_list
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventListResponse'
-          description: ''
+                $ref: "#/components/schemas/EventListResponse"
+          description: ""
   /api/events/{id}:
     get:
       operationId: api_events_retrieve
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventDetail'
-          description: ''
+                $ref: "#/components/schemas/EventDetail"
+          description: ""
   /api/events/{id}/enter:
     post:
       operationId: api_events_enter_create
       description: 이벤트 참여 → 포인트 적립 규칙 연동 (F-CON-03).
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventEnterResponse'
-          description: ''
+                $ref: "#/components/schemas/EventEnterResponse"
+          description: ""
   /api/faqs:
     get:
       operationId: api_faqs_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FaqListResponse'
-          description: ''
+                $ref: "#/components/schemas/FaqListResponse"
+          description: ""
   /api/faqs/keywords:
     get:
       operationId: api_faqs_keywords_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FaqKeywords'
-          description: ''
+                $ref: "#/components/schemas/FaqKeywords"
+          description: ""
   /api/investments:
     get:
       operationId: api_investments_list
       description: GET /api/investments — 내 투자 내역 / POST — 투자 주문 (F-INV-04).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvestmentListResponse'
-          description: ''
+                $ref: "#/components/schemas/InvestmentListResponse"
+          description: ""
     post:
       operationId: api_investments_create
       description: GET /api/investments — 내 투자 내역 / POST — 투자 주문 (F-INV-04).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InvestOrder'
+              $ref: "#/components/schemas/InvestOrder"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/InvestOrder'
+              $ref: "#/components/schemas/InvestOrder"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/InvestOrder'
+              $ref: "#/components/schemas/InvestOrder"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvestmentResponse'
-          description: ''
+                $ref: "#/components/schemas/InvestmentResponse"
+          description: ""
   /api/investments/{id}:
     get:
       operationId: api_investments_retrieve
       description: GET /api/investments/{id} — 건별 상세 (회차별 상환 현황).
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvestmentDetailResponse'
-          description: ''
+                $ref: "#/components/schemas/InvestmentDetailResponse"
+          description: ""
   /api/loans:
     get:
       operationId: api_loans_list
       description: GET /api/loans?category= (F-LOAN-01).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoanProductListResponse'
-          description: ''
+                $ref: "#/components/schemas/LoanProductListResponse"
+          description: ""
   /api/loans/{id}:
     get:
       operationId: api_loans_retrieve
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoanProductDetail'
-          description: ''
+                $ref: "#/components/schemas/LoanProductDetail"
+          description: ""
   /api/loans/applications:
     post:
       operationId: api_loans_applications_create
       description: POST /api/loans/applications — 대출 신청 (F-LOAN-04).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoanApplication'
+              $ref: "#/components/schemas/LoanApplication"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/LoanApplication'
+              $ref: "#/components/schemas/LoanApplication"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/LoanApplication'
+              $ref: "#/components/schemas/LoanApplication"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoanApplicationResponse'
-          description: ''
+                $ref: "#/components/schemas/LoanApplicationResponse"
+          description: ""
   /api/loans/limit-check:
     post:
       operationId: api_loans_limit_check_create
       description: POST /api/loans/limit-check — 간편 한도 조회 모의 (F-LOAN-03).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LimitCheck'
+              $ref: "#/components/schemas/LimitCheck"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/LimitCheck'
+              $ref: "#/components/schemas/LimitCheck"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/LimitCheck'
+              $ref: "#/components/schemas/LimitCheck"
         required: true
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LimitCheckResponse'
-          description: ''
+                $ref: "#/components/schemas/LimitCheckResponse"
+          description: ""
   /api/me:
     get:
       operationId: api_me_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-          description: ''
+                $ref: "#/components/schemas/User"
+          description: ""
   /api/me/calendar:
     get:
       operationId: api_me_calendar_retrieve
       description: GET /api/me/calendar?year=&month= (F-MY-02).
       parameters:
-      - in: query
-        name: month
-        schema:
-          type: integer
-        required: true
-      - in: query
-        name: year
-        schema:
-          type: integer
-        required: true
+        - in: query
+          name: month
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: year
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CalendarResponse'
-          description: ''
+                $ref: "#/components/schemas/CalendarResponse"
+          description: ""
   /api/me/dashboard:
     get:
       operationId: api_me_dashboard_retrieve
       description: GET /api/me/dashboard (F-MY-01).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DashboardResponse'
-          description: ''
+                $ref: "#/components/schemas/DashboardResponse"
+          description: ""
   /api/me/grade:
     get:
       operationId: api_me_grade_retrieve
       description: GET /api/me/grade (F-MY-05).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GradeResponse'
-          description: ''
+                $ref: "#/components/schemas/GradeResponse"
+          description: ""
   /api/me/grade-request:
     post:
       operationId: api_me_grade_request_create
       description: POST /api/me/grade-request — 등급 변경 신청 (서류 multipart).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GradeRequest'
+              $ref: "#/components/schemas/GradeRequest"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/GradeRequest'
+              $ref: "#/components/schemas/GradeRequest"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/GradeRequest'
+              $ref: "#/components/schemas/GradeRequest"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GradeRequestResponse'
-          description: ''
+                $ref: "#/components/schemas/GradeRequestResponse"
+          description: ""
   /api/me/grade/history:
     get:
       operationId: api_me_grade_history_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GradeHistoryResponse'
-          description: ''
+                $ref: "#/components/schemas/GradeHistoryResponse"
+          description: ""
   /api/me/investments:
     get:
       operationId: api_me_investments_retrieve
       description: GET /api/me/investments — 투자내역 필터 (F-MY-03).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvestmentListResponse'
-          description: ''
+                $ref: "#/components/schemas/InvestmentListResponse"
+          description: ""
   /api/me/limit-assessment:
     post:
       operationId: api_me_limit_assessment_create
       description: POST /api/me/limit-assessment — 원스톱 한도심사 (모의).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LimitAssessmentResponse'
-          description: ''
+                $ref: "#/components/schemas/LimitAssessmentResponse"
+          description: ""
   /api/news:
     get:
       operationId: api_news_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewsListResponse'
-          description: ''
+                $ref: "#/components/schemas/NewsListResponse"
+          description: ""
   /api/notices:
     get:
       operationId: api_notices_list
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NoticeListResponse'
-          description: ''
+                $ref: "#/components/schemas/NoticeListResponse"
+          description: ""
   /api/notices/{id}:
     get:
       operationId: api_notices_retrieve
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NoticeDetail'
-          description: ''
+                $ref: "#/components/schemas/NoticeDetail"
+          description: ""
   /api/notifications:
     get:
       operationId: api_notifications_retrieve
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationListResponse'
-          description: ''
+                $ref: "#/components/schemas/NotificationListResponse"
+          description: ""
   /api/notifications/settings:
     post:
       operationId: api_notifications_settings_create
       description: POST /api/notifications/settings — 카테고리별 ON/OFF.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NotifSetting'
+              $ref: "#/components/schemas/NotifSetting"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/NotifSetting'
+              $ref: "#/components/schemas/NotifSetting"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/NotifSetting'
+              $ref: "#/components/schemas/NotifSetting"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotifSettingResponse'
-          description: ''
+                $ref: "#/components/schemas/NotifSettingResponse"
+          description: ""
   /api/points:
     get:
       operationId: api_points_retrieve
       description: GET /api/points (F-PNT-01).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PointBalance'
-          description: ''
+                $ref: "#/components/schemas/PointBalance"
+          description: ""
   /api/points/convert:
     post:
       operationId: api_points_convert_create
       description: POST /api/points/convert — 포인트→예치금 전환 (F-PNT-01).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PointConvert'
+              $ref: "#/components/schemas/PointConvert"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PointConvert'
+              $ref: "#/components/schemas/PointConvert"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PointConvert'
+              $ref: "#/components/schemas/PointConvert"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PointConvertResponse'
-          description: ''
+                $ref: "#/components/schemas/PointConvertResponse"
+          description: ""
   /api/points/history:
     get:
       operationId: api_points_history_retrieve
       description: GET /api/points/history (F-PNT-02). CSV export 지원.
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PointHistory'
-          description: ''
+                $ref: "#/components/schemas/PointHistory"
+          description: ""
   /api/products:
     get:
       operationId: api_products_list
       description: GET /api/products — 투자 상품 목록 (F-INV-01).
       parameters:
-      - in: query
-        name: include_closed
-        schema:
-          type: boolean
-      - in: query
-        name: max_amount
-        schema:
-          type: integer
-      - in: query
-        name: max_rate
-        schema:
-          type: number
-          format: double
-      - in: query
-        name: max_term
-        schema:
-          type: integer
-      - in: query
-        name: min_amount
-        schema:
-          type: integer
-      - in: query
-        name: min_rate
-        schema:
-          type: number
-          format: double
-      - in: query
-        name: min_term
-        schema:
-          type: integer
-      - name: page
-        required: false
-        in: query
-        description: 페이지네이션된 결과 집합 내의 페이지 번호.
-        schema:
-          type: integer
-      - name: page_size
-        required: false
-        in: query
-        description: 페이지당 반환할 결과 수.
-        schema:
-          type: integer
-      - in: query
-        name: sort
-        schema:
-          type: string
-      - in: query
-        name: status
-        schema:
-          type: string
-      - in: query
-        name: type
-        schema:
-          type: string
+        - in: query
+          name: include_closed
+          schema:
+            type: boolean
+        - in: query
+          name: max_amount
+          schema:
+            type: integer
+        - in: query
+          name: max_rate
+          schema:
+            type: number
+            format: double
+        - in: query
+          name: max_term
+          schema:
+            type: integer
+        - in: query
+          name: min_amount
+          schema:
+            type: integer
+        - in: query
+          name: min_rate
+          schema:
+            type: number
+            format: double
+        - in: query
+          name: min_term
+          schema:
+            type: integer
+        - name: page
+          required: false
+          in: query
+          description: 페이지네이션된 결과 집합 내의 페이지 번호.
+          schema:
+            type: integer
+        - name: page_size
+          required: false
+          in: query
+          description: 페이지당 반환할 결과 수.
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            type: string
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedProductListList'
-          description: ''
+                $ref: "#/components/schemas/PaginatedProductListList"
+          description: ""
   /api/products/{id}:
     get:
       operationId: api_products_retrieve
       description: GET /api/products/{id} — 상세 (F-INV-02).
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductDetail'
-          description: ''
+                $ref: "#/components/schemas/ProductDetail"
+          description: ""
   /api/products/{id}/schedule-preview:
     get:
       operationId: api_products_schedule_preview_retrieve
       description: GET /api/products/{id}/schedule-preview?amount= — 예상수익 (F-INV-03).
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SchedulePreview'
-          description: ''
+                $ref: "#/components/schemas/SchedulePreview"
+          description: ""
   /api/reservations:
     get:
       operationId: api_reservations_list
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ReservationResponse'
-          description: ''
+                  $ref: "#/components/schemas/ReservationResponse"
+          description: ""
     post:
       operationId: api_reservations_create
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ReservationCreate'
+              $ref: "#/components/schemas/ReservationCreate"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ReservationCreate'
+              $ref: "#/components/schemas/ReservationCreate"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ReservationCreate'
+              $ref: "#/components/schemas/ReservationCreate"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReservationResponse'
-          description: ''
+                $ref: "#/components/schemas/ReservationResponse"
+          description: ""
   /api/reservations/{id}:
     patch:
       operationId: api_reservations_partial_update
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedReservationPatch'
+              $ref: "#/components/schemas/PatchedReservationPatch"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedReservationPatch'
+              $ref: "#/components/schemas/PatchedReservationPatch"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedReservationPatch'
+              $ref: "#/components/schemas/PatchedReservationPatch"
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReservationResponse'
-          description: ''
+                $ref: "#/components/schemas/ReservationResponse"
+          description: ""
     delete:
       operationId: api_reservations_destroy
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '204':
+        "204":
           description: No response body
   /api/reservations/eligible:
     get:
       operationId: api_reservations_eligible_retrieve
       description: GET /api/reservations/eligible — 만기 임박 + 재모집 대상 투자.
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReservationEligibleResponse'
-          description: ''
+                $ref: "#/components/schemas/ReservationEligibleResponse"
+          description: ""
   /api/suitability-test:
     get:
       operationId: api_suitability_test_retrieve
       description: GET 문항 조회 / POST 제출·채점 (F-INV-05).
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuitabilityQuestionsResponse'
-          description: ''
+                $ref: "#/components/schemas/SuitabilityQuestionsResponse"
+          description: ""
     post:
       operationId: api_suitability_test_create
       description: GET 문항 조회 / POST 제출·채점 (F-INV-05).
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SuitabilitySubmit'
+              $ref: "#/components/schemas/SuitabilitySubmit"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SuitabilitySubmit'
+              $ref: "#/components/schemas/SuitabilitySubmit"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SuitabilitySubmit'
+              $ref: "#/components/schemas/SuitabilitySubmit"
         required: true
       security:
-      - cookieAuth: []
+        - cookieAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuitabilityResult'
-          description: ''
+                $ref: "#/components/schemas/SuitabilityResult"
+          description: ""
   /api/terms/{key}:
     get:
       operationId: api_terms_retrieve
       parameters:
-      - in: path
-        name: key
-        schema:
-          type: string
-        required: true
+        - in: path
+          name: key
+          schema:
+            type: string
+          required: true
       tags:
-      - api
+        - api
       security:
-      - cookieAuth: []
-      - {}
+        - cookieAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Term'
-          description: ''
+                $ref: "#/components/schemas/Term"
+          description: ""
   /api/webhooks/bank/deposit:
     post:
       operationId: api_webhooks_bank_deposit_create
       description: POST /api/webhooks/bank/deposit — 입금 완료 통지.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankWebhookPayload'
+              $ref: "#/components/schemas/BankWebhookPayload"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BankWebhookPayload'
+              $ref: "#/components/schemas/BankWebhookPayload"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BankWebhookPayload'
+              $ref: "#/components/schemas/BankWebhookPayload"
         required: true
       security:
-      - {}
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankWebhookAck'
-          description: ''
+                $ref: "#/components/schemas/BankWebhookAck"
+          description: ""
   /api/webhooks/bank/transfer:
     post:
       operationId: api_webhooks_bank_transfer_create
       description: POST /api/webhooks/bank/transfer — 출금 이체 결과.
       tags:
-      - api
+        - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankWebhookPayload'
+              $ref: "#/components/schemas/BankWebhookPayload"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BankWebhookPayload'
+              $ref: "#/components/schemas/BankWebhookPayload"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BankWebhookPayload'
+              $ref: "#/components/schemas/BankWebhookPayload"
         required: true
       security:
-      - {}
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankWebhookAck'
-          description: ''
+                $ref: "#/components/schemas/BankWebhookAck"
+          description: ""
 components:
   schemas:
     ActionEnum:
       enum:
-      - approve
-      - reject
+        - approve
+        - reject
       type: string
       description: |-
         * `approve` - approve
@@ -2294,14 +2294,14 @@ components:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminDisclosureDetail:
       type: object
       properties:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminDisclosureListResponse:
       type: object
       properties:
@@ -2309,7 +2309,7 @@ components:
           type: array
           items: {}
       required:
-      - results
+        - results
     AdminDisclosureUpsert:
       type: object
       properties:
@@ -2325,14 +2325,14 @@ components:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminEventDetail:
       type: object
       properties:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminEventListResponse:
       type: object
       properties:
@@ -2340,7 +2340,7 @@ components:
           type: array
           items: {}
       required:
-      - results
+        - results
     AdminEventUpsert:
       type: object
       properties:
@@ -2358,14 +2358,14 @@ components:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminFaqDetail:
       type: object
       properties:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminFaqListResponse:
       type: object
       properties:
@@ -2373,7 +2373,7 @@ components:
           type: array
           items: {}
       required:
-      - results
+        - results
     AdminFaqUpsert:
       type: object
       properties:
@@ -2398,21 +2398,21 @@ components:
           type: string
           format: date-time
       required:
-      - created_at
-      - email
-      - id
-      - status
-      - to_grade
-      - user_id
+        - created_at
+        - email
+        - id
+        - status
+        - to_grade
+        - user_id
     AdminGradeRequestList:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/AdminGradeRequestItem'
+            $ref: "#/components/schemas/AdminGradeRequestItem"
       required:
-      - results
+        - results
     AdminLoanApplicationItem:
       type: object
       properties:
@@ -2432,36 +2432,36 @@ components:
           type: string
           format: date-time
       required:
-      - amount
-      - company
-      - created_at
-      - id
-      - name
-      - status
-      - term_months
+        - amount
+        - company
+        - created_at
+        - id
+        - name
+        - status
+        - term_months
     AdminLoanApplicationList:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/AdminLoanApplicationItem'
+            $ref: "#/components/schemas/AdminLoanApplicationItem"
       required:
-      - results
+        - results
     AdminNewsCreated:
       type: object
       properties:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminNewsDetail:
       type: object
       properties:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminNewsListResponse:
       type: object
       properties:
@@ -2469,7 +2469,7 @@ components:
           type: array
           items: {}
       required:
-      - results
+        - results
     AdminNewsUpsert:
       type: object
       properties:
@@ -2484,14 +2484,14 @@ components:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminNoticeDetail:
       type: object
       properties:
         id:
           type: integer
       required:
-      - id
+        - id
     AdminNoticeListResponse:
       type: object
       properties:
@@ -2499,7 +2499,7 @@ components:
           type: array
           items: {}
       required:
-      - results
+        - results
     AdminNoticeUpsert:
       type: object
       properties:
@@ -2529,15 +2529,15 @@ components:
         status:
           type: string
       required:
-      - annual_rate
-      - id
-      - name
-      - product_no
-      - raised_amount
-      - status
-      - target_amount
-      - term_months
-      - type
+        - annual_rate
+        - id
+        - name
+        - product_no
+        - raised_amount
+        - status
+        - target_amount
+        - term_months
+        - type
     AdminProductCreateResponse:
       type: object
       properties:
@@ -2548,18 +2548,18 @@ components:
         status:
           type: string
       required:
-      - id
-      - product_no
-      - status
+        - id
+        - product_no
+        - status
     AdminProductListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/AdminProduct'
+            $ref: "#/components/schemas/AdminProduct"
       required:
-      - results
+        - results
     AgreementItem:
       type: object
       properties:
@@ -2568,15 +2568,15 @@ components:
         agreed:
           type: boolean
       required:
-      - agreed
-      - term
+        - agreed
+        - term
     AppCodeExchange:
       type: object
       properties:
         code:
           type: string
       required:
-      - code
+        - code
     AppCodeIssueResponse:
       type: object
       properties:
@@ -2585,15 +2585,15 @@ components:
         expires_in:
           type: integer
       required:
-      - code
-      - expires_in
+        - code
+        - expires_in
     AutoCharge:
       type: object
       properties:
         enabled:
           type: boolean
       required:
-      - enabled
+        - enabled
     BankWebhookAck:
       type: object
       properties:
@@ -2602,7 +2602,7 @@ components:
         deduplicated:
           type: boolean
       required:
-      - received
+        - received
     BankWebhookPayload:
       type: object
       properties:
@@ -2611,15 +2611,15 @@ components:
         type:
           type: string
       required:
-      - event_id
-      - type
+        - event_id
+        - type
     BusinessNumberVerify:
       type: object
       properties:
         business_number:
           type: string
       required:
-      - business_number
+        - business_number
     BusinessNumberVerifyResponse:
       type: object
       properties:
@@ -2628,7 +2628,7 @@ components:
         reason:
           type: string
       required:
-      - verified
+        - verified
     CalendarDay:
       type: object
       properties:
@@ -2642,10 +2642,10 @@ components:
         status:
           type: string
       required:
-      - date
-      - interest_net
-      - principal
-      - status
+        - date
+        - interest_net
+        - principal
+        - status
     CalendarMonthly:
       type: object
       properties:
@@ -2658,36 +2658,36 @@ components:
         interest_scheduled_net:
           type: integer
       required:
-      - interest_done_net
-      - interest_scheduled_net
-      - principal_done
-      - principal_scheduled
+        - interest_done_net
+        - interest_scheduled_net
+        - principal_done
+        - principal_scheduled
     CalendarResponse:
       type: object
       properties:
         days:
           type: array
           items:
-            $ref: '#/components/schemas/CalendarDay'
+            $ref: "#/components/schemas/CalendarDay"
         monthly:
-          $ref: '#/components/schemas/CalendarMonthly'
+          $ref: "#/components/schemas/CalendarMonthly"
       required:
-      - days
-      - monthly
+        - days
+        - monthly
     CartAdd:
       type: object
       properties:
         product_id:
           type: integer
       required:
-      - product_id
+        - product_id
     CartAddResponse:
       type: object
       properties:
         id:
           type: integer
       required:
-      - id
+        - id
     CartItem:
       type: object
       properties:
@@ -2712,55 +2712,55 @@ components:
         closed:
           type: boolean
       required:
-      - annual_rate
-      - closed
-      - id
-      - name
-      - product_id
-      - product_no
-      - remaining_amount
-      - status
-      - target_amount
-      - term_months
+        - annual_rate
+        - closed
+        - id
+        - name
+        - product_id
+        - product_no
+        - remaining_amount
+        - status
+        - target_amount
+        - term_months
     CartListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/CartItem'
+            $ref: "#/components/schemas/CartItem"
         count:
           type: integer
       required:
-      - count
-      - results
+        - count
+        - results
     DashboardResponse:
       type: object
       properties:
         profile:
-          $ref: '#/components/schemas/_Profile'
+          $ref: "#/components/schemas/_Profile"
         virtual_account:
           allOf:
-          - $ref: '#/components/schemas/_VirtualAccount'
+            - $ref: "#/components/schemas/_VirtualAccount"
           nullable: true
         deposit:
           type: integer
         points:
           type: integer
         limits:
-          $ref: '#/components/schemas/_Limits'
+          $ref: "#/components/schemas/_Limits"
         active:
-          $ref: '#/components/schemas/_Active'
+          $ref: "#/components/schemas/_Active"
         past:
-          $ref: '#/components/schemas/_Past'
+          $ref: "#/components/schemas/_Past"
       required:
-      - active
-      - deposit
-      - limits
-      - past
-      - points
-      - profile
-      - virtual_account
+        - active
+        - deposit
+        - limits
+        - past
+        - points
+        - profile
+        - virtual_account
     DepositAccount:
       type: object
       properties:
@@ -2777,25 +2777,25 @@ components:
         withdrawable:
           type: integer
       required:
-      - account_no
-      - bank
-      - deposit
-      - held
-      - holder
-      - withdrawable
+        - account_no
+        - bank
+        - deposit
+        - held
+        - holder
+        - withdrawable
     DepositHistory:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/LedgerEntry'
+            $ref: "#/components/schemas/LedgerEntry"
         next_cursor:
           type: string
           nullable: true
       required:
-      - next_cursor
-      - results
+        - next_cursor
+        - results
     DepositHoldItem:
       type: object
       properties:
@@ -2816,22 +2816,22 @@ components:
           type: string
           format: date-time
       required:
-      - amount
-      - created_at
-      - email
-      - held_reason
-      - id
-      - sender_name
-      - user_id
+        - amount
+        - created_at
+        - email
+        - held_reason
+        - id
+        - sender_name
+        - user_id
     DepositHoldList:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/DepositHoldItem'
+            $ref: "#/components/schemas/DepositHoldItem"
       required:
-      - results
+        - results
     DepositIntentResponse:
       type: object
       properties:
@@ -2840,8 +2840,8 @@ components:
         status:
           type: string
       required:
-      - intent_id
-      - status
+        - intent_id
+        - status
     Device:
       type: object
       properties:
@@ -2849,17 +2849,17 @@ components:
           type: string
           maxLength: 100
         platform:
-          $ref: '#/components/schemas/PlatformEnum'
+          $ref: "#/components/schemas/PlatformEnum"
       required:
-      - expo_push_token
-      - platform
+        - expo_push_token
+        - platform
     DeviceResponse:
       type: object
       properties:
         registered:
           type: boolean
       required:
-      - registered
+        - registered
     Disclosure:
       type: object
       properties:
@@ -2879,28 +2879,28 @@ components:
           type: string
           format: date-time
       required:
-      - id
-      - kpi
-      - month
-      - published_at
-      - tabs
-      - year
+        - id
+        - kpi
+        - month
+        - published_at
+        - tabs
+        - year
     DisclosureListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/Disclosure'
+            $ref: "#/components/schemas/Disclosure"
       required:
-      - results
+        - results
     EnabledResponse:
       type: object
       properties:
         enabled:
           type: boolean
       required:
-      - enabled
+        - enabled
     EventDetail:
       type: object
       properties:
@@ -2935,20 +2935,20 @@ components:
         ongoing:
           type: array
           items:
-            $ref: '#/components/schemas/OngoingEvent'
+            $ref: "#/components/schemas/OngoingEvent"
       required:
-      - body
-      - end_at
-      - id
-      - next_id
-      - ongoing
-      - prev_id
-      - reward_points
-      - start_at
-      - status
-      - summary
-      - thumbnail_url
-      - title
+        - body
+        - end_at
+        - id
+        - next_id
+        - ongoing
+        - prev_id
+        - reward_points
+        - start_at
+        - status
+        - summary
+        - thumbnail_url
+        - title
     EventEnterResponse:
       type: object
       properties:
@@ -2957,8 +2957,8 @@ components:
         reward_points:
           type: integer
       required:
-      - entered
-      - reward_points
+        - entered
+        - reward_points
     EventListItem:
       type: object
       properties:
@@ -2981,35 +2981,35 @@ components:
           format: date-time
           nullable: true
       required:
-      - end_at
-      - id
-      - start_at
-      - status
-      - summary
-      - thumbnail_url
-      - title
+        - end_at
+        - id
+        - start_at
+        - status
+        - summary
+        - thumbnail_url
+        - title
     EventListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/EventListItem'
+            $ref: "#/components/schemas/EventListItem"
         total:
           type: integer
         page:
           type: integer
       required:
-      - page
-      - results
-      - total
+        - page
+        - results
+        - total
     ExpireSummary:
       type: object
       properties:
         expired_lots:
           type: integer
       required:
-      - expired_lots
+        - expired_lots
     FaqItem:
       type: object
       properties:
@@ -3022,10 +3022,10 @@ components:
         answer:
           type: string
       required:
-      - answer
-      - category
-      - id
-      - question
+        - answer
+        - category
+        - id
+        - question
     FaqKeywords:
       type: object
       properties:
@@ -3034,22 +3034,22 @@ components:
           items:
             type: string
       required:
-      - keywords
+        - keywords
     FaqListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/FaqItem'
+            $ref: "#/components/schemas/FaqItem"
         total:
           type: integer
         page:
           type: integer
       required:
-      - page
-      - results
-      - total
+        - page
+        - results
+        - total
     FindId:
       type: object
       properties:
@@ -3060,21 +3060,21 @@ components:
         phone:
           type: string
       required:
-      - birth_date
-      - name
-      - phone
+        - birth_date
+        - name
+        - phone
     FindIdResponse:
       type: object
       properties:
         email:
           type: string
       required:
-      - email
+        - email
     GradeEnum:
       enum:
-      - general
-      - income_eligible
-      - professional
+        - general
+        - income_eligible
+        - professional
       type: string
       description: |-
         * `general` - 일반투자자
@@ -3097,20 +3097,20 @@ components:
           format: date-time
           nullable: true
       required:
-      - created_at
-      - decided_at
-      - id
-      - status
-      - to_grade
+        - created_at
+        - decided_at
+        - id
+        - status
+        - to_grade
     GradeHistoryResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/GradeHistoryItem'
+            $ref: "#/components/schemas/GradeHistoryItem"
       required:
-      - results
+        - results
     GradeLimits:
       type: object
       properties:
@@ -3128,17 +3128,17 @@ components:
           format: double
           nullable: true
       required:
-      - per_product_pct
-      - real_estate
-      - same_borrower
-      - total
+        - per_product_pct
+        - real_estate
+        - same_borrower
+        - total
     GradeRequest:
       type: object
       properties:
         to_grade:
-          $ref: '#/components/schemas/ToGradeEnum'
+          $ref: "#/components/schemas/ToGradeEnum"
       required:
-      - to_grade
+        - to_grade
     GradeRequestResponse:
       type: object
       properties:
@@ -3147,21 +3147,21 @@ components:
         status:
           type: string
       required:
-      - id
-      - status
+        - id
+        - status
     GradeResponse:
       type: object
       properties:
         grade:
           type: string
         limits:
-          $ref: '#/components/schemas/GradeLimits'
+          $ref: "#/components/schemas/GradeLimits"
         used:
-          $ref: '#/components/schemas/GradeUsed'
+          $ref: "#/components/schemas/GradeUsed"
       required:
-      - grade
-      - limits
-      - used
+        - grade
+        - limits
+        - used
     GradeUsed:
       type: object
       properties:
@@ -3170,8 +3170,8 @@ components:
         real_estate:
           type: integer
       required:
-      - real_estate
-      - total
+        - real_estate
+        - total
     IdStatus:
       type: object
       properties:
@@ -3180,8 +3180,8 @@ components:
         status:
           type: string
       required:
-      - id
-      - status
+        - id
+        - status
     IdentityVerify:
       type: object
       properties:
@@ -3194,10 +3194,10 @@ components:
         phone:
           type: string
       required:
-      - birth
-      - carrier
-      - name
-      - phone
+        - birth
+        - carrier
+        - name
+        - phone
     IdentityVerifyResponse:
       type: object
       properties:
@@ -3206,8 +3206,8 @@ components:
         verified:
           type: boolean
       required:
-      - ci
-      - verified
+        - ci
+        - verified
     InvestOrder:
       type: object
       properties:
@@ -3223,8 +3223,8 @@ components:
         confirm:
           type: string
       required:
-      - amount
-      - product_id
+        - amount
+        - product_id
     InvestmentDetailProduct:
       type: object
       properties:
@@ -3241,12 +3241,12 @@ components:
         status:
           type: string
       required:
-      - annual_rate
-      - id
-      - name
-      - product_no
-      - status
-      - type
+        - annual_rate
+        - id
+        - name
+        - product_no
+        - status
+        - type
     InvestmentDetailResponse:
       type: object
       properties:
@@ -3263,20 +3263,20 @@ components:
         schedule:
           type: array
           items:
-            $ref: '#/components/schemas/ScheduleRow'
+            $ref: "#/components/schemas/ScheduleRow"
         product:
-          $ref: '#/components/schemas/InvestmentDetailProduct'
+          $ref: "#/components/schemas/InvestmentDetailProduct"
         paid_net:
           type: integer
       required:
-      - amount
-      - expected_net_return
-      - investment_id
-      - paid_net
-      - points_used
-      - product
-      - schedule
-      - status
+        - amount
+        - expected_net_return
+        - investment_id
+        - paid_net
+        - points_used
+        - product
+        - schedule
+        - status
     InvestmentListItem:
       type: object
       properties:
@@ -3302,31 +3302,31 @@ components:
           type: string
           format: date-time
       required:
-      - amount
-      - created_at
-      - expected_net_return
-      - id
-      - points_used
-      - product_id
-      - product_name
-      - product_no
-      - status
-      - type
+        - amount
+        - created_at
+        - expected_net_return
+        - id
+        - points_used
+        - product_id
+        - product_name
+        - product_no
+        - status
+        - type
     InvestmentListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/InvestmentListItem'
+            $ref: "#/components/schemas/InvestmentListItem"
         total:
           type: integer
         page:
           type: integer
       required:
-      - page
-      - results
-      - total
+        - page
+        - results
+        - total
     InvestmentResponse:
       type: object
       properties:
@@ -3343,14 +3343,14 @@ components:
         schedule:
           type: array
           items:
-            $ref: '#/components/schemas/ScheduleRow'
+            $ref: "#/components/schemas/ScheduleRow"
       required:
-      - amount
-      - expected_net_return
-      - investment_id
-      - points_used
-      - schedule
-      - status
+        - amount
+        - expected_net_return
+        - investment_id
+        - points_used
+        - schedule
+        - status
     LedgerEntry:
       type: object
       properties:
@@ -3368,12 +3368,12 @@ components:
           type: string
           format: date-time
       required:
-      - amount
-      - created_at
-      - id
-      - kind
-      - ref_id
-      - ref_type
+        - amount
+        - created_at
+        - id
+        - kind
+        - ref_id
+        - ref_type
     LimitAssessmentResponse:
       type: object
       properties:
@@ -3388,10 +3388,10 @@ components:
         simulation:
           type: boolean
       required:
-      - eligible_grades
-      - id
-      - simulation
-      - status
+        - eligible_grades
+        - id
+        - simulation
+        - status
     LimitCheck:
       type: object
       properties:
@@ -3409,7 +3409,7 @@ components:
         biz_no:
           type: string
       required:
-      - type
+        - type
     LimitCheckResponse:
       type: object
       properties:
@@ -3420,8 +3420,8 @@ components:
           items:
             type: string
       required:
-      - limit
-      - rate_range
+        - limit
+        - rate_range
     LinkedAccount:
       type: object
       properties:
@@ -3435,9 +3435,9 @@ components:
           type: string
           maxLength: 50
       required:
-      - account_no
-      - bank_name
-      - holder
+        - account_no
+        - bank_name
+        - holder
     LinkedAccountResponse:
       type: object
       properties:
@@ -3452,7 +3452,7 @@ components:
         auto_charge:
           type: boolean
       required:
-      - linked
+        - linked
     LoanApplication:
       type: object
       properties:
@@ -3488,12 +3488,12 @@ components:
           type: boolean
           default: false
       required:
-      - agree_privacy
-      - amount
-      - email
-      - name
-      - phone
-      - term_months
+        - agree_privacy
+        - amount
+        - email
+        - name
+        - phone
+        - term_months
     LoanApplicationResponse:
       type: object
       properties:
@@ -3502,8 +3502,8 @@ components:
         status:
           type: string
       required:
-      - application_id
-      - status
+        - application_id
+        - status
     LoanDecisionResponse:
       type: object
       properties:
@@ -3515,9 +3515,9 @@ components:
           type: integer
           nullable: true
       required:
-      - id
-      - product_id
-      - status
+        - id
+        - product_id
+        - status
     LoanProduct:
       type: object
       properties:
@@ -3542,15 +3542,15 @@ components:
         repay_method:
           type: string
       required:
-      - category
-      - id
-      - max_limit
-      - name
-      - rate_range
-      - repay_method
-      - summary
-      - target
-      - term_desc
+        - category
+        - id
+        - max_limit
+        - name
+        - rate_range
+        - repay_method
+        - summary
+        - target
+        - term_desc
     LoanProductDetail:
       type: object
       properties:
@@ -3589,29 +3589,29 @@ components:
         notices:
           type: string
       required:
-      - category
-      - faqs
-      - features
-      - id
-      - info
-      - max_limit
-      - name
-      - notices
-      - rate_range
-      - repay_method
-      - steps
-      - summary
-      - target
-      - term_desc
+        - category
+        - faqs
+        - features
+        - id
+        - info
+        - max_limit
+        - name
+        - notices
+        - rate_range
+        - repay_method
+        - steps
+        - summary
+        - target
+        - term_desc
     LoanProductListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/LoanProduct'
+            $ref: "#/components/schemas/LoanProduct"
       required:
-      - results
+        - results
     Login:
       type: object
       properties:
@@ -3624,8 +3624,8 @@ components:
           type: boolean
           default: true
       required:
-      - email
-      - password
+        - email
+        - password
     LoginResponse:
       type: object
       properties:
@@ -3638,10 +3638,10 @@ components:
         pin_registered:
           type: boolean
       required:
-      - grade
-      - name
-      - pin_registered
-      - user_id
+        - grade
+        - name
+        - pin_registered
+        - user_id
     NewsItem:
       type: object
       properties:
@@ -3659,25 +3659,25 @@ components:
           type: string
           format: date
       required:
-      - id
-      - published_at
-      - source
-      - thumbnail_url
-      - title
-      - url
+        - id
+        - published_at
+        - source
+        - thumbnail_url
+        - title
+        - url
     NewsListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/NewsItem'
+            $ref: "#/components/schemas/NewsItem"
         next_cursor:
           type: string
           nullable: true
       required:
-      - next_cursor
-      - results
+        - next_cursor
+        - results
     NoticeDetail:
       type: object
       properties:
@@ -3697,12 +3697,12 @@ components:
           type: string
           format: date-time
       required:
-      - attachments
-      - body
-      - category
-      - created_at
-      - id
-      - title
+        - attachments
+        - body
+        - category
+        - created_at
+        - id
+        - title
     NoticeListItem:
       type: object
       properties:
@@ -3716,25 +3716,25 @@ components:
           type: string
           format: date-time
       required:
-      - category
-      - created_at
-      - id
-      - title
+        - category
+        - created_at
+        - id
+        - title
     NoticeListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/NoticeListItem'
+            $ref: "#/components/schemas/NoticeListItem"
         total:
           type: integer
         page:
           type: integer
       required:
-      - page
-      - results
-      - total
+        - page
+        - results
+        - total
     NotifSetting:
       type: object
       properties:
@@ -3754,9 +3754,9 @@ components:
         repayment:
           type: boolean
       required:
-      - new_product
-      - recruit_closed
-      - repayment
+        - new_product
+        - recruit_closed
+        - repayment
     NotificationItem:
       type: object
       properties:
@@ -3772,20 +3772,20 @@ components:
           type: string
           format: date-time
       required:
-      - body
-      - created_at
-      - id
-      - kind
-      - title
+        - body
+        - created_at
+        - id
+        - kind
+        - title
     NotificationListResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/NotificationItem'
+            $ref: "#/components/schemas/NotificationItem"
       required:
-      - results
+        - results
     NotifyIntent:
       type: object
       properties:
@@ -3796,15 +3796,15 @@ components:
           type: integer
           minimum: 1
       required:
-      - amount
-      - sender_name
+        - amount
+        - sender_name
     OkResponse:
       type: object
       properties:
         ok:
           type: boolean
       required:
-      - ok
+        - ok
     OngoingEvent:
       type: object
       properties:
@@ -3815,14 +3815,14 @@ components:
         thumbnail_url:
           type: string
       required:
-      - id
-      - thumbnail_url
-      - title
+        - id
+        - thumbnail_url
+        - title
     PaginatedProductListList:
       type: object
       required:
-      - count
-      - results
+        - count
+        - results
       properties:
         count:
           type: integer
@@ -3840,7 +3840,7 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/ProductList'
+            $ref: "#/components/schemas/ProductList"
     PasswordReset:
       type: object
       properties:
@@ -3849,8 +3849,8 @@ components:
         new_password:
           type: string
       required:
-      - new_password
-      - token
+        - new_password
+        - token
     PasswordResetRequest:
       type: object
       properties:
@@ -3858,7 +3858,7 @@ components:
           type: string
           format: email
       required:
-      - email
+        - email
     PasswordResetRequestResponse:
       type: object
       properties:
@@ -3868,15 +3868,15 @@ components:
           type: string
           nullable: true
       required:
-      - dev_token
-      - sent
+        - dev_token
+        - sent
     PasswordResetResponse:
       type: object
       properties:
         reset:
           type: boolean
       required:
-      - reset
+        - reset
     PatchedAdminDisclosurePatch:
       type: object
       properties:
@@ -3922,22 +3922,22 @@ components:
       type: object
       properties:
         action:
-          $ref: '#/components/schemas/ActionEnum'
+          $ref: "#/components/schemas/ActionEnum"
         reason:
           type: string
     PatchedLoanDecision:
       type: object
       properties:
         action:
-          $ref: '#/components/schemas/ActionEnum'
+          $ref: "#/components/schemas/ActionEnum"
         name:
           type: string
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: "#/components/schemas/TypeEnum"
         annual_rate:
           type: string
         repay_type:
-          $ref: '#/components/schemas/RepayTypeEnum'
+          $ref: "#/components/schemas/RepayTypeEnum"
         platform_fee_rate:
           type: string
         borrower_id:
@@ -3946,7 +3946,7 @@ components:
       type: object
       properties:
         status:
-          $ref: '#/components/schemas/StatusEnum'
+          $ref: "#/components/schemas/StatusEnum"
     PatchedProductUpsert:
       type: object
       properties:
@@ -3955,7 +3955,7 @@ components:
         name:
           type: string
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: "#/components/schemas/TypeEnum"
         annual_rate:
           type: string
           format: decimal
@@ -3965,7 +3965,7 @@ components:
         target_amount:
           type: integer
         repay_type:
-          $ref: '#/components/schemas/RepayTypeEnum'
+          $ref: "#/components/schemas/RepayTypeEnum"
         platform_fee_rate:
           type: string
           format: decimal
@@ -4008,26 +4008,26 @@ components:
           type: string
           format: email
       required:
-      - pin
+        - pin
     PinRegister:
       type: object
       properties:
         pin:
           type: string
       required:
-      - pin
+        - pin
     PinRegisterResponse:
       type: object
       properties:
         pin_registered:
           type: boolean
       required:
-      - pin_registered
+        - pin_registered
     PlatformEnum:
       enum:
-      - ios
-      - android
-      - web
+        - ios
+        - android
+        - web
       type: string
       description: |-
         * `ios` - ios
@@ -4041,8 +4041,8 @@ components:
         expiring_this_month:
           type: integer
       required:
-      - balance
-      - expiring_this_month
+        - balance
+        - expiring_this_month
     PointConvert:
       type: object
       properties:
@@ -4050,7 +4050,7 @@ components:
           type: integer
           minimum: 1
       required:
-      - amount
+        - amount
     PointConvertResponse:
       type: object
       properties:
@@ -4061,9 +4061,9 @@ components:
         deposit:
           type: integer
       required:
-      - converted
-      - deposit
-      - points
+        - converted
+        - deposit
+        - points
     PointEntry:
       type: object
       properties:
@@ -4079,20 +4079,20 @@ components:
           type: string
           format: date-time
       required:
-      - amount
-      - created_at
-      - id
-      - kind
-      - memo
+        - amount
+        - created_at
+        - id
+        - kind
+        - memo
     PointHistory:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/PointEntry'
+            $ref: "#/components/schemas/PointEntry"
       required:
-      - results
+        - results
     ProductDetail:
       type: object
       properties:
@@ -4106,7 +4106,7 @@ components:
           type: string
           maxLength: 200
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: "#/components/schemas/TypeEnum"
         annual_rate:
           type: string
           format: decimal
@@ -4128,14 +4128,14 @@ components:
         progress_pct:
           type: string
         status:
-          $ref: '#/components/schemas/StatusEnum'
+          $ref: "#/components/schemas/StatusEnum"
         tags: {}
         registered_at:
           type: string
           format: date-time
           readOnly: true
         repay_type:
-          $ref: '#/components/schemas/RepayTypeEnum'
+          $ref: "#/components/schemas/RepayTypeEnum"
         platform_fee_rate:
           type: string
           format: decimal
@@ -4151,17 +4151,17 @@ components:
           format: date-time
           nullable: true
       required:
-      - annual_rate
-      - id
-      - name
-      - product_no
-      - progress_pct
-      - registered_at
-      - remaining_amount
-      - repay_type
-      - target_amount
-      - term_months
-      - type
+        - annual_rate
+        - id
+        - name
+        - product_no
+        - progress_pct
+        - registered_at
+        - remaining_amount
+        - repay_type
+        - target_amount
+        - term_months
+        - type
     ProductList:
       type: object
       properties:
@@ -4175,7 +4175,7 @@ components:
           type: string
           maxLength: 200
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: "#/components/schemas/TypeEnum"
         annual_rate:
           type: string
           format: decimal
@@ -4197,22 +4197,22 @@ components:
         progress_pct:
           type: string
         status:
-          $ref: '#/components/schemas/StatusEnum'
+          $ref: "#/components/schemas/StatusEnum"
         tags: {}
         registered_at:
           type: string
           format: date-time
           readOnly: true
       required:
-      - annual_rate
-      - id
-      - name
-      - product_no
-      - progress_pct
-      - registered_at
-      - target_amount
-      - term_months
-      - type
+        - annual_rate
+        - id
+        - name
+        - product_no
+        - progress_pct
+        - registered_at
+        - target_amount
+        - term_months
+        - type
     ProductUpsert:
       type: object
       properties:
@@ -4221,7 +4221,7 @@ components:
         name:
           type: string
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: "#/components/schemas/TypeEnum"
         annual_rate:
           type: string
           format: decimal
@@ -4231,7 +4231,7 @@ components:
         target_amount:
           type: integer
         repay_type:
-          $ref: '#/components/schemas/RepayTypeEnum'
+          $ref: "#/components/schemas/RepayTypeEnum"
         platform_fee_rate:
           type: string
           format: decimal
@@ -4265,7 +4265,7 @@ components:
         password:
           type: string
       required:
-      - password
+        - password
     ReauthResponse:
       type: object
       properties:
@@ -4274,8 +4274,8 @@ components:
         expires_in:
           type: integer
       required:
-      - expires_in
-      - reauth_token
+        - expires_in
+        - reauth_token
     ReconcileSummary:
       type: object
       properties:
@@ -4289,9 +4289,9 @@ components:
         report_id:
           type: integer
       required:
-      - diffs
-      - ok
-      - report_id
+        - diffs
+        - ok
+        - report_id
     RepaySummary:
       type: object
       properties:
@@ -4302,14 +4302,14 @@ components:
         overdue:
           type: integer
       required:
-      - date
-      - overdue
-      - paid
+        - date
+        - overdue
+        - paid
     RepayTypeEnum:
       enum:
-      - equal_installment
-      - equal_principal
-      - bullet
+        - equal_installment
+        - equal_principal
+        - bullet
       type: string
       description: |-
         * `equal_installment` - 원리금균등
@@ -4324,8 +4324,8 @@ components:
           type: integer
           minimum: 1
       required:
-      - amount
-      - investment_id
+        - amount
+        - investment_id
     ReservationEligibleItem:
       type: object
       properties:
@@ -4343,21 +4343,21 @@ components:
         refinance_open:
           type: boolean
       required:
-      - amount
-      - investment_id
-      - maturity_date
-      - product_id
-      - product_name
-      - refinance_open
+        - amount
+        - investment_id
+        - maturity_date
+        - product_id
+        - product_name
+        - refinance_open
     ReservationEligibleResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/ReservationEligibleItem'
+            $ref: "#/components/schemas/ReservationEligibleItem"
       required:
-      - results
+        - results
     ReservationResponse:
       type: object
       properties:
@@ -4375,13 +4375,13 @@ components:
           type: string
           format: date-time
       required:
-      - amount
-      - id
-      - status
+        - amount
+        - id
+        - status
     RoleEnum:
       enum:
-      - investor
-      - borrower
+        - investor
+        - borrower
       type: string
       description: |-
         * `investor` - 투자자
@@ -4400,13 +4400,13 @@ components:
         schedule:
           type: array
           items:
-            $ref: '#/components/schemas/SchedulePreviewRow'
+            $ref: "#/components/schemas/SchedulePreviewRow"
       required:
-      - gross_rate
-      - gross_return
-      - net_rate
-      - net_return
-      - schedule
+        - gross_rate
+        - gross_return
+        - net_rate
+        - net_return
+        - schedule
     SchedulePreviewRow:
       type: object
       properties:
@@ -4428,14 +4428,14 @@ components:
         interest_net:
           type: integer
       required:
-      - interest_gross
-      - interest_net
-      - pay_date
-      - platform_fee
-      - principal
-      - repay_principal
-      - seq
-      - tax
+        - interest_gross
+        - interest_net
+        - pay_date
+        - platform_fee
+        - principal
+        - repay_principal
+        - seq
+        - tax
     ScheduleRow:
       type: object
       properties:
@@ -4457,14 +4457,14 @@ components:
         interest_net:
           type: integer
       required:
-      - interest_gross
-      - interest_net
-      - pay_date
-      - platform_fee
-      - principal
-      - repay_principal
-      - seq
-      - tax
+        - interest_gross
+        - interest_net
+        - pay_date
+        - platform_fee
+        - principal
+        - repay_principal
+        - seq
+        - tax
     SeedProductsRequest:
       type: object
       properties:
@@ -4472,7 +4472,7 @@ components:
           type: integer
           default: 10
         status:
-          $ref: '#/components/schemas/StatusEnum'
+          $ref: "#/components/schemas/StatusEnum"
         rate_min:
           type: number
           format: double
@@ -4500,8 +4500,8 @@ components:
           items:
             type: integer
       required:
-      - created
-      - ids
+        - created
+        - ids
     Signup:
       type: object
       properties:
@@ -4512,33 +4512,33 @@ components:
           type: string
         name:
           type: string
-          default: ''
+          default: ""
         member_type:
           allOf:
-          - $ref: '#/components/schemas/SignupMemberTypeEnum'
+            - $ref: "#/components/schemas/SignupMemberTypeEnum"
           default: personal
         business_number:
           type: string
-          default: ''
+          default: ""
           maxLength: 10
         referrer_email:
           oneOf:
-          - type: string
-            format: email
-          - type: string
-            maxLength: 0
+            - type: string
+              format: email
+            - type: string
+              maxLength: 0
         agreements:
           type: array
           items:
-            $ref: '#/components/schemas/AgreementItem'
+            $ref: "#/components/schemas/AgreementItem"
       required:
-      - agreements
-      - email
-      - password
+        - agreements
+        - email
+        - password
     SignupMemberTypeEnum:
       enum:
-      - personal
-      - corporate
+        - personal
+        - corporate
       type: string
       description: |-
         * `personal` - personal
@@ -4554,20 +4554,20 @@ components:
         next_step:
           type: string
       required:
-      - email
-      - next_step
-      - user_id
+        - email
+        - next_step
+        - user_id
     StatusEnum:
       enum:
-      - draft
-      - scheduled
-      - recruiting
-      - recruited
-      - executed
-      - repaying
-      - repaid
-      - overdue
-      - loss
+        - draft
+        - scheduled
+        - recruiting
+        - recruited
+        - executed
+        - repaying
+        - repaid
+        - overdue
+        - loss
       type: string
       description: |-
         * `draft` - Draft
@@ -4587,8 +4587,8 @@ components:
         choice:
           type: string
       required:
-      - choice
-      - seq
+        - choice
+        - seq
     SuitabilityQuestion:
       type: object
       properties:
@@ -4601,23 +4601,23 @@ components:
           items:
             type: string
       required:
-      - answer_options
-      - seq
-      - text
+        - answer_options
+        - seq
+        - text
     SuitabilityQuestionsResponse:
       type: object
       properties:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/SuitabilityQuestion'
+            $ref: "#/components/schemas/SuitabilityQuestion"
         valid_until:
           type: string
           format: date-time
           nullable: true
       required:
-      - questions
-      - valid_until
+        - questions
+        - valid_until
     SuitabilityResult:
       type: object
       properties:
@@ -4628,17 +4628,17 @@ components:
           format: date-time
           nullable: true
       required:
-      - expires_at
-      - passed
+        - expires_at
+        - passed
     SuitabilitySubmit:
       type: object
       properties:
         answers:
           type: array
           items:
-            $ref: '#/components/schemas/SuitabilityAnswer'
+            $ref: "#/components/schemas/SuitabilityAnswer"
       required:
-      - answers
+        - answers
     Term:
       type: object
       properties:
@@ -4652,10 +4652,10 @@ components:
           type: string
           format: date-time
       required:
-      - body
-      - key
-      - title
-      - updated_at
+        - body
+        - key
+        - title
+        - updated_at
     TimeAdvanceRequest:
       type: object
       properties:
@@ -4668,30 +4668,30 @@ components:
         date:
           type: string
         repay:
-          $ref: '#/components/schemas/RepaySummary'
+          $ref: "#/components/schemas/RepaySummary"
         expire:
-          $ref: '#/components/schemas/ExpireSummary'
+          $ref: "#/components/schemas/ExpireSummary"
         reconcile:
-          $ref: '#/components/schemas/ReconcileSummary'
+          $ref: "#/components/schemas/ReconcileSummary"
       required:
-      - date
-      - expire
-      - reconcile
-      - repay
+        - date
+        - expire
+        - reconcile
+        - repay
     ToGradeEnum:
       enum:
-      - income_eligible
-      - professional
+        - income_eligible
+        - professional
       type: string
       description: |-
         * `income_eligible` - income_eligible
         * `professional` - professional
     TypeEnum:
       enum:
-      - scf
-      - stock_loan
-      - mortgage
-      - personal_credit
+        - scf
+        - stock_loan
+        - mortgage
+        - personal_credit
       type: string
       description: |-
         * `scf` - 매출채권
@@ -4712,13 +4712,13 @@ components:
           type: string
           maxLength: 50
         role:
-          $ref: '#/components/schemas/RoleEnum'
+          $ref: "#/components/schemas/RoleEnum"
         grade:
-          $ref: '#/components/schemas/GradeEnum'
+          $ref: "#/components/schemas/GradeEnum"
         is_staff:
           type: boolean
         member_type:
-          $ref: '#/components/schemas/UserMemberTypeEnum'
+          $ref: "#/components/schemas/UserMemberTypeEnum"
         pin_registered:
           type: boolean
           readOnly: true
@@ -4726,14 +4726,14 @@ components:
           type: boolean
           readOnly: true
       required:
-      - email
-      - id
-      - identity_verified
-      - pin_registered
+        - email
+        - id
+        - identity_verified
+        - pin_registered
     UserMemberTypeEnum:
       enum:
-      - personal
-      - corporate
+        - personal
+        - corporate
       type: string
       description: |-
         * `personal` - 개인
@@ -4757,9 +4757,9 @@ components:
         status:
           type: string
       required:
-      - fee
-      - status
-      - withdrawal_id
+        - fee
+        - status
+        - withdrawal_id
     _Active:
       type: object
       properties:
@@ -4772,10 +4772,10 @@ components:
         interest_expected_net:
           type: integer
       required:
-      - interest_expected_net
-      - interest_received_net
-      - invested
-      - principal_remaining
+        - interest_expected_net
+        - interest_received_net
+        - invested
+        - principal_remaining
     _Limits:
       type: object
       properties:
@@ -4786,8 +4786,8 @@ components:
           type: integer
           nullable: true
       required:
-      - mortgage_remaining
-      - total_remaining
+        - mortgage_remaining
+        - total_remaining
     _Past:
       type: object
       properties:
@@ -4796,8 +4796,8 @@ components:
         interest_received_net:
           type: integer
       required:
-      - count
-      - interest_received_net
+        - count
+        - interest_received_net
     _Profile:
       type: object
       properties:
@@ -4811,10 +4811,10 @@ components:
         identity_verified:
           type: boolean
       required:
-      - email
-      - grade
-      - identity_verified
-      - name
+        - email
+        - grade
+        - identity_verified
+        - name
     _VirtualAccount:
       type: object
       properties:
@@ -4825,9 +4825,9 @@ components:
         holder:
           type: string
       required:
-      - account_no
-      - bank
-      - holder
+        - account_no
+        - bank
+        - holder
   securitySchemes:
     cookieAuth:
       type: apiKey

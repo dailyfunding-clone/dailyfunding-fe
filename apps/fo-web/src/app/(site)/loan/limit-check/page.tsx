@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 
-import {
-  firstParam,
-} from "@/entities/content";
+import { firstParam } from "@/entities/content";
 import { fetchJson } from "@/entities/content/index.server";
 
 import LimitCheckForm from "./limit-check-form";
@@ -10,7 +8,6 @@ import LimitCheckForm from "./limit-check-form";
 import "../loan.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "간편 한도 조회" };
-
 
 const LimitCheckContent = async ({
   searchParams,

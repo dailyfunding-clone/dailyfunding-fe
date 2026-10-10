@@ -28,7 +28,13 @@ const LoanApplicationsPage = () => {
   const [error, setError] = useState("");
   const [productId, setProductId] = useState<number | null>(null);
 
-  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
+  const {
+    data,
+    isLoading,
+    error: listError,
+    refetch,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "loan-applications", status],
     queryFn: () =>
       api.get("/api/admin/loan-applications", {
@@ -58,26 +64,23 @@ const LoanApplicationsPage = () => {
   const [approveState, approveAction, approvePending] = useActionState<
     { error: string } | null,
     FormData
-  >(
-    (_prev, formData) => {
-      if (!selected) return { error: "신청을 선택해 주세요" };
-      const parsed = parseForm(adminLoanApproveSchema, formData);
-      if ("error" in parsed) return { error: parsed.error };
-      const body: components["schemas"]["PatchedLoanDecision"] = {
-        action: "approve",
-      };
-      if (parsed.data.name) body.name = parsed.data.name;
-      if (parsed.data.type) body.type = parsed.data.type as components["schemas"]["TypeEnum"];
-      if (parsed.data.annual_rate) body.annual_rate = parsed.data.annual_rate;
-      if (parsed.data.repay_type)
-        body.repay_type = parsed.data.repay_type as components["schemas"]["RepayTypeEnum"];
-      if (parsed.data.platform_fee_rate) body.platform_fee_rate = parsed.data.platform_fee_rate;
-      if (parsed.data.borrower_id) body.borrower_id = parsed.data.borrower_id;
-      decide.mutate({ id: selected.id, body });
-      return null;
-    },
-    null,
-  );
+  >((_prev, formData) => {
+    if (!selected) return { error: "신청을 선택해 주세요" };
+    const parsed = parseForm(adminLoanApproveSchema, formData);
+    if ("error" in parsed) return { error: parsed.error };
+    const body: components["schemas"]["PatchedLoanDecision"] = {
+      action: "approve",
+    };
+    if (parsed.data.name) body.name = parsed.data.name;
+    if (parsed.data.type) body.type = parsed.data.type as components["schemas"]["TypeEnum"];
+    if (parsed.data.annual_rate) body.annual_rate = parsed.data.annual_rate;
+    if (parsed.data.repay_type)
+      body.repay_type = parsed.data.repay_type as components["schemas"]["RepayTypeEnum"];
+    if (parsed.data.platform_fee_rate) body.platform_fee_rate = parsed.data.platform_fee_rate;
+    if (parsed.data.borrower_id) body.borrower_id = parsed.data.borrower_id;
+    decide.mutate({ id: selected.id, body });
+    return null;
+  }, null);
 
   const onReject = () => {
     if (!selected) return;

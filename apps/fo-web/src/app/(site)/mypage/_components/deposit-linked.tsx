@@ -10,7 +10,6 @@ import { linkedAccountSchema, parseForm, type FormState } from "@/shared/lib";
 
 import { apiErrorMessage, BANKS } from "./constants";
 
-
 type LinkedAccount = {
   bank_name: string;
   account_no: string;
@@ -73,10 +72,7 @@ const DepositLinked = () => {
           setSaved(true);
           return null;
         } catch (err) {
-          if (
-            err instanceof ApiRequestError &&
-            err.code === "REAUTH_REQUIRED"
-          ) {
+          if (err instanceof ApiRequestError && err.code === "REAUTH_REQUIRED") {
             reauth?.reset();
             continue;
           }
@@ -93,8 +89,7 @@ const DepositLinked = () => {
     null,
   );
 
-  const formError =
-    state?.error ?? (toggle.error ? apiErrorMessage(toggle.error) : "");
+  const formError = state?.error ?? (toggle.error ? apiErrorMessage(toggle.error) : "");
 
   if (linkedQuery.isPending) {
     return <div className="empty">불러오는 중이에요…</div>;
@@ -135,8 +130,7 @@ const DepositLinked = () => {
             </button>
           </div>
           <p className="muted mt-12">
-            간편충전을 켜면 투자할 때 부족한 금액을 연결계좌에서 자동으로
-            채워요.
+            간편충전을 켜면 투자할 때 부족한 금액을 연결계좌에서 자동으로 채워요.
           </p>
         </div>
       )}
@@ -168,14 +162,16 @@ const DepositLinked = () => {
           maxLength={50}
           required
         />
-        {formError && <p className="form-error" role="alert">{formError}</p>}
+        {formError && (
+          <p className="form-error" role="alert">
+            {formError}
+          </p>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "등록 중…" : "연결계좌 등록"}
         </Button>
       </form>
-      <p className="muted mt-12">
-        본인 명의 계좌만 등록할 수 있어요. 출금 시 이 계좌로 입금돼요.
-      </p>
+      <p className="muted mt-12">본인 명의 계좌만 등록할 수 있어요. 출금 시 이 계좌로 입금돼요.</p>
     </div>
   );
 };

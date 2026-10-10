@@ -82,6 +82,6 @@ const RootLayout = () => {
       </View>
     </SafeAreaProvider>
   );
-}
+};
 
 export default RootLayout;

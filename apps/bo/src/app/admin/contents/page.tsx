@@ -324,7 +324,13 @@ const ContentSection = ({ def }: { def: ContentDef }) => {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<Row | "new" | null>(null);
   const [error, setError] = useState("");
-  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
+  const {
+    data,
+    isLoading,
+    error: listError,
+    refetch,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "contents", def.key],
     queryFn: () => api.get(`/api/admin/${def.key}`),
   });

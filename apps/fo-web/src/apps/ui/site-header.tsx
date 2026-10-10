@@ -23,8 +23,7 @@ const SiteHeader = () => {
   const signOut = useSignOut();
   const cart = useQuery<{ results: unknown[]; count?: number }>({
     queryKey: ["cart"],
-    queryFn: () =>
-      api.request<{ results: unknown[]; count?: number }>("get", "/api/cart"),
+    queryFn: () => api.request<{ results: unknown[]; count?: number }>("get", "/api/cart"),
     enabled: !!me.data,
     retry: false,
   });

@@ -80,13 +80,9 @@ export const api = createClient({
   onUnauthorized: refreshSession,
 });
 
-export const apiFetch = (
-  path: string,
-  init?: RequestInit & { idempotencyKey?: string },
-) => {
+export const apiFetch = (path: string, init?: RequestInit & { idempotencyKey?: string }) => {
   const { idempotencyKey: key, ...rest } = init ?? {};
-  const csrf =
-    (rest.method ?? "GET").toUpperCase() !== "GET" ? readCsrfToken() : undefined;
+  const csrf = (rest.method ?? "GET").toUpperCase() !== "GET" ? readCsrfToken() : undefined;
   if (!key && !csrf) return http(path, rest);
   const headers = new Headers(rest.headers);
   if (key) headers.set("Idempotency-Key", key);

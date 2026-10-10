@@ -9,7 +9,6 @@ import { findIdSchema, parseForm, type FormState } from "@/shared/lib";
 import { useAppNavigate } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
 
-
 type FindIdState = FormState | { email: string };
 
 const FindIdPage = () => {
@@ -60,10 +59,7 @@ const FindIdPage = () => {
           <button type="button" onClick={() => nav.replace("/auth/signin", "로그인")}>
             로그인하기
           </button>
-          <button
-            type="button"
-            onClick={() => nav.push("/auth/find/password", "비밀번호 재설정")}
-          >
+          <button type="button" onClick={() => nav.push("/auth/find/password", "비밀번호 재설정")}>
             비밀번호 재설정
           </button>
         </div>
@@ -97,7 +93,11 @@ const FindIdPage = () => {
           autoComplete="tel-national"
           required
         />
-        {error && <p className="form-error" role="alert">{error}</p>}
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "찾는 중…" : "아이디 찾기"}
         </Button>

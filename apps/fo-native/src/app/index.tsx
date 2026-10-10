@@ -5,12 +5,9 @@ import { ActivityIndicator, View } from "react-native";
 
 import { validateStoredSession } from "@/features/auth";
 
-
 const GateScreen = () => {
   const navState = useRootNavigationState();
-  const [session, setSession] = useState<
-    { token: string | null } | null | undefined
-  >(undefined);
+  const [session, setSession] = useState<{ token: string | null } | null | undefined>(undefined);
 
   const mounted = useRef(true);
 
@@ -41,11 +38,7 @@ const GateScreen = () => {
     );
   }
   if (!session) return <Redirect href="/auth" />;
-  return (
-    <Redirect
-      href={{ pathname: "/auth/pin", params: { startup: "1" } }}
-    />
-  );
+  return <Redirect href={{ pathname: "/auth/pin", params: { startup: "1" } }} />;
 };
 
 export default GateScreen;

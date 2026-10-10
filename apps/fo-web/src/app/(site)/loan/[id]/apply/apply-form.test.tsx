@@ -33,9 +33,7 @@ const submitInfoStep = () => {
   fireEvent.change(screen.getByLabelText(/이메일/), {
     target: { value: "a@b.co" },
   });
-  fireEvent.click(
-    screen.getByRole("checkbox", { name: /개인정보 수집·이용/ }),
-  );
+  fireEvent.click(screen.getByRole("checkbox", { name: /개인정보 수집·이용/ }));
   fireEvent.submit(formOf("다음"));
 };
 

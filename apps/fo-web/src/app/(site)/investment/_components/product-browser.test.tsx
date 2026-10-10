@@ -36,13 +36,9 @@ afterEach(cleanup);
 
 describe("ProductBrowser notify toggle", () => {
   it("hydrates the toggle from GET /api/notifications/settings", async () => {
-    const get = vi
-      .spyOn(api, "get")
-      .mockResolvedValue({ enabled: true } as never);
+    const get = vi.spyOn(api, "get").mockResolvedValue({ enabled: true } as never);
     renderBrowser();
-    await waitFor(() =>
-      expect(get).toHaveBeenCalledWith("/api/notifications/settings"),
-    );
+    await waitFor(() => expect(get).toHaveBeenCalledWith("/api/notifications/settings"));
     const btn = await screen.findByRole("button", {
       name: /신규 상품 알림/,
     });
@@ -52,9 +48,7 @@ describe("ProductBrowser notify toggle", () => {
 
   it("posts the inverse state when toggled", async () => {
     vi.spyOn(api, "get").mockResolvedValue({ enabled: false } as never);
-    const post = vi
-      .spyOn(api, "post")
-      .mockResolvedValue({ new_product: true } as never);
+    const post = vi.spyOn(api, "post").mockResolvedValue({ new_product: true } as never);
     renderBrowser();
     const btn = await screen.findByRole("button", {
       name: /신규 상품 알림 받기/,

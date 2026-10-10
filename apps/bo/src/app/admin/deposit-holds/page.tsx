@@ -9,7 +9,13 @@ import { errMsg, fmtDateTime } from "@/shared/lib";
 const DepositHoldsPage = () => {
   const qc = useQueryClient();
   const [error, setError] = useState("");
-  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
+  const {
+    data,
+    isLoading,
+    error: listError,
+    refetch,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "deposit-holds"],
     queryFn: () => api.get("/api/admin/deposit/holds"),
   });

@@ -14,7 +14,6 @@ import "../../investment.scss";
 
 export const metadata: Metadata = { title: "투자하기" };
 
-
 const fetchProduct = async (id: string): Promise<ProductDetail | null> => {
   const res = await fetch(`${API_URL}/products/${id}`, {
     next: { revalidate: 15 },
@@ -42,9 +41,7 @@ const OrderContent = async ({ params }: Props) => {
         <span className="badge">연 {product.annual_rate}%</span>
         <span className="badge">{product.term_months}개월</span>
       </div>
-      <h2 style={{ fontSize: 18, fontWeight: 700, margin: "10px 0 20px" }}>
-        {product.name}
-      </h2>
+      <h2 style={{ fontSize: 18, fontWeight: 700, margin: "10px 0 20px" }}>{product.name}</h2>
       <ReauthProvider
         title="투자 비밀번호 확인"
         description="투자하려면 비밀번호를 한 번 더 입력해 주세요."

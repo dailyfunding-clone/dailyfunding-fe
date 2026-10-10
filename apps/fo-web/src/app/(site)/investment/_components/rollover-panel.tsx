@@ -43,23 +43,17 @@ const RolloverPanel = () => {
 
   const list = useQuery<ServerReservation[]>({
     queryKey: ["reservations", "list"],
-    queryFn: () =>
-      api
-        .get("/api/reservations")
-        .then((rows) => rows as ServerReservation[]),
+    queryFn: () => api.get("/api/reservations").then((rows) => rows as ServerReservation[]),
     enabled: !!me.data,
   });
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: ["reservations"] });
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["reservations"] });
 
   const setError = (invId: number, e: unknown) => {
     setErrors((prev) => ({
       ...prev,
       [invId]:
-        e instanceof ApiRequestError
-          ? e.message || "요청에 실패했어요"
-          : "요청에 실패했어요",
+        e instanceof ApiRequestError ? e.message || "요청에 실패했어요" : "요청에 실패했어요",
     }));
   };
 
@@ -129,9 +123,7 @@ const RolloverPanel = () => {
 
   const items = eligible.data?.results ?? [];
   const reserved = Object.fromEntries(
-    (list.data ?? [])
-      .filter((r) => r.status === "reserved")
-      .map((r) => [r.investment_id, r]),
+    (list.data ?? []).filter((r) => r.status === "reserved").map((r) => [r.investment_id, r]),
   );
   const myReservations = list.data ?? [];
 
@@ -146,8 +138,7 @@ const RolloverPanel = () => {
             {items.map((item) => {
               const r = reserved[item.investment_id];
               const draft =
-                drafts[item.investment_id] ??
-                String((r?.amount ?? item.amount) / 10_000);
+                drafts[item.investment_id] ?? String((r?.amount ?? item.amount) / 10_000);
               const won = Math.round(Number(draft) * 10_000);
               return (
                 <div key={item.investment_id} className="card resv-card">
@@ -176,10 +167,7 @@ const RolloverPanel = () => {
                         onChange={(e) =>
                           setDrafts((prev) => ({
                             ...prev,
-                            [item.investment_id]: e.target.value.replace(
-                              /[^0-9]/g,
-                              "",
-                            ),
+                            [item.investment_id]: e.target.value.replace(/[^0-9]/g, ""),
                           }))
                         }
                       />
@@ -237,7 +225,9 @@ const RolloverPanel = () => {
                     </p>
                   )}
                   {errors[item.investment_id] && (
-                    <p className="form-error" role="alert">{errors[item.investment_id]}</p>
+                    <p className="form-error" role="alert">
+                      {errors[item.investment_id]}
+                    </p>
                   )}
                 </div>
               );

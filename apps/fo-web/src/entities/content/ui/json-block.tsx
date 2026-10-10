@@ -3,8 +3,7 @@ import "../content.scss";
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
-const fmt = (v: unknown): string =>
-  typeof v === "number" ? v.toLocaleString("ko-KR") : String(v);
+const fmt = (v: unknown): string => (typeof v === "number" ? v.toLocaleString("ko-KR") : String(v));
 
 const MatrixTable = ({ rows }: { rows: Record<string, unknown>[] }) => {
   const cols = [...new Set(rows.flatMap((r) => Object.keys(r)))];

@@ -1,9 +1,7 @@
 import { Suspense } from "react";
 
 import ProductListSkeleton from "@/app/(site)/investment/_components/product-list-skeleton";
-import {
-  firstParam,
-} from "@/entities/content";
+import { firstParam } from "@/entities/content";
 import { fetchJson } from "@/entities/content/index.server";
 import { fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
@@ -14,7 +12,6 @@ import type { LoanProduct } from "./types";
 import "./loan.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "대출받기" };
-
 
 const CATEGORIES = [
   { key: "all", label: "전체" },
@@ -29,8 +26,7 @@ const LoanListContent = async ({ searchParams }: { searchParams: SearchParams })
   const category = firstParam(params.category) ?? "all";
   const data = await fetchJson<{ results: LoanProduct[] }>("/loans");
   const all = data?.results ?? [];
-  const loans =
-    category === "all" ? all : all.filter((l) => l.category === category);
+  const loans = category === "all" ? all : all.filter((l) => l.category === category);
   return (
     <main className="container">
       <div className="loan-head">
@@ -61,9 +57,7 @@ const LoanListContent = async ({ searchParams }: { searchParams: SearchParams })
         <div className="card-grid loan-cards">
           {loans.map((l) => (
             <AppLink key={l.id} href={`/loan/${l.id}`} className="card loan-card">
-              <span
-                className={`badge${l.category === "personal" ? " badge-accent" : ""}`}
-              >
+              <span className={`badge${l.category === "personal" ? " badge-accent" : ""}`}>
                 {CATEGORY_LABEL[l.category] ?? l.category}
               </span>
               <h3>{l.name}</h3>

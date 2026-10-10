@@ -2,8 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const FOCUSABLE =
-  "input, select, textarea, button, a[href], [tabindex]:not([tabindex='-1'])";
+const FOCUSABLE = "input, select, textarea, button, a[href], [tabindex]:not([tabindex='-1'])";
 
 const AdminModal = ({
   title,

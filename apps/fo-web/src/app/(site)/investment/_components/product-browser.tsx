@@ -150,9 +150,7 @@ const ProductBrowser = ({ products }: Props) => {
   const open = sortProducts(
     visible.filter(
       (p) =>
-        OPEN_STATUSES.has(p.status) &&
-        (!f.status || p.status === f.status) &&
-        matchesFilters(p, f),
+        OPEN_STATUSES.has(p.status) && (!f.status || p.status === f.status) && matchesFilters(p, f),
     ),
     f.sort,
   );

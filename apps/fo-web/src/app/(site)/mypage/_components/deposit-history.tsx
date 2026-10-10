@@ -63,10 +63,7 @@ const DepositHistory = () => {
     queryFn: ({ pageParam }) => {
       const p = new URLSearchParams(params);
       if (pageParam) p.set("cursor", String(pageParam));
-      return api.request<HistoryPage>(
-        "get",
-        `/api/deposit/history?${p.toString()}`,
-      );
+      return api.request<HistoryPage>("get", `/api/deposit/history?${p.toString()}`);
     },
     initialPageParam: "",
     getNextPageParam: (last) => last.next_cursor ?? undefined,
@@ -160,11 +157,7 @@ const DepositHistory = () => {
       ) : query.isError ? (
         <div className="empty">
           <p>내역을 불러오지 못했어요</p>
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={() => void query.refetch()}
-          >
+          <button type="button" className="btn btn-outline" onClick={() => void query.refetch()}>
             다시 시도
           </button>
         </div>

@@ -1,6 +1,4 @@
-import {
-  TERMS,
-} from "@/entities/content";
+import { TERMS } from "@/entities/content";
 import { AppLink } from "@/shared/ui";
 
 import type { Metadata } from "next";

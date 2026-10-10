@@ -13,7 +13,6 @@ import { DepositLinked } from "../_components";
 
 import "../mypage.scss";
 
-
 const TABS = [
   { key: "history", label: "예치금내역" },
   { key: "charge", label: "충전하기" },
@@ -31,12 +30,12 @@ const tabFrom = (sp: URLSearchParams | ReturnType<typeof useSearchParams>): TabK
 const DepositPage = () => {
   useDocumentTitle("예치금");
   return (
-  <AuthGate title="예치금">
-    <Suspense fallback={null}>
-      <Deposit />
-    </Suspense>
-  </AuthGate>
-);
+    <AuthGate title="예치금">
+      <Suspense fallback={null}>
+        <Deposit />
+      </Suspense>
+    </AuthGate>
+  );
 };
 
 const Deposit = () => {

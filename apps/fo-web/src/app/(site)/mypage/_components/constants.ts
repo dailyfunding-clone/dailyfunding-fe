@@ -120,14 +120,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   INTERNAL: "잠시 후 다시 시도해 주세요",
 };
 
-export const apiErrorMessage = (
-  error: unknown,
-  fallback = "잠시 후 다시 시도해 주세요",
-) => {
+export const apiErrorMessage = (error: unknown, fallback = "잠시 후 다시 시도해 주세요") => {
   if (error instanceof ApiRequestError) {
-    return (
-      ERROR_MESSAGES[error.code] ?? error.message ?? fallback
-    );
+    return ERROR_MESSAGES[error.code] ?? error.message ?? fallback;
   }
   return fallback;
 };

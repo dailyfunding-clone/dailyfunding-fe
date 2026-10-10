@@ -27,7 +27,13 @@ const GradeRequestsPage = () => {
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
 
-  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
+  const {
+    data,
+    isLoading,
+    error: listError,
+    refetch,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "grade-requests", status],
     queryFn: () =>
       api.get("/api/admin/grade-requests", {

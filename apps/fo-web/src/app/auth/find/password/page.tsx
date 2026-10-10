@@ -15,14 +15,13 @@ import {
 import { useAppNavigate } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
 
-
 const FindPasswordPage = () => {
   useDocumentTitle("비밀번호 찾기");
   return (
-  <Suspense>
-    <FindPasswordInner />
-  </Suspense>
-);
+    <Suspense>
+      <FindPasswordInner />
+    </Suspense>
+  );
 };
 
 const FindPasswordInner = () => {
@@ -32,58 +31,58 @@ const FindPasswordInner = () => {
   const [done, setDone] = useState(false);
   const [requested, setRequested] = useState(false);
 
-  const [requestState, requestAction, requestPending] = useActionState<
-    FormState,
-    FormData
-  >(async (_prev, formData) => {
-    const parsed = parseForm(passwordResetRequestSchema, formData);
-    if ("error" in parsed) return { error: parsed.error };
-    try {
-      const res = await ky.post("/api/auth/password/reset-request", {
+  const [requestState, requestAction, requestPending] = useActionState<FormState, FormData>(
+    async (_prev, formData) => {
+      const parsed = parseForm(passwordResetRequestSchema, formData);
+      if ("error" in parsed) return { error: parsed.error };
+      try {
+        const res = await ky.post("/api/auth/password/reset-request", {
           json: parsed.data,
           headers: csrfHeaders(),
           throwHttpErrors: false,
         });
-      const body = (await res.json().catch(() => null)) as {
-        message?: string;
-      } | null;
-      if (!res.ok) {
-        return { error: body?.message ?? "재설정 요청에 실패했어요" };
+        const body = (await res.json().catch(() => null)) as {
+          message?: string;
+        } | null;
+        if (!res.ok) {
+          return { error: body?.message ?? "재설정 요청에 실패했어요" };
+        }
+        setRequested(true);
+        return null;
+      } catch {
+        return { error: "잠시 후 다시 시도해 주세요" };
       }
-      setRequested(true);
-      return null;
-    } catch {
-      return { error: "잠시 후 다시 시도해 주세요" };
-    }
-  }, null);
+    },
+    null,
+  );
 
-  const [resetState, resetAction, resetPending] = useActionState<
-    FormState,
-    FormData
-  >(async (_prev, formData) => {
-    const parsed = parseForm(passwordResetSchema, {
-      ...Object.fromEntries(formData),
-      token,
-    });
-    if ("error" in parsed) return { error: parsed.error };
-    try {
-      const res = await ky.post("/api/auth/password/reset", {
-        json: parsed.data,
-        headers: csrfHeaders(),
-        throwHttpErrors: false,
+  const [resetState, resetAction, resetPending] = useActionState<FormState, FormData>(
+    async (_prev, formData) => {
+      const parsed = parseForm(passwordResetSchema, {
+        ...Object.fromEntries(formData),
+        token,
       });
-      const body = (await res.json().catch(() => null)) as {
-        message?: string;
-      } | null;
-      if (!res.ok) {
-        return { error: body?.message ?? "비밀번호 재설정에 실패했어요" };
+      if ("error" in parsed) return { error: parsed.error };
+      try {
+        const res = await ky.post("/api/auth/password/reset", {
+          json: parsed.data,
+          headers: csrfHeaders(),
+          throwHttpErrors: false,
+        });
+        const body = (await res.json().catch(() => null)) as {
+          message?: string;
+        } | null;
+        if (!res.ok) {
+          return { error: body?.message ?? "비밀번호 재설정에 실패했어요" };
+        }
+        setDone(true);
+        return null;
+      } catch {
+        return { error: "잠시 후 다시 시도해 주세요" };
       }
-      setDone(true);
-      return null;
-    } catch {
-      return { error: "잠시 후 다시 시도해 주세요" };
-    }
-  }, null);
+    },
+    null,
+  );
 
   const error = resetState?.error ?? requestState?.error ?? "";
 
@@ -147,7 +146,11 @@ const FindPasswordInner = () => {
             autoComplete="new-password"
             required
           />
-          {error && <p className="form-error" role="alert">{error}</p>}
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
           <Button type="submit" disabled={resetPending}>
             {resetPending ? "변경 중…" : "비밀번호 변경"}
           </Button>
@@ -171,7 +174,11 @@ const FindPasswordInner = () => {
           autoComplete="email"
           required
         />
-        {error && <p className="form-error" role="alert">{error}</p>}
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
         <Button type="submit" disabled={requestPending}>
           {requestPending ? "확인 중…" : "재설정 링크 받기"}
         </Button>

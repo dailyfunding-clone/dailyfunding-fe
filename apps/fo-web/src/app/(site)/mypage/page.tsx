@@ -12,7 +12,6 @@ import { GRADE_LABELS } from "./_components";
 
 import "./mypage.scss";
 
-
 type Dashboard = {
   profile: {
     name: string;
@@ -56,10 +55,10 @@ const MENU = [
 const MyPage = () => {
   useDocumentTitle("마이페이지");
   return (
-  <AuthGate title="마이페이지">
-    <Dashboard />
-  </AuthGate>
-);
+    <AuthGate title="마이페이지">
+      <Dashboard />
+    </AuthGate>
+  );
 };
 
 const Dashboard = () => {
@@ -74,11 +73,7 @@ const Dashboard = () => {
       <div className="container">
         <div className="empty">
           <p>정보를 불러오지 못했어요</p>
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={() => void refetch()}
-          >
+          <button type="button" className="btn btn-outline" onClick={() => void refetch()}>
             다시 시도
           </button>
         </div>
@@ -139,11 +134,7 @@ const Dashboard = () => {
             </p>
             <p className="muted acct-holder">예금주 {data.virtual_account.holder}</p>
             <div className="card-links">
-              <button
-                type="button"
-                className="btn btn-outline"
-                onClick={copyAccount}
-              >
+              <button type="button" className="btn btn-outline" onClick={copyAccount}>
                 {copied ? "복사했어요" : "계좌번호 복사"}
               </button>
             </div>

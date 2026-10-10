@@ -122,9 +122,7 @@ it("shares in-flight appCode requests and resolves with the issued code", async 
   );
   expect(await a).toBe("code-1");
   const c = client.requestAppCode();
-  await vi.waitFor(() =>
-    expect(outbound.filter((m) => m.type === "auth.appCode")).toHaveLength(2),
-  );
+  await vi.waitFor(() => expect(outbound.filter((m) => m.type === "auth.appCode")).toHaveLength(2));
   receive(
     JSON.stringify({
       v: 2,

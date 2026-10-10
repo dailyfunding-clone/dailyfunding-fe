@@ -2,14 +2,8 @@ import Image from "next/image";
 import { Suspense } from "react";
 
 import ProductListSkeleton from "@/app/(site)/investment/_components/product-list-skeleton";
-import {
-  Pagination,
-} from "@/entities/content";
-import {
-  firstParam,
-  fmtDate,
-  qs,
-} from "@/entities/content";
+import { Pagination } from "@/entities/content";
+import { firstParam, fmtDate, qs } from "@/entities/content";
 import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
@@ -18,7 +12,6 @@ import { STATUS_LABEL, dday } from "./utils";
 import "./event.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "이벤트" };
-
 
 const STATUS_TABS = [
   { key: "", label: "전체" },
@@ -87,9 +80,7 @@ const EventListContent = async ({
                 <h3>{e.title}</h3>
                 <p>{e.summary}</p>
                 <div className="event-card-badges">
-                  <span
-                    className={`badge${e.status === "ongoing" ? " badge-accent" : ""}`}
-                  >
+                  <span className={`badge${e.status === "ongoing" ? " badge-accent" : ""}`}>
                     {STATUS_LABEL[e.status] ?? e.status}
                   </span>
                   {d && <span className="badge">{d}</span>}
@@ -107,9 +98,7 @@ const EventListContent = async ({
       <Pagination
         total={total}
         page={page}
-        buildHref={(p) =>
-          `/event${qs({ status: status || undefined, page: String(p) })}`
-        }
+        buildHref={(p) => `/event${qs({ status: status || undefined, page: String(p) })}`}
       />
     </main>
   );

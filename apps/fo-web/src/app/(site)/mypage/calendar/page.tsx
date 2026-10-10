@@ -11,7 +11,6 @@ import { toISODate } from "../_components";
 
 import "../mypage.scss";
 
-
 type CalendarDay = {
   date: string;
   principal: number;
@@ -34,10 +33,10 @@ const DOW = ["일", "월", "화", "수", "목", "금", "토"];
 const CalendarPage = () => {
   useDocumentTitle("상환달력");
   return (
-  <AuthGate title="상환달력">
-    <RepayCalendar />
-  </AuthGate>
-);
+    <AuthGate title="상환달력">
+      <RepayCalendar />
+    </AuthGate>
+  );
 };
 
 const RepayCalendar = () => {
@@ -49,10 +48,7 @@ const RepayCalendar = () => {
   const { data } = useQuery<CalendarResponse>({
     queryKey: ["me-calendar", ym.year, ym.month],
     queryFn: () =>
-      api.request<CalendarResponse>(
-        "get",
-        `/api/me/calendar?year=${ym.year}&month=${ym.month}`,
-      ),
+      api.request<CalendarResponse>("get", `/api/me/calendar?year=${ym.year}&month=${ym.month}`),
   });
 
   const move = (delta: number) => {
@@ -87,18 +83,10 @@ const RepayCalendar = () => {
             {ym.year}년 {ym.month}월
           </strong>
           <div className="cal-nav">
-            <button
-              type="button"
-              onClick={() => move(-1)}
-              aria-label="이전 달"
-            >
+            <button type="button" onClick={() => move(-1)} aria-label="이전 달">
               ◀
             </button>
-            <button
-              type="button"
-              onClick={() => move(1)}
-              aria-label="다음 달"
-            >
+            <button type="button" onClick={() => move(1)} aria-label="다음 달">
               ▶
             </button>
           </div>
@@ -116,10 +104,7 @@ const RepayCalendar = () => {
             const iso = `${ym.year}-${String(ym.month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
             const entries = dayMap.get(iso) ?? [];
             return (
-              <div
-                key={iso}
-                className={`cal-day${iso === todayIso ? " is-today" : ""}`}
-              >
+              <div key={iso} className={`cal-day${iso === todayIso ? " is-today" : ""}`}>
                 <span>{day}</span>
                 {entries.length > 0 && (
                   <span className="cal-dots">

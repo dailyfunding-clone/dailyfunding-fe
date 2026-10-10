@@ -144,7 +144,11 @@ const SuitabilityTest = () => {
           </div>
         </div>
       ))}
-      {submit.isError && <p className="form-error" role="alert">제출에 실패했어요. 다시 시도해 주세요</p>}
+      {submit.isError && (
+        <p className="form-error" role="alert">
+          제출에 실패했어요. 다시 시도해 주세요
+        </p>
+      )}
       <button
         type="button"
         className="btn btn-primary"

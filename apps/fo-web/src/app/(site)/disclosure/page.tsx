@@ -2,21 +2,14 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 
 import ProductListSkeleton from "@/app/(site)/investment/_components/product-list-skeleton";
-import {
-  JsonBlock,
-} from "@/entities/content";
-import {
-  firstParam,
-  fmtDate,
-  qs,
-} from "@/entities/content";
+import { JsonBlock } from "@/entities/content";
+import { firstParam, fmtDate, qs } from "@/entities/content";
 import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
 import "./disclosure.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "공시" };
-
 
 const TABS = [
   { key: "management", label: "경영현황" },
@@ -55,9 +48,7 @@ const DisclosureContent = async ({
   const year = firstParam(params.year) ?? "";
   const month = firstParam(params.month) ?? "";
   const tab = firstParam(params.tab) ?? "management";
-  const data = await fetchJson<{ results: Disclosure[] }>(
-    `/disclosures${qs({ year, month })}`,
-  );
+  const data = await fetchJson<{ results: Disclosure[] }>(`/disclosures${qs({ year, month })}`);
   const d = data?.results?.[0];
   await connection();
   const thisYear = new Date().getFullYear();
@@ -99,9 +90,7 @@ const DisclosureContent = async ({
             {Object.entries(d.kpi ?? {}).map(([k, v]) => (
               <dl className="kpi" key={k}>
                 <dt>{KPI_LABEL[k] ?? k}</dt>
-                <dd>
-                  {typeof v === "number" ? v.toLocaleString("ko-KR") : String(v)}
-                </dd>
+                <dd>{typeof v === "number" ? v.toLocaleString("ko-KR") : String(v)}</dd>
               </dl>
             ))}
           </div>

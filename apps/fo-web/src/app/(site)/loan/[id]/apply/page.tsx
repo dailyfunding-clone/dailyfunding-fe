@@ -13,12 +13,7 @@ import "../../loan.scss";
 
 export const metadata: Metadata = { title: "대출 신청" };
 
-
-const LoanApplyContent = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+const LoanApplyContent = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const loan = await fetchJson<LoanProduct>(`/loans/${id}`);
   if (!loan) notFound();

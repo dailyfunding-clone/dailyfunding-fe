@@ -1,8 +1,7 @@
 import { API_URL } from "@/shared/api";
 import { safeHttpUrl } from "@/shared/lib/safe-url";
 
-export const firstParam = (v: string | string[] | undefined) =>
-  Array.isArray(v) ? v[0] : v;
+export const firstParam = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
 export const qs = (params: Record<string, string | undefined>) => {
   const search = new URLSearchParams();

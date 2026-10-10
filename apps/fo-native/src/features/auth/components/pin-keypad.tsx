@@ -42,29 +42,18 @@ const PinKeypad = ({
       </View>
       <View style={styles.grid}>
         {keys.slice(0, 9).map((key, i) => (
-          <Pressable
-            key={i}
-            style={styles.key}
-            onPress={() => press(key)}
-            hitSlop={8}
-          >
+          <Pressable key={i} style={styles.key} onPress={() => press(key)} hitSlop={8}>
             <Text style={styles.keyText}>{key}</Text>
           </Pressable>
         ))}
         <Pressable
           style={styles.key}
-          onPress={() =>
-            setKeys(shuffle(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]))
-          }
+          onPress={() => setKeys(shuffle(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]))}
           hitSlop={8}
         >
           <Text style={styles.keyText}>↺</Text>
         </Pressable>
-        <Pressable
-          style={styles.key}
-          onPress={() => press(keys[9])}
-          hitSlop={8}
-        >
+        <Pressable style={styles.key} onPress={() => press(keys[9])} hitSlop={8}>
           <Text style={styles.keyText}>{keys[9]}</Text>
         </Pressable>
         <Pressable style={styles.key} onPress={() => press("back")} hitSlop={8}>

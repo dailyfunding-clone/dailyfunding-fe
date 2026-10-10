@@ -4,17 +4,8 @@ import { Button, Field } from "@dailyfunding/design-system/components";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
-import {
-  ApiRequestError,
-  api,
-  fmtWon,
-  idempotencyKey,
-} from "@/shared/api";
-import {
-  depositChargeSchema,
-  parseForm,
-  type FormState,
-} from "@/shared/lib";
+import { ApiRequestError, api, fmtWon, idempotencyKey } from "@/shared/api";
+import { depositChargeSchema, parseForm, type FormState } from "@/shared/lib";
 
 import { apiErrorMessage } from "./constants";
 
@@ -30,8 +21,7 @@ export type DepositAccount = {
 export const useDepositAccount = () =>
   useQuery<DepositAccount>({
     queryKey: ["deposit", "account"],
-    queryFn: () =>
-      api.request<DepositAccount>("get", "/api/deposit/account"),
+    queryFn: () => api.request<DepositAccount>("get", "/api/deposit/account"),
     retry: false,
   });
 
@@ -99,15 +89,11 @@ const DepositCharge = () => {
             {copied ? "복사했어요" : "계좌번호 복사"}
           </button>
         </div>
-        <p className="muted mt-12">
-          현재 예치금 {fmtWon(account.data.deposit)}
-        </p>
+        <p className="muted mt-12">현재 예치금 {fmtWon(account.data.deposit)}</p>
       </div>
 
       {done && (
-        <p className="ok-msg">
-          입금 의사를 등록했어요. 위 계좌로 입금하면 자동으로 충전돼요.
-        </p>
+        <p className="ok-msg">입금 의사를 등록했어요. 위 계좌로 입금하면 자동으로 충전돼요.</p>
       )}
 
       <form className="auth-form" action={formAction}>
@@ -129,14 +115,16 @@ const DepositCharge = () => {
           placeholder="금액을 입력해 주세요"
           required
         />
-        {state?.error && <p className="form-error" role="alert">{state.error}</p>}
+        {state?.error && (
+          <p className="form-error" role="alert">
+            {state.error}
+          </p>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "등록 중…" : "입금 알리기"}
         </Button>
       </form>
-      <p className="muted mt-12">
-        입금자명이 계좌 예금주와 다르면 입금이 보류될 수 있어요.
-      </p>
+      <p className="muted mt-12">입금자명이 계좌 예금주와 다르면 입금이 보류될 수 있어요.</p>
     </div>
   );
 };

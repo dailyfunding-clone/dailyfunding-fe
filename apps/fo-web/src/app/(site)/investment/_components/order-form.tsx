@@ -251,10 +251,7 @@ const OrderForm = ({ product }: Props) => {
         <button
           type="submit"
           className="btn btn-primary"
-          disabled={
-            order.pending ||
-            (detail.data?.status ?? product.status) !== "recruiting"
-          }
+          disabled={order.pending || (detail.data?.status ?? product.status) !== "recruiting"}
         >
           {order.pending ? "처리 중이에요…" : "투자하기"}
         </button>

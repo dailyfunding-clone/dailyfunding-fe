@@ -1,10 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import {
-  fmtDate,
-  TERMS,
-} from "@/entities/content";
+import { fmtDate, TERMS } from "@/entities/content";
 import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
@@ -21,7 +18,6 @@ export const generateMetadata = async ({
   if (!term) notFound();
   return { title: term.title ?? "약관" };
 };
-
 
 type Term = {
   key: string;

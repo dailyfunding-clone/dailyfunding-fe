@@ -64,12 +64,8 @@ type LockLike = {
 
 const withLock = <T>(name: string, fn: () => T | Promise<T>): Promise<T> => {
   const locks =
-    typeof navigator !== "undefined"
-      ? (navigator as { locks?: LockLike }).locks
-      : undefined;
-  return locks
-    ? (locks.request(`df-order-lock:${name}`, fn) as Promise<T>)
-    : Promise.resolve(fn());
+    typeof navigator !== "undefined" ? (navigator as { locks?: LockLike }).locks : undefined;
+  return locks ? (locks.request(`df-order-lock:${name}`, fn) as Promise<T>) : Promise.resolve(fn());
 };
 
 const isActive = (a: OrderAttempt) => a.phase === "open" || a.phase === "confirming";

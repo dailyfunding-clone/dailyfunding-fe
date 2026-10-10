@@ -13,9 +13,7 @@ describe("SignupTerms", () => {
     const master = box(getByRole("checkbox", { name: "모두 동의해요" }));
     fireEvent.click(master);
     expect(master.checked).toBe(true);
-    const marketing = box(
-      getByRole("checkbox", { name: "(선택) 마케팅 소식 받기" }),
-    );
+    const marketing = box(getByRole("checkbox", { name: "(선택) 마케팅 소식 받기" }));
     expect(marketing.checked).toBe(true);
   });
 
@@ -23,9 +21,7 @@ describe("SignupTerms", () => {
     const { getByRole } = render(<SignupTerms />);
     const master = box(getByRole("checkbox", { name: "모두 동의해요" }));
     fireEvent.click(master);
-    const marketing = box(
-      getByRole("checkbox", { name: "(선택) 마케팅 소식 받기" }),
-    );
+    const marketing = box(getByRole("checkbox", { name: "(선택) 마케팅 소식 받기" }));
     fireEvent.click(marketing);
     expect(marketing.checked).toBe(false);
     expect(master.checked).toBe(false);

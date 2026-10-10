@@ -20,10 +20,10 @@ const ProductProgress = memo(({ product }: Props) => {
   useEffect(() => {
     if (lastRaised.current === product.raised_amount) return;
     lastRaised.current = product.raised_amount;
-    queryClient.setQueryData<ProductProgressData>(
-      productProgressKey(product.id),
-      (prev) => ({ ...prev, raised_amount: product.raised_amount }),
-    );
+    queryClient.setQueryData<ProductProgressData>(productProgressKey(product.id), (prev) => ({
+      ...prev,
+      raised_amount: product.raised_amount,
+    }));
   }, [product.id, product.raised_amount, queryClient]);
   const live = useQuery<ProductProgressData>({
     queryKey: productProgressKey(product.id),

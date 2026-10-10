@@ -74,11 +74,7 @@ const ProductActions = ({ product }: Props) => {
         >
           {msg || "장바구니"}
         </button>
-        <button
-          type="button"
-          className="btn btn-outline"
-          onClick={() => setModalOpen(true)}
-        >
+        <button type="button" className="btn btn-outline" onClick={() => setModalOpen(true)}>
           예상수익
         </button>
         <button
@@ -94,11 +90,7 @@ const ProductActions = ({ product }: Props) => {
               : "모집이 마감됐어요"}
         </button>
       </div>
-      <ScheduleModal
-        productId={product.id}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
+      <ScheduleModal productId={product.id} open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 };

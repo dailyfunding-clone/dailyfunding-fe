@@ -200,9 +200,9 @@ describe("useInvestOrder", () => {
   });
 
   it("treats a 5xx submit failure as ambiguous and recoverable", async () => {
-    const request = vi.spyOn(api, "request").mockRejectedValue(
-      new ApiRequestError({ status: 500, code: "INTERNAL", details: {} }),
-    );
+    const request = vi
+      .spyOn(api, "request")
+      .mockRejectedValue(new ApiRequestError({ status: 500, code: "INTERNAL", details: {} }));
     const { result } = setup();
     await act(() => result.current.submit(input));
     expect(result.current.state).toMatchObject({ status: "failed", recoverable: true });

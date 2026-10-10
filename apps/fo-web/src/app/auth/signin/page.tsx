@@ -11,7 +11,6 @@ import { parseForm, signInSchema, type FormState } from "@/shared/lib";
 import { useAppNavigate } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
 
-
 const SAVED_EMAIL_KEY = "saved_signin_email";
 
 const subscribeSavedEmail = (onStoreChange: () => void) => {
@@ -112,7 +111,11 @@ const SignInPage = () => {
           />
           로그인 유지
         </label>
-        {state?.error && <p className="form-error" role="alert">{state.error}</p>}
+        {state?.error && (
+          <p className="form-error" role="alert">
+            {state.error}
+          </p>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "로그인 중…" : "로그인"}
         </Button>
@@ -124,10 +127,7 @@ const SignInPage = () => {
         <button type="button" onClick={() => nav.push("/auth/find/id", "아이디 찾기")}>
           아이디 찾기
         </button>
-        <button
-          type="button"
-          onClick={() => nav.push("/auth/find/password", "비밀번호 재설정")}
-        >
+        <button type="button" onClick={() => nav.push("/auth/find/password", "비밀번호 재설정")}>
           비밀번호 재설정
         </button>
       </div>

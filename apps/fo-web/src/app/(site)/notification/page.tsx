@@ -2,9 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import {
-  fmtDate,
-} from "@/entities/content";
+import { fmtDate } from "@/entities/content";
 import { AuthGate } from "@/features/auth";
 import { api } from "@/shared/api";
 import { useDocumentTitle } from "@/shared/lib";
@@ -29,8 +27,7 @@ const NotificationList = () => {
   useDocumentTitle("알림");
   const { data, isPending, isError, refetch } = useQuery<{ results: Notification[] }>({
     queryKey: ["notifications"],
-    queryFn: () =>
-      api.request<{ results: Notification[] }>("get", "/api/notifications"),
+    queryFn: () => api.request<{ results: Notification[] }>("get", "/api/notifications"),
   });
 
   return (
@@ -41,11 +38,7 @@ const NotificationList = () => {
       ) : isError ? (
         <div className="empty">
           <p>알림을 불러오지 못했어요</p>
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={() => void refetch()}
-          >
+          <button type="button" className="btn btn-outline" onClick={() => void refetch()}>
             다시 시도
           </button>
         </div>

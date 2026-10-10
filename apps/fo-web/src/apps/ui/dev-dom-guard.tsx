@@ -5,8 +5,7 @@ import { useEffect } from "react";
 const BAD_ATTRS = "[bis_skin_checked],[href^='chrome://'],[src^='chrome://']";
 
 const isBad = (name: string, value: unknown) =>
-  name === "bis_skin_checked" ||
-  (typeof value === "string" && value.startsWith("chrome://"));
+  name === "bis_skin_checked" || (typeof value === "string" && value.startsWith("chrome://"));
 
 const sweep = () => {
   document.querySelectorAll(BAD_ATTRS).forEach((el) => {

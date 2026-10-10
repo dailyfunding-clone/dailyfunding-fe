@@ -9,16 +9,13 @@ afterEach(() => {
 const headerOf = (call: unknown[], name: string) =>
   call[0] instanceof Request
     ? call[0].headers.get(name)
-    : new Request(
-        call[0] as RequestInfo | URL,
-        call[1] as RequestInit | undefined,
-      ).headers.get(name);
+    : new Request(call[0] as RequestInfo | URL, call[1] as RequestInit | undefined).headers.get(
+        name,
+      );
 
 describe("apiFetch", () => {
   it("sends Idempotency-Key on multipart submits", async () => {
-    const fetchMock = vi.fn(
-      async () => new Response("{}", { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response("{}", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     const body = new FormData();
     body.set("amount", "1000");
@@ -27,15 +24,11 @@ describe("apiFetch", () => {
       body,
       idempotencyKey: "draft-key",
     });
-    expect(headerOf(fetchMock.mock.calls[0], "Idempotency-Key")).toBe(
-      "draft-key",
-    );
+    expect(headerOf(fetchMock.mock.calls[0], "Idempotency-Key")).toBe("draft-key");
   });
 
   it("keeps caller headers alongside the key", async () => {
-    const fetchMock = vi.fn(
-      async () => new Response("{}", { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response("{}", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     await apiFetch("http://test.local/api/me/grade-request", {
       method: "POST",
@@ -49,23 +42,17 @@ describe("apiFetch", () => {
   });
 
   it("omits the header when no key is provided", async () => {
-    const fetchMock = vi.fn(
-      async () => new Response("{}", { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response("{}", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     await apiFetch("http://test.local/api/me/limit-assessment", {
       method: "POST",
       body: new FormData(),
     });
-    expect(
-      headerOf(fetchMock.mock.calls[0], "Idempotency-Key"),
-    ).toBeNull();
+    expect(headerOf(fetchMock.mock.calls[0], "Idempotency-Key")).toBeNull();
   });
 
   it("sends X-CSRF-Token from the csrf cookie on mutations", async () => {
-    const fetchMock = vi.fn(
-      async () => new Response("{}", { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response("{}", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     document.cookie = "csrf=tok123";
     await apiFetch("http://test.local/api/me/grade-request", {
@@ -77,9 +64,7 @@ describe("apiFetch", () => {
   });
 
   it("does not send X-CSRF-Token on GET", async () => {
-    const fetchMock = vi.fn(
-      async () => new Response("{}", { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response("{}", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     document.cookie = "csrf=tok123";
     await apiFetch("http://test.local/api/notifications");

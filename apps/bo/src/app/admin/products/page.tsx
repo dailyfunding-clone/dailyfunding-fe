@@ -22,7 +22,13 @@ const ProductsPage = () => {
   const [modal, setModal] = useState<AdminProduct | "new" | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const { data, isLoading, error: listError, refetch, isFetching } = useQuery({
+  const {
+    data,
+    isLoading,
+    error: listError,
+    refetch,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "products"],
     queryFn: () => api.get("/api/admin/products"),
   });

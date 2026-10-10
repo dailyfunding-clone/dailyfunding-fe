@@ -12,6 +12,6 @@ const WebViewBridge = () => {
   }, []);
 
   return null;
-}
+};
 
 export default WebViewBridge;

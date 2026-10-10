@@ -23,8 +23,7 @@ const CartListPanel = () => {
   });
 
   const remove = useMutation({
-    mutationFn: (id: number) =>
-      api.delete("/api/cart/{id}", { path: { id } }),
+    mutationFn: (id: number) => api.delete("/api/cart/{id}", { path: { id } }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cart"] }),
   });
 
@@ -68,10 +67,7 @@ const CartListPanel = () => {
       <div className="stack">
         {items.map((item) => (
           <div key={item.id} className="card cart-card">
-            <AppLink
-              href={`/investment/${item.product_id}`}
-              className="cart-card-main"
-            >
+            <AppLink href={`/investment/${item.product_id}`} className="cart-card-main">
               <div className="product-card-badges">
                 {item.closed ? (
                   <span className="badge badge-danger">마감</span>

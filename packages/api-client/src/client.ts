@@ -79,9 +79,7 @@ type QueryParams<P extends PathKey, M extends Method> =
 type RequestOptions<P extends PathKey, M extends Method> = (keyof PathParams<P, M> extends never
   ? { path?: never }
   : { path: PathParams<P, M> }) &
-  (keyof QueryParams<P, M> extends never
-    ? { query?: never }
-    : { query?: QueryParams<P, M> }) & {
+  (keyof QueryParams<P, M> extends never ? { query?: never } : { query?: QueryParams<P, M> }) & {
     reauthToken?: string;
     idempotencyKey?: string;
   };

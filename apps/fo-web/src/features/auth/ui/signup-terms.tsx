@@ -33,9 +33,7 @@ const SignupTerms = ({ borrower = false }: { borrower?: boolean }) => {
           aria-label="모두 동의해요"
           checked={allChecked}
           onChange={(e) => {
-            setChecked(
-              Object.fromEntries(terms.map((t) => [t.id, e.target.checked])),
-            );
+            setChecked(Object.fromEntries(terms.map((t) => [t.id, e.target.checked])));
           }}
         />
         모두 동의해요

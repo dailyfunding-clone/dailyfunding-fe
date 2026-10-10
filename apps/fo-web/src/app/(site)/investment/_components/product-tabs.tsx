@@ -43,8 +43,7 @@ const renderValue = (v: unknown): React.ReactNode => {
 
 const DictView = ({ data }: { data: Record<string, unknown> }) => {
   const entries = Object.entries(data);
-  if (entries.length === 0)
-    return <p className="empty">등록된 정보가 없어요</p>;
+  if (entries.length === 0) return <p className="empty">등록된 정보가 없어요</p>;
   return (
     <dl className="kv">
       {entries.map(([k, v]) => (
@@ -67,10 +66,7 @@ type Props = {
 
 const ProductTabs = ({ tabs }: Props) => {
   const [active, setActive] = useState<(typeof TABS)[number]["key"]>("overview");
-  const notice =
-    typeof tabs?.notice === "string" && tabs.notice.trim()
-      ? tabs.notice
-      : null;
+  const notice = typeof tabs?.notice === "string" && tabs.notice.trim() ? tabs.notice : null;
   return (
     <>
       <div className="tabs" role="tablist" aria-label="상품 정보">
