@@ -11,10 +11,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["10.0.2.2"],
   transpilePackages: ["@dailyfunding/bridge", "@dailyfunding/design-system"],
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "**" },
-      { protocol: "http", hostname: "**" },
-    ],
+    unoptimized: true,
   },
   cacheLife: {
     content: {
@@ -29,7 +26,10 @@ const nextConfig: NextConfig = {
     },
   },
   rewrites: async () => [
-    { source: "/api/:path*", destination: "http://localhost:8000/api/:path*" },
+    {
+      source: "/api/:path*",
+      destination: `${process.env.API_INTERNAL_URL ?? "http://localhost:8000"}/api/:path*`,
+    },
   ],
 };
 

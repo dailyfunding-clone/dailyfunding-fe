@@ -63,14 +63,13 @@ const DepositHistory = () => {
     queryFn: ({ pageParam }) => {
       const p = new URLSearchParams(params);
       if (pageParam) p.set("cursor", String(pageParam));
-      return api.request<HistoryPage>(
-        "get",
-        `/api/deposit/history?${p.toString()}`,
-      );
+      return api.request<HistoryPage>("get", `/api/deposit/history?${p.toString()}`);
     },
     initialPageParam: "",
     getNextPageParam: (last) => last.next_cursor ?? undefined,
   });
+
+  const { fetchNextPage } = query;
 
   const applyRange = (key: string) => {
     setRange(key);
@@ -155,6 +154,13 @@ const DepositHistory = () => {
 
       {query.isPending ? (
         <div className="empty">불러오는 중…</div>
+      ) : query.isError ? (
+        <div className="empty">
+          <p>내역을 불러오지 못했어요</p>
+          <button type="button" className="btn btn-outline" onClick={() => void query.refetch()}>
+            다시 시도
+          </button>
+        </div>
       ) : entries.length === 0 ? (
         <div className="empty">내역이 없어요</div>
       ) : (
@@ -173,6 +179,18 @@ const DepositHistory = () => {
               </li>
             ))}
           </ul>
+          {query.isFetchNextPageError && (
+            <div className="empty">
+              <p>추가 내역을 불러오지 못했어요</p>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => void fetchNextPage()}
+              >
+                다시 시도
+              </button>
+            </div>
+          )}
           {query.hasNextPage && (
             <button
               type="button"

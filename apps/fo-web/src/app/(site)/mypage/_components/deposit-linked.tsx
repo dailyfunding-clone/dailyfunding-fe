@@ -1,14 +1,14 @@
 "use client";
 
 import { Button, Field } from "@dailyfunding/design-system/components";
-import { useActionState, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useActionState, useState } from "react";
 
 import { useReauth } from "@/features/auth";
 import { ApiRequestError, api } from "@/shared/api";
 import { linkedAccountSchema, parseForm, type FormState } from "@/shared/lib";
 
 import { apiErrorMessage, BANKS } from "./constants";
-
 
 type LinkedAccount = {
   bank_name: string;
@@ -17,32 +17,41 @@ type LinkedAccount = {
   auto_charge: boolean;
 };
 
+type LinkedResponse = { linked: boolean } & Partial<LinkedAccount>;
+
+const LINKED_KEY = ["deposit", "linked-account"] as const;
+
 const DepositLinked = () => {
   const reauth = useReauth();
-  const [linked, setLinked] = useState<LinkedAccount | null>(null);
-  const [toggleError, setToggleError] = useState("");
+  const queryClient = useQueryClient();
   const [saved, setSaved] = useState(false);
-  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    api
-      .request<{ linked: boolean } & Partial<LinkedAccount>>(
-        "get",
-        "/api/deposit/linked-account",
-      )
-      .then((res) => {
-        if (res.linked) {
-          setLinked({
-            bank_name: res.bank_name ?? "",
-            account_no: res.account_no ?? "",
-            holder: res.holder ?? "",
-            auto_charge: res.auto_charge ?? false,
-          });
-        }
-      })
-      .catch(() => undefined)
-      .finally(() => setLoaded(true));
-  }, []);
+  const linkedQuery = useQuery<LinkedResponse>({
+    queryKey: LINKED_KEY,
+    queryFn: () => api.request<LinkedResponse>("get", "/api/deposit/linked-account"),
+    retry: false,
+  });
+
+  const linked: LinkedAccount | null = linkedQuery.data?.linked
+    ? {
+        bank_name: linkedQuery.data.bank_name ?? "",
+        account_no: linkedQuery.data.account_no ?? "",
+        holder: linkedQuery.data.holder ?? "",
+        auto_charge: linkedQuery.data.auto_charge ?? false,
+      }
+    : null;
+
+  const toggle = useMutation({
+    mutationFn: (enabled: boolean) =>
+      api.request<{ enabled: boolean }>("put", "/api/deposit/auto-charge", {
+        enabled,
+      }),
+    onSuccess: (res) => {
+      queryClient.setQueryData<LinkedResponse>(LINKED_KEY, (prev) =>
+        prev ? { ...prev, auto_charge: res.enabled } : prev,
+      );
+    },
+  });
 
   const [state, formAction, pending] = useActionState<FormState, FormData>(
     async (_prev, formData) => {
@@ -53,24 +62,17 @@ const DepositLinked = () => {
         const token = await reauth?.ensure(attempt > 0);
         if (!token) return { error: "본인 인증이 취소됐어요" };
         try {
-          const res = await api.request<
-            { linked: boolean } & Partial<LinkedAccount>
-          >("put", "/api/deposit/linked-account", parsed.data, {
-            reauthToken: token,
-          });
-          setLinked({
-            bank_name: res.bank_name ?? "",
-            account_no: res.account_no ?? "",
-            holder: res.holder ?? "",
-            auto_charge: res.auto_charge ?? false,
-          });
+          const res = await api.request<LinkedResponse>(
+            "put",
+            "/api/deposit/linked-account",
+            parsed.data,
+            { reauthToken: token },
+          );
+          queryClient.setQueryData(LINKED_KEY, res);
           setSaved(true);
           return null;
         } catch (err) {
-          if (
-            err instanceof ApiRequestError &&
-            err.code === "REAUTH_REQUIRED"
-          ) {
+          if (err instanceof ApiRequestError && err.code === "REAUTH_REQUIRED") {
             reauth?.reset();
             continue;
           }
@@ -87,23 +89,25 @@ const DepositLinked = () => {
     null,
   );
 
-  const toggleAutoCharge = async () => {
-    if (!linked) return;
-    const enabled = !linked.auto_charge;
-    try {
-      const res = await api.request<{ enabled: boolean }>(
-        "put",
-        "/api/deposit/auto-charge",
-        { enabled },
-      );
-      setLinked({ ...linked, auto_charge: res.enabled });
-    } catch (err) {
-      setToggleError(apiErrorMessage(err));
-    }
-  };
+  const formError = state?.error ?? (toggle.error ? apiErrorMessage(toggle.error) : "");
 
-  if (!loaded) {
+  if (linkedQuery.isPending) {
     return <div className="empty">불러오는 중이에요…</div>;
+  }
+
+  if (linkedQuery.isError) {
+    return (
+      <div className="empty">
+        <p>연결계좌 정보를 불러오지 못했어요</p>
+        <button
+          type="button"
+          className="btn btn-outline"
+          onClick={() => void linkedQuery.refetch()}
+        >
+          다시 시도
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -119,14 +123,14 @@ const DepositLinked = () => {
             <button
               type="button"
               className="btn btn-outline"
-              onClick={toggleAutoCharge}
+              disabled={toggle.isPending}
+              onClick={() => toggle.mutate(!linked.auto_charge)}
             >
               간편충전 {linked.auto_charge ? "끄기" : "켜기"}
             </button>
           </div>
           <p className="muted mt-12">
-            간편충전을 켜면 투자할 때 부족한 금액을 연결계좌에서 자동으로
-            채워요.
+            간편충전을 켜면 투자할 때 부족한 금액을 연결계좌에서 자동으로 채워요.
           </p>
         </div>
       )}
@@ -158,16 +162,16 @@ const DepositLinked = () => {
           maxLength={50}
           required
         />
-        {(state?.error ?? toggleError) && (
-          <p className="form-error">{state?.error ?? toggleError}</p>
+        {formError && (
+          <p className="form-error" role="alert">
+            {formError}
+          </p>
         )}
         <Button type="submit" disabled={pending}>
           {pending ? "등록 중…" : "연결계좌 등록"}
         </Button>
       </form>
-      <p className="muted mt-12">
-        본인 명의 계좌만 등록할 수 있어요. 출금 시 이 계좌로 입금돼요.
-      </p>
+      <p className="muted mt-12">본인 명의 계좌만 등록할 수 있어요. 출금 시 이 계좌로 입금돼요.</p>
     </div>
   );
 };

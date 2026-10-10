@@ -3,7 +3,6 @@
 import { useAppNavigate } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
 
-
 const SignUpPage = () => {
   useDocumentTitle("회원가입");
   const nav = useAppNavigate();
@@ -32,10 +31,7 @@ const SignUpPage = () => {
         </button>
       </div>
       <div className="auth-links">
-        <button
-          type="button"
-          onClick={() => nav.replace("/auth/signin", "로그인")}
-        >
+        <button type="button" onClick={() => nav.replace("/auth/signin", "로그인")}>
           이미 계정이 있어요
         </button>
       </div>

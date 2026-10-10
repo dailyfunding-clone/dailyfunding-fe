@@ -8,14 +8,13 @@ import { GRADE_LABELS } from "../_components";
 
 import "../mypage.scss";
 
-
 const ProfilePage = () => {
   useDocumentTitle("회원정보");
   return (
-  <AuthGate>
-    <Profile />
-  </AuthGate>
-);
+    <AuthGate title="회원정보">
+      <Profile />
+    </AuthGate>
+  );
 };
 
 const Profile = () => {
@@ -61,9 +60,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <p className="muted mt-12">
-        회원정보 변경은 고객센터로 문의해 주세요.
-      </p>
+      <p className="muted mt-12">회원정보 변경은 고객센터로 문의해 주세요.</p>
     </div>
   );
 };

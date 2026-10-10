@@ -350,6 +350,11 @@ paths:
   /api/admin/grade-requests:
     get:
       operationId: api_admin_grade_requests_retrieve
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
       tags:
       - api
       security:
@@ -395,6 +400,11 @@ paths:
   /api/admin/loan-applications:
     get:
       operationId: api_admin_loan_applications_retrieve
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
       tags:
       - api
       security:
@@ -902,7 +912,6 @@ paths:
         required: true
       security:
       - cookieAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -940,6 +949,7 @@ paths:
   /api/auth/login/pin:
     post:
       operationId: api_auth_login_pin_create
+      description: 저장된 세션(로그인 상태) 사용자의 간편비밀번호 잠금 해제.
       tags:
       - api
       requestBody:
@@ -956,7 +966,6 @@ paths:
         required: true
       security:
       - cookieAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -1075,7 +1084,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Reauth'
-        required: true
       security:
       - cookieAuth: []
       responses:
@@ -1787,6 +1795,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/LimitAssessmentResponse'
           description: ''
+  /api/metrics/vitals:
+    post:
+      operationId: api_metrics_vitals_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vital'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Vital'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Vital'
+        required: true
+      security:
+      - {}
+      responses:
+        '204':
+          description: No response body
   /api/news:
     get:
       operationId: api_news_retrieve
@@ -1853,9 +1883,23 @@ paths:
                 $ref: '#/components/schemas/NotificationListResponse'
           description: ''
   /api/notifications/settings:
+    get:
+      operationId: api_notifications_settings_retrieve
+      description: GET/POST /api/notifications/settings — 알림 설정 조회·변경.
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSettingsGet'
+          description: ''
     post:
       operationId: api_notifications_settings_create
-      description: POST /api/notifications/settings — 카테고리별 ON/OFF.
+      description: GET/POST /api/notifications/settings — 알림 설정 조회·변경.
       tags:
       - api
       requestBody:
@@ -1940,6 +1984,11 @@ paths:
       operationId: api_products_list
       description: GET /api/products — 투자 상품 목록 (F-INV-01).
       parameters:
+      - in: query
+        name: ids
+        schema:
+          type: string
+        description: Comma-separated positive product IDs (up to 100).
       - in: query
         name: include_closed
         schema:
@@ -2049,6 +2098,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SchedulePreview'
+          description: ''
+  /api/products/stream:
+    get:
+      operationId: api_products_stream_retrieve
+      parameters:
+      - in: header
+        name: Last-Event-ID
+        schema:
+          type: integer
+      - in: query
+        name: ids
+        schema:
+          type: string
+        description: Comma-separated positive product IDs (up to 100). Omit for all
+          public products.
+      tags:
+      - api
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/ProductProgress'
           description: ''
   /api/reservations:
     get:
@@ -3776,6 +3850,13 @@ components:
             $ref: '#/components/schemas/NotificationItem'
       required:
       - results
+    NotificationSettingsGet:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+      required:
+      - enabled
     NotifyIntent:
       type: object
       properties:
@@ -3994,9 +4075,6 @@ components:
       properties:
         pin:
           type: string
-        email:
-          type: string
-          format: email
       required:
       - pin
     PinRegister:
@@ -4140,15 +4218,26 @@ components:
           type: string
           format: date-time
           nullable: true
+        tabs:
+          allOf:
+          - $ref: '#/components/schemas/ProductTabs'
+          readOnly: true
+        my:
+          allOf:
+          - $ref: '#/components/schemas/ProductMy'
+          nullable: true
+          readOnly: true
       required:
       - annual_rate
       - id
+      - my
       - name
       - product_no
       - progress_pct
       - registered_at
       - remaining_amount
       - repay_type
+      - tabs
       - target_amount
       - term_months
       - type
@@ -4203,6 +4292,55 @@ components:
       - target_amount
       - term_months
       - type
+    ProductMy:
+      type: object
+      properties:
+        deposit:
+          type: integer
+        investable:
+          type: integer
+        grade_remaining_limit:
+          type: integer
+          nullable: true
+        same_borrower_remaining:
+          type: integer
+          nullable: true
+      required:
+      - deposit
+      - grade_remaining_limit
+      - investable
+      - same_borrower_remaining
+    ProductProgress:
+      type: object
+      properties:
+        id:
+          type: integer
+        raised_amount:
+          type: integer
+        remaining:
+          type: integer
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+      required:
+      - id
+      - raised_amount
+      - remaining
+      - status
+    ProductTabs:
+      type: object
+      properties:
+        overview:
+          type: object
+          additionalProperties: {}
+        detail:
+          type: object
+          additionalProperties: {}
+        notice:
+          type: string
+      required:
+      - detail
+      - notice
+      - overview
     ProductUpsert:
       type: object
       properties:
@@ -4254,8 +4392,10 @@ components:
       properties:
         password:
           type: string
-      required:
-      - password
+        pin:
+          type: string
+          maxLength: 6
+          minLength: 6
     ReauthResponse:
       type: object
       properties:
@@ -4460,6 +4600,8 @@ components:
       properties:
         count:
           type: integer
+          maximum: 500
+          minimum: 1
           default: 10
         status:
           $ref: '#/components/schemas/StatusEnum'
@@ -4728,6 +4870,26 @@ components:
       description: |-
         * `personal` - 개인
         * `corporate` - 법인
+    Vital:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        value:
+          type: number
+          format: double
+        path:
+          type: string
+          maxLength: 2048
+        ts:
+          type: number
+          format: double
+      required:
+      - name
+      - path
+      - ts
+      - value
     Withdraw:
       type: object
       properties:

@@ -36,10 +36,7 @@ export const DECISION_LABEL: Record<string, string> = {
   converted: "상품전환",
 };
 
-export const NEXT_STATUS: Record<
-  string,
-  { to: string; label: string; danger?: boolean }[]
-> = {
+export const NEXT_STATUS: Record<string, { to: string; label: string }[]> = {
   draft: [
     { to: "scheduled", label: "모집 예정" },
     { to: "recruiting", label: "모집 시작" },
@@ -49,12 +46,12 @@ export const NEXT_STATUS: Record<
   executed: [{ to: "repaying", label: "상환 시작" }],
   repaying: [
     { to: "repaid", label: "상환 완료" },
-    { to: "overdue", label: "연체 전환", danger: true },
-    { to: "loss", label: "손실 처리", danger: true },
+    { to: "overdue", label: "연체 전환" },
+    { to: "loss", label: "손실 처리" },
   ],
   overdue: [
     { to: "repaid", label: "상환 완료" },
-    { to: "loss", label: "손실 처리", danger: true },
+    { to: "loss", label: "손실 처리" },
   ],
 };
 

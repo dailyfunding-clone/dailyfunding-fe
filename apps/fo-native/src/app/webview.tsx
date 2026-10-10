@@ -1,3 +1,4 @@
+import { isLocalPath } from "@dailyfunding/bridge";
 import { tokens } from "@dailyfunding/design-system";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -11,23 +12,34 @@ import {
   View,
 } from "react-native";
 
-import { AppWebView , handleBridgeMessage } from "@/features/webview";
+import {
+  AppWebView,
+  createBridgeChannel,
+  handleBridgeMessage,
+  releaseBridgeChannel,
+} from "@/features/webview";
 
+import type { NativeChannel } from "@dailyfunding/bridge";
 import type { WebView, WebViewMessageEvent } from "react-native-webview";
-
-
 
 const WebViewScreen = () => {
   const { path, title } = useLocalSearchParams<{
     path?: string;
     title?: string;
   }>();
+  const safePath = isLocalPath(path) ? path : "/";
   const navigation = useNavigation();
   const router = useRouter();
   const webViewRef = useRef<WebView>(null);
   const [canGoBack, setCanGoBack] = useState(false);
+  const [channel, setChannel] = useState<NativeChannel | null>(null);
   const [ready, setReady] = useState(false);
-  const currentTitle = useRef<string | undefined>(title);
+
+  useEffect(() => {
+    const created = createBridgeChannel(webViewRef, `webview-${Date.now()}-${Math.random()}`);
+    setChannel(created);
+    return () => releaseBridgeChannel(created);
+  }, []);
 
   const goBack = useCallback(() => {
     if (canGoBack) {
@@ -58,29 +70,30 @@ const WebViewScreen = () => {
     return () => sub.remove();
   }, [canGoBack]);
 
-  const handleMessage = (event: WebViewMessageEvent) =>
+  const handleMessage = (event: WebViewMessageEvent) => {
+    if (!channel) return;
     handleBridgeMessage(event, {
       router,
+      channel,
       goBack,
       setTitle: (t) => {
-        currentTitle.current = t;
         navigation.setOptions({ title: t });
       },
       onReady: () => setReady(true),
-      webViewRef,
     });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: tokens.semantic.color.bgDefault }}>
       <AppWebView
         ref={webViewRef}
-        path={path ?? "/"}
+        path={safePath}
         onMessage={handleMessage}
         onLoadEnd={() => setReady(true)}
         onNavigationStateChange={(navState) => {
           setCanGoBack(navState.canGoBack);
+          navigation.setOptions({ gestureEnabled: !navState.canGoBack });
           if (!title && navState.title) {
-            currentTitle.current = navState.title;
             navigation.setOptions({ title: navState.title });
           }
         }}
@@ -92,7 +105,7 @@ const WebViewScreen = () => {
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   loadingOverlay: {

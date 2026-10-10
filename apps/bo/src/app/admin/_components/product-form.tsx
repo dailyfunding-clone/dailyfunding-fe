@@ -4,24 +4,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useActionState } from "react";
 
 import { api } from "@/shared/api";
-import { apiPatch } from "@/shared/api";
 import { adminProductSchema, parseForm, type FormState } from "@/shared/lib";
+import { buildProductBody, type AdminProduct } from "@/shared/lib";
 import { errMsg } from "@/shared/lib";
 
 import AdminModal from "./admin-modal";
 import { REPAY_LABEL, TYPE_LABEL } from "./constants";
-
-export type AdminProduct = {
-  id: number;
-  product_no: string;
-  name: string;
-  type: string;
-  annual_rate: string;
-  term_months: number;
-  target_amount: number;
-  raised_amount: number;
-  status: string;
-};
 
 const TYPE_OPTIONS = Object.entries(TYPE_LABEL);
 const REPAY_OPTIONS = Object.entries(REPAY_LABEL);
@@ -38,26 +26,22 @@ const ProductForm = ({
     async (_prev, formData) => {
       const parsed = parseForm(adminProductSchema, formData);
       if ("error" in parsed) return { error: parsed.error };
-      const { product_no, platform_fee_rate, repay_day, borrower_name, tags, ...rest } =
-        parsed.data;
-      const body: Record<string, unknown> = {
-        ...rest,
-        tags: tags
-          ? tags
-              .split(",")
-              .map((t) => t.trim())
-              .filter(Boolean)
-          : [],
-      };
-      if (product_no) body.product_no = product_no;
-      if (platform_fee_rate) body.platform_fee_rate = platform_fee_rate;
-      if (repay_day !== undefined) body.repay_day = repay_day;
-      if (borrower_name) body.borrower_name = borrower_name;
+      if (!product) {
+        if (!parsed.data.repay_type) return { error: "상환방식을 선택해 주세요" };
+        if (!parsed.data.borrower_id) return { error: "차주 ID를 입력해 주세요" };
+      }
+      const body = buildProductBody(parsed.data, product);
+      if (product && Object.keys(body).length === 0) {
+        onClose();
+        return null;
+      }
       try {
         if (product) {
-          await apiPatch(`/api/admin/products/${product.id}`, body);
+          await api.patch("/api/admin/products/{id}", body, {
+            path: { id: product.id },
+          });
         } else {
-          await api.request("post", "/api/admin/products", body);
+          await api.post("/api/admin/products", body);
         }
         qc.invalidateQueries({ queryKey: ["admin", "products"] });
         onClose();
@@ -75,22 +59,13 @@ const ProductForm = ({
         <div className="form-row">
           <label className="field">
             <span className="field-label">상품명 *</span>
-            <input
-              className="input"
-              name="name"
-              defaultValue={product?.name}
-              required
-            />
+            <input className="input" name="name" defaultValue={product?.name} required />
           </label>
         </div>
         <div className="form-row">
           <label className="field">
             <span className="field-label">상품번호 (비우면 자동)</span>
-            <input
-              className="input"
-              name="product_no"
-              defaultValue={product?.product_no}
-            />
+            <input className="input" name="product_no" defaultValue={product?.product_no} />
           </label>
         </div>
         <div className="form-row">
@@ -153,13 +128,14 @@ const ProductForm = ({
         </div>
         <div className="form-row">
           <label className="field">
-            <span className="field-label">상환방식 *</span>
+            <span className="field-label">상환방식{product ? " (비우면 유지)" : " *"}</span>
             <select
               className="input"
               name="repay_type"
-              defaultValue="equal_installment"
-              required
+              defaultValue={product ? "" : "equal_installment"}
+              required={!product}
             >
+              {product && <option value="">변경 안 함</option>}
               {REPAY_OPTIONS.map(([v, l]) => (
                 <option key={v} value={v}>
                   {l}
@@ -171,31 +147,19 @@ const ProductForm = ({
         <div className="form-row">
           <label className="field">
             <span className="field-label">플랫폼 수수료율 (%)</span>
-            <input
-              className="input"
-              name="platform_fee_rate"
-              type="number"
-              step="0.01"
-              min="0"
-            />
+            <input className="input" name="platform_fee_rate" type="number" step="0.01" min="0" />
           </label>
         </div>
         <div className="form-row">
           <label className="field">
             <span className="field-label">상환일 (매월 1~28일)</span>
-            <input
-              className="input"
-              name="repay_day"
-              type="number"
-              min="1"
-              max="28"
-            />
+            <input className="input" name="repay_day" type="number" min="1" max="28" />
           </label>
         </div>
         <div className="form-row">
           <label className="field">
-            <span className="field-label">차주 ID *</span>
-            <input className="input" name="borrower_id" required />
+            <span className="field-label">차주 ID{product ? " (비우면 유지)" : " *"}</span>
+            <input className="input" name="borrower_id" required={!product} />
           </label>
         </div>
         <div className="form-row">
@@ -207,11 +171,7 @@ const ProductForm = ({
         <div className="form-row">
           <label className="field">
             <span className="field-label">태그 (쉼표 구분)</span>
-            <input
-              className="input"
-              name="tags"
-              placeholder="조기상환가능, 보증보험"
-            />
+            <input className="input" name="tags" placeholder="조기상환가능, 보증보험" />
           </label>
         </div>
         <div className="form-row">
@@ -222,19 +182,10 @@ const ProductForm = ({
         </div>
         {state?.error && <p className="form-error">{state.error}</p>}
         <div className="admin-modal-actions">
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={onClose}
-            disabled={pending}
-          >
+          <button type="button" className="btn btn-outline" onClick={onClose} disabled={pending}>
             취소
           </button>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={pending}
-          >
+          <button type="submit" className="btn btn-primary" disabled={pending}>
             {product ? "수정" : "등록"}
           </button>
         </div>
@@ -243,4 +194,5 @@ const ProductForm = ({
   );
 };
 
+export type { AdminProduct };
 export default ProductForm;

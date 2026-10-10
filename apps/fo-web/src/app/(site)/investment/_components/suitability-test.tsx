@@ -9,10 +9,7 @@ import { useMe } from "@/shared/session";
 
 import { fmtDate } from "./constants";
 
-import type {
-  SuitabilityQuestions,
-  SuitabilityResult,
-} from "./types";
+import type { SuitabilityQuestion, SuitabilityQuestions, SuitabilityResult } from "./types";
 
 const SuitabilityTest = () => {
   const me = useMe();
@@ -23,15 +20,14 @@ const SuitabilityTest = () => {
 
   const test = useQuery<SuitabilityQuestions>({
     queryKey: ["suitability"],
-    queryFn: () =>
-      api.request<SuitabilityQuestions>("get", "/api/suitability-test"),
+    queryFn: () => api.request<SuitabilityQuestions>("get", "/api/suitability-test"),
     enabled: !!me.data,
   });
 
   const submit = useMutation({
-    mutationFn: () =>
+    mutationFn: (questions: SuitabilityQuestion[]) =>
       api.request<SuitabilityResult>("post", "/api/suitability-test", {
-        answers: test.data!.questions.map((q) => ({
+        answers: questions.map((q) => ({
           seq: q.seq,
           choice: answers[q.seq],
         })),
@@ -73,8 +69,7 @@ const SuitabilityTest = () => {
             <h2>투자할 수 있어요</h2>
             <p>
               테스트를 통과했어요
-              {result.expires_at &&
-                ` · ${fmtDate(result.expires_at)}까지 유효해요`}
+              {result.expires_at && ` · ${fmtDate(result.expires_at)}까지 유효해요`}
             </p>
             <div className="result-actions">
               <button
@@ -89,10 +84,7 @@ const SuitabilityTest = () => {
         ) : (
           <>
             <h2>아직 조금 부족해요</h2>
-            <p>
-              틀린 문항이 있어요. 온투업 투자의 위험성을 다시 확인하고 재응시해
-              주세요.
-            </p>
+            <p>틀린 문항이 있어요. 온투업 투자의 위험성을 다시 확인하고 재응시해 주세요.</p>
             <div className="result-actions">
               <button
                 type="button"
@@ -144,9 +136,7 @@ const SuitabilityTest = () => {
                 key={opt}
                 type="button"
                 className={`suit-opt${answers[q.seq] === opt ? " is-active" : ""}`}
-                onClick={() =>
-                  setAnswers((prev) => ({ ...prev, [q.seq]: opt }))
-                }
+                onClick={() => setAnswers((prev) => ({ ...prev, [q.seq]: opt }))}
               >
                 {opt === "O" ? "O 맞아요" : opt === "X" ? "X 아니에요" : opt}
               </button>
@@ -155,14 +145,16 @@ const SuitabilityTest = () => {
         </div>
       ))}
       {submit.isError && (
-        <p className="form-error">제출에 실패했어요. 다시 시도해 주세요</p>
+        <p className="form-error" role="alert">
+          제출에 실패했어요. 다시 시도해 주세요
+        </p>
       )}
       <button
         type="button"
         className="btn btn-primary"
         style={{ width: "100%", marginTop: 8 }}
         disabled={done < total || submit.isPending}
-        onClick={() => submit.mutate()}
+        onClick={() => submit.mutate(test.data.questions)}
       >
         제출하기
       </button>

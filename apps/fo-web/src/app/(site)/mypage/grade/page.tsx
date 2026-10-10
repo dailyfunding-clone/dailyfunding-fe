@@ -6,16 +6,20 @@ import { useActionState, useState } from "react";
 
 import { AuthGate } from "@/features/auth";
 import { ReauthProvider, useReauth } from "@/features/auth";
-import { api, apiFetch, fmtMan } from "@/shared/api";
+import { api, apiFetch, fmtMan, idempotencyKey } from "@/shared/api";
 import { gradeRequestSchema, parseForm, type FormState } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
 import { useMe } from "@/shared/session";
 
-import { apiErrorMessage, GRADE_LABELS, GRADE_LIMIT_TABLE, GRADE_REQUEST_STATUS_LABELS } from "../_components";
+import {
+  apiErrorMessage,
+  GRADE_LABELS,
+  GRADE_LIMIT_TABLE,
+  GRADE_REQUEST_STATUS_LABELS,
+} from "../_components";
 import { fmtDate } from "../_components";
 
 import "../mypage.scss";
-
 
 type GradeInfo = {
   grade: string;
@@ -44,7 +48,7 @@ const fmtLimit = (n: number | null) => (n === null ? "무제한" : fmtMan(n));
 const GradePage = () => {
   useDocumentTitle("등급정보");
   return (
-    <AuthGate>
+    <AuthGate title="등급정보">
       <Grade />
     </AuthGate>
   );
@@ -58,11 +62,7 @@ const Grade = () => {
   });
   const history = useQuery<{ results: GradeHistoryItem[] }>({
     queryKey: ["me-grade-history"],
-    queryFn: () =>
-      api.request<{ results: GradeHistoryItem[] }>(
-        "get",
-        "/api/me/grade/history",
-      ),
+    queryFn: () => api.request<{ results: GradeHistoryItem[] }>("get", "/api/me/grade/history"),
   });
 
   if (grade.isPending) {
@@ -96,16 +96,14 @@ const Grade = () => {
             <span>총 투자 한도</span>
             <strong>
               {fmtLimit(limits.total)}
-              {limits.total !== null &&
-                ` (사용 ${fmtMan(used.total)})`}
+              {limits.total !== null && ` (사용 ${fmtMan(used.total)})`}
             </strong>
           </div>
           <div className="row-between">
             <span>부동산 상품 한도</span>
             <strong>
               {fmtLimit(limits.real_estate)}
-              {limits.real_estate !== null &&
-                ` (사용 ${fmtMan(used.real_estate)})`}
+              {limits.real_estate !== null && ` (사용 ${fmtMan(used.real_estate)})`}
             </strong>
           </div>
           <div className="row-between">
@@ -209,6 +207,7 @@ const GradeRequestForm = () => {
   const reauth = useReauth();
   const queryClient = useQueryClient();
   const [done, setDone] = useState(false);
+  const [submitKey, setSubmitKey] = useState(idempotencyKey);
 
   const [state, formAction, pending] = useActionState<FormState, FormData>(
     async (_prev, formData) => {
@@ -224,9 +223,11 @@ const GradeRequestForm = () => {
           method: "POST",
           headers: { "X-Reauth-Token": token },
           body: formData,
+          idempotencyKey: submitKey,
         });
         if (res.ok) {
           setDone(true);
+          setSubmitKey(idempotencyKey());
           queryClient.invalidateQueries({ queryKey: ["me-grade-history"] });
           queryClient.invalidateQueries({ queryKey: ["me-grade"] });
           queryClient.invalidateQueries({ queryKey: ["me"] });
@@ -249,9 +250,7 @@ const GradeRequestForm = () => {
 
   return (
     <div className="card">
-      {done && (
-        <p className="ok-msg">등급 변경을 신청했어요. 심사 후 반영돼요.</p>
-      )}
+      {done && <p className="ok-msg">등급 변경을 신청했어요. 심사 후 반영돼요.</p>}
       <form className="auth-form" action={formAction}>
         <label className="field">
           <span className="field-label">변경할 등급</span>
@@ -264,14 +263,16 @@ const GradeRequestForm = () => {
           <span className="field-label">자격 서류 (선택)</span>
           <input type="file" name="document" className="input" />
         </label>
-        {state?.error && <p className="form-error">{state.error}</p>}
+        {state?.error && (
+          <p className="form-error" role="alert">
+            {state.error}
+          </p>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "신청 중…" : "등급 변경 신청"}
         </Button>
       </form>
-      <p className="muted mt-12">
-        소득적격·전문투자자는 자격 서류 심사 후 승인돼요.
-      </p>
+      <p className="muted mt-12">소득적격·전문투자자는 자격 서류 심사 후 승인돼요.</p>
     </div>
   );
 };
@@ -279,6 +280,7 @@ const GradeRequestForm = () => {
 const LimitAssessment = ({ verified }: { verified: boolean }) => {
   const queryClient = useQueryClient();
   const [done, setDone] = useState<string | null>(null);
+  const [submitKey, setSubmitKey] = useState(idempotencyKey);
 
   const [state, formAction, pending] = useActionState<FormState, FormData>(
     async (_prev, formData) => {
@@ -289,6 +291,7 @@ const LimitAssessment = ({ verified }: { verified: boolean }) => {
         const res = await apiFetch("/api/me/limit-assessment", {
           method: "POST",
           body: formData,
+          idempotencyKey: submitKey,
         });
         const body = (await res.json().catch(() => null)) as {
           status?: string;
@@ -298,6 +301,7 @@ const LimitAssessment = ({ verified }: { verified: boolean }) => {
           return { error: body?.message ?? "심사 신청에 실패했어요" };
         }
         setDone(body?.status ?? "submitted");
+        setSubmitKey(idempotencyKey());
         queryClient.invalidateQueries({ queryKey: ["me-grade-history"] });
         return null;
       } catch (err) {
@@ -310,9 +314,7 @@ const LimitAssessment = ({ verified }: { verified: boolean }) => {
   if (!verified) {
     return (
       <div className="card">
-        <p className="muted">
-          원스톱 한도심사는 본인인증 후 이용할 수 있어요.
-        </p>
+        <p className="muted">원스톱 한도심사는 본인인증 후 이용할 수 있어요.</p>
       </div>
     );
   }
@@ -320,23 +322,23 @@ const LimitAssessment = ({ verified }: { verified: boolean }) => {
   return (
     <div className="card">
       {done && (
-        <p className="ok-msg">
-          한도심사를 접수했어요. 소득적격·전문투자자 자격을 검토해요.
-        </p>
+        <p className="ok-msg">한도심사를 접수했어요. 소득적격·전문투자자 자격을 검토해요.</p>
       )}
       <form className="auth-form" action={formAction}>
         <label className="field">
           <span className="field-label">소득 서류 (선택)</span>
           <input type="file" name="document" className="input" />
         </label>
-        {state?.error && <p className="form-error">{state.error}</p>}
+        {state?.error && (
+          <p className="form-error" role="alert">
+            {state.error}
+          </p>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "접수 중…" : "한도심사 신청"}
         </Button>
       </form>
-      <p className="muted mt-12">
-        시뮬레이션 심사예요. 실제 소득 확인은 이뤄지지 않아요.
-      </p>
+      <p className="muted mt-12">시뮬레이션 심사예요. 실제 소득 확인은 이뤄지지 않아요.</p>
     </div>
   );
 };

@@ -3,13 +3,12 @@ import { Suspense } from "react";
 
 import { API_URL } from "@/shared/api";
 
-import { ProductBrowser } from "./_components";
+import { ProductBrowser, ProductListSkeleton } from "./_components";
 
 import type { ProductListItem } from "./_components";
 import "./investment.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "투자하기" };
-
 
 const SERVER_PARAMS = [
   "type",
@@ -35,14 +34,12 @@ const fetchProducts = async (
     const v = sp[key];
     if (typeof v === "string" && v) qs.set(key, v);
   }
-  try {
-    const res = await fetch(`${API_URL}/products?${qs.toString()}`);
-    if (!res.ok) return [];
-    const data = (await res.json()) as { results: ProductListItem[] };
-    return data.results ?? [];
-  } catch {
-    return [];
+  const res = await fetch(`${API_URL}/products?${qs.toString()}`);
+  if (!res.ok) {
+    throw new Error(`fetchProducts failed: ${res.status}`);
   }
+  const data = (await res.json()) as { results: ProductListItem[] };
+  return data.results ?? [];
 };
 
 type Props = {
@@ -58,7 +55,7 @@ const InvestmentContent = async ({ searchParams }: Props) => {
 const InvestmentPage = (props: Props) => (
   <main className="container">
     <h1 className="page-title">투자하기</h1>
-    <Suspense fallback={null}>
+    <Suspense fallback={<ProductListSkeleton />}>
       <InvestmentContent {...props} />
     </Suspense>
   </main>

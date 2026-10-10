@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+
+jobs:
+  fe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
+
+  schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Fetch BE OpenAPI schema
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/dailyfunding-clone/dailyfunding-be/schema/schema.yaml \
+            -o packages/api-client/schema.yaml
+      - name: Regenerate schema.d.ts
+        run: pnpm --filter @dailyfunding/api-client typegen
+      - name: Fail if generated types drifted
+        run: git diff --exit-code packages/api-client/src/schema.d.ts

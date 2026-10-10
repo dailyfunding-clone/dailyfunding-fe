@@ -1,19 +1,17 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import { api, fmtMan } from "@/shared/api";
 import { useMounted } from "@/shared/lib";
 import { useMe } from "@/shared/session";
 import { FilterRow } from "@/shared/ui";
 
-import {
-  HIDDEN_STATUSES,
-  OPEN_STATUSES,
-  TYPE_OPTIONS,
-} from "./constants";
+import { HIDDEN_STATUSES, OPEN_STATUSES, TYPE_OPTIONS } from "./constants";
 import ProductCard from "./product-card";
+import { useProductStream } from "./use-product-stream";
 
 import type { ProductListItem } from "./types";
 
@@ -66,8 +64,39 @@ const toParams = (f: Filters) => {
   return qs.toString();
 };
 
-const fmtAmountCap = (n: number, max: number) =>
-  n >= max ? `${fmtMan(max)}+` : fmtMan(n);
+const fmtAmountCap = (n: number, max: number) => (n >= max ? `${fmtMan(max)}+` : fmtMan(n));
+
+const NOTIFY_MSG_MS = 3_000;
+
+const matchesFilters = (p: ProductListItem, f: Filters) =>
+  (!f.type || p.type === f.type) &&
+  p.term_months >= f.min_term &&
+  p.term_months <= f.max_term &&
+  p.target_amount >= f.min_amount &&
+  p.target_amount <= f.max_amount;
+
+const sortProducts = (list: ProductListItem[], sort: string) => {
+  const sorted = [...list];
+  if (sort === "rate_desc") {
+    sorted.sort((a, b) => Number(b.annual_rate) - Number(a.annual_rate));
+  } else if (sort === "rate_asc") {
+    sorted.sort((a, b) => Number(a.annual_rate) - Number(b.annual_rate));
+  } else {
+    sorted.sort((a, b) => b.registered_at.localeCompare(a.registered_at));
+  }
+  return sorted;
+};
+
+const clampRanges = (f: Filters): Filters => {
+  const next = { ...f };
+  if (next.min_term > next.max_term) {
+    [next.min_term, next.max_term] = [next.max_term, next.min_term];
+  }
+  if (next.min_amount > next.max_amount) {
+    [next.min_amount, next.max_amount] = [next.max_amount, next.min_amount];
+  }
+  return next;
+};
 
 type Props = {
   products: ProductListItem[];
@@ -78,9 +107,13 @@ const ProductBrowser = ({ products }: Props) => {
   const sp = useSearchParams();
   const me = useMe();
   const mounted = useMounted();
+  const queryClient = useQueryClient();
   const [f, setF] = useState<Filters>(() => fromParams(sp));
   const [expanded, setExpanded] = useState(false);
+  const [localNotify, setLocalNotify] = useState<boolean | null>(null);
   const [notifyMsg, setNotifyMsg] = useState("");
+  const notifyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [refetching, startRefetch] = useTransition();
 
   const [prevSp, setPrevSp] = useState(sp);
   if (prevSp !== sp) {
@@ -88,31 +121,67 @@ const ProductBrowser = ({ products }: Props) => {
     setF(fromParams(sp));
   }
 
+  useEffect(
+    () => () => {
+      if (notifyTimer.current) clearTimeout(notifyTimer.current);
+    },
+    [],
+  );
+
+  const flashNotify = (msg: string) => {
+    setNotifyMsg(msg);
+    if (notifyTimer.current) clearTimeout(notifyTimer.current);
+    notifyTimer.current = setTimeout(() => setNotifyMsg(""), NOTIFY_MSG_MS);
+  };
+
   const commit = (next: Filters) => {
-    setF(next);
-    const qs = toParams(next);
-    router.replace(qs ? `/investment?${qs}` : "/investment", { scroll: false });
+    const clamped = clampRanges(next);
+    setF(clamped);
+    const qs = toParams(clamped);
+    startRefetch(() => {
+      router.replace(qs ? `/investment?${qs}` : "/investment", { scroll: false });
+    });
   };
 
   const patch = (part: Partial<Filters>) => setF((prev) => ({ ...prev, ...part }));
   const commitRange = () => commit(f);
 
   const visible = products.filter((p) => !HIDDEN_STATUSES.has(p.status));
-  const open = visible.filter(
-    (p) => OPEN_STATUSES.has(p.status) && (!f.status || p.status === f.status),
+  const open = sortProducts(
+    visible.filter(
+      (p) =>
+        OPEN_STATUSES.has(p.status) && (!f.status || p.status === f.status) && matchesFilters(p, f),
+    ),
+    f.sort,
   );
-  const closed = visible.filter((p) => !OPEN_STATUSES.has(p.status));
+  const closed = sortProducts(
+    visible.filter((p) => !OPEN_STATUSES.has(p.status) && matchesFilters(p, f)),
+    f.sort,
+  );
+
+  useProductStream(open.map((p) => p.id));
+
+  const notifySettings = useQuery({
+    queryKey: ["notifications", "settings"],
+    queryFn: () => api.get("/api/notifications/settings"),
+    enabled: !!me.data,
+  });
+  const notifyOn = localNotify ?? notifySettings.data?.enabled ?? false;
 
   const toggleNotify = async () => {
     try {
-      await api.request(
-        "post",
-        "/api/notifications/settings",
-        { new_product: true },
-      );
-      setNotifyMsg("신규 상품 알림을 켰어요");
+      const next = !notifyOn;
+      const res = await api.post("/api/notifications/settings", {
+        new_product: next,
+      });
+      const on = res.new_product ?? next;
+      setLocalNotify(on);
+      queryClient.setQueryData(["notifications", "settings"], {
+        enabled: on,
+      });
+      flashNotify(on ? "신규 상품 알림을 켰어요" : "신규 상품 알림을 껐어요");
     } catch {
-      setNotifyMsg("알림 설정에 실패했어요");
+      flashNotify("알림 설정에 실패했어요");
     }
   };
 
@@ -133,8 +202,12 @@ const ProductBrowser = ({ products }: Props) => {
             ))}
           </div>
           {mounted && me.data && (
-            <button type="button" className="inv-notify" onClick={toggleNotify}>
-              {notifyMsg || "신규 상품 알림 받기"}
+            <button
+              type="button"
+              className={`inv-notify${notifyOn ? " is-active" : ""}`}
+              onClick={toggleNotify}
+            >
+              {notifyMsg || (notifyOn ? "신규 상품 알림 끄기" : "신규 상품 알림 받기")}
             </button>
           )}
         </FilterRow>
@@ -152,9 +225,7 @@ const ProductBrowser = ({ products }: Props) => {
                 key={t.value}
                 type="button"
                 className={`chip${f.type === t.value ? " is-active" : ""}`}
-                onClick={() =>
-                  commit({ ...f, type: f.type === t.value ? "" : t.value })
-                }
+                onClick={() => commit({ ...f, type: f.type === t.value ? "" : t.value })}
               >
                 {t.label}
               </button>
@@ -235,17 +306,16 @@ const ProductBrowser = ({ products }: Props) => {
               onBlur={commitRange}
               aria-label="최대 금액"
             />
-            <span className="inv-range-val">
-              {fmtAmountCap(f.max_amount, AMOUNT_MAX)}
-            </span>
+            <span className="inv-range-val">{fmtAmountCap(f.max_amount, AMOUNT_MAX)}</span>
           </div>
         </FilterRow>
       </div>
 
+      {refetching && <p className="field-hint inv-loading">상품을 불러오는 중…</p>}
       {open.length === 0 ? (
         <div className="empty">조건에 맞는 상품이 없어요</div>
       ) : (
-        <div className="card-grid">
+        <div className="card-grid" aria-busy={refetching}>
           {open.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

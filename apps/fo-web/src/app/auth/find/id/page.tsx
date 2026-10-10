@@ -4,10 +4,10 @@ import { Button, Field } from "@dailyfunding/design-system/components";
 import ky from "ky";
 import { useActionState } from "react";
 
+import { csrfHeaders } from "@/shared/api";
 import { findIdSchema, parseForm, type FormState } from "@/shared/lib";
 import { useAppNavigate } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
-
 
 type FindIdState = FormState | { email: string };
 
@@ -21,6 +21,7 @@ const FindIdPage = () => {
       try {
         const res = await ky.post("/api/auth/find-id", {
           json: parsed.data,
+          headers: csrfHeaders(),
           throwHttpErrors: false,
         });
         const body = (await res.json().catch(() => null)) as {
@@ -58,10 +59,7 @@ const FindIdPage = () => {
           <button type="button" onClick={() => nav.replace("/auth/signin", "로그인")}>
             로그인하기
           </button>
-          <button
-            type="button"
-            onClick={() => nav.push("/auth/find/password", "비밀번호 재설정")}
-          >
+          <button type="button" onClick={() => nav.push("/auth/find/password", "비밀번호 재설정")}>
             비밀번호 재설정
           </button>
         </div>
@@ -95,7 +93,11 @@ const FindIdPage = () => {
           autoComplete="tel-national"
           required
         />
-        {error && <p className="form-error">{error}</p>}
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "찾는 중…" : "아이디 찾기"}
         </Button>

@@ -50,89 +50,6 @@ input {
   font: inherit;
 }
 
-/* --- 공통 --- */
-
-.btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 52px;
-  border-radius: var(--scale-radius-md);
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.btn-primary {
-  background: var(--semantic-color-accent-primary);
-  color: var(--semantic-color-bg-default);
-}
-
-.btn-outline {
-  border: 1px solid var(--semantic-color-stroke-default);
-  background: var(--semantic-color-bg-default);
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.field-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--semantic-color-fg-secondary);
-}
-
-.input {
-  height: 48px;
-  padding: 0 14px;
-  border: 1px solid var(--semantic-color-stroke-default);
-  border-radius: var(--scale-radius-sm);
-  font-size: 15px;
-}
-
-.field-input-wrap {
-  position: relative;
-  display: block;
-}
-
-.field-input-wrap .input {
-  width: 100%;
-}
-
-.field-input-wrap .input:has(+ .field-eye) {
-  padding-right: 44px;
-}
-
-.field-eye {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  padding: 4px;
-  border: 0;
-  background: none;
-  color: var(--semantic-color-fg-tertiary);
-  cursor: pointer;
-}
-
-.input::placeholder {
-  color: var(--semantic-color-fg-tertiary);
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--semantic-color-accent-primary);
-}
-
-.form-error {
-  font-size: 13px;
-  color: var(--semantic-color-danger);
-}
-
 /* --- 공통 UI --- */
 
 .card {
@@ -141,12 +58,6 @@ input {
   border-radius: var(--scale-radius-md);
   padding: 20px;
   background: var(--semantic-color-bg-default);
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
 }
 
 .badge {
@@ -169,30 +80,6 @@ input {
 .badge-danger {
   background: color-mix(in srgb, var(--semantic-color-danger) 10%, transparent);
   color: var(--semantic-color-danger);
-}
-
-.progress {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--semantic-color-stroke-subtle);
-  overflow: hidden;
-}
-
-.progress i {
-  display: block;
-  height: 100%;
-  background: var(--semantic-color-accent-primary);
-  border-radius: 3px;
-}
-
-.list {
-  list-style: none;
-}
-
-.list li {
-  padding: 14px 0;
-  border-bottom: 1px solid var(--semantic-color-stroke-subtle);
-  font-size: 15px;
 }
 
 .table {
@@ -264,24 +151,11 @@ input {
   font-size: 14px;
 }
 
-.page-title {
-  font-size: 24px;
-  font-weight: 800;
-  margin: 32px 0 20px;
-}
-
 .form-row {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 16px;
-}
-
-.form-check {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
 }
 
 .modal-backdrop {
@@ -316,27 +190,6 @@ input {
   }
 }
 
-.kpi-band {
-  display: flex;
-  gap: 24px;
-  padding: 20px 0;
-  overflow-x: auto;
-}
-
-.kpi {
-  flex-shrink: 0;
-}
-
-.kpi dt {
-  font-size: 12px;
-  color: var(--semantic-color-fg-tertiary);
-}
-
-.kpi dd {
-  font-size: 18px;
-  font-weight: 800;
-}
-
 /* --- auth --- */
 
 .auth-shell {
@@ -361,60 +214,6 @@ input {
 .auth-header h1 {
   font-size: 17px;
   font-weight: 600;
-}
-
-.auth-desc {
-  margin-top: 4px;
-  font-size: 14px;
-  color: var(--semantic-color-fg-tertiary);
-}
-
-.in-app .auth-header {
-  display: none;
-}
-
-.auth-back {
-  position: absolute;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-}
-
-.auth-start {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 48px 0 8px;
-}
-
-.auth-hero-badge {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--semantic-color-accent-primary);
-  margin-bottom: 8px;
-}
-
-.auth-hero-title {
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-
-.auth-hero-desc {
-  margin-top: 8px;
-  font-size: 15px;
-  color: var(--semantic-color-fg-tertiary);
-}
-
-.auth-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .auth-form {

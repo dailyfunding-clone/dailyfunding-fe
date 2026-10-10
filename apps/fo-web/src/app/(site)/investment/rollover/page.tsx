@@ -4,7 +4,6 @@ import "../investment.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "예약 투자" };
 
-
 const RolloverPage = () => (
   <main className="container" style={{ maxWidth: 720 }}>
     <h1 className="page-title">예약 투자</h1>

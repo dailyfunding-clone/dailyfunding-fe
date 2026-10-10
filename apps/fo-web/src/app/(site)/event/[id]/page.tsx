@@ -2,9 +2,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import {
-  fmtDate,
-} from "@/entities/content";
+import ProductDetailSkeleton from "@/app/(site)/investment/_components/product-detail-skeleton";
+import { fmtDate } from "@/entities/content";
 import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
@@ -24,7 +23,6 @@ export const generateMetadata = async ({
   return { title: event?.title ?? "이벤트" };
 };
 
-
 type EventDetail = {
   id: number;
   title: string;
@@ -37,14 +35,10 @@ type EventDetail = {
   end_at: string | null;
   prev_id: number | null;
   next_id: number | null;
-  ongoing: { id: number; title: string; thumbnail_url: string }[];
+  ongoing?: { id: number; title: string; thumbnail_url: string }[];
 };
 
-const EventDetailContent = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+const EventDetailContent = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const event = await fetchJson<EventDetail>(`/events/${id}`);
   if (!event) notFound();
@@ -60,9 +54,7 @@ const EventDetailContent = async ({
           )}
         </div>
         <div className="event-card-badges event-hero-badges">
-          <span
-            className={`badge${event.status === "ongoing" ? " badge-accent" : ""}`}
-          >
+          <span className={`badge${event.status === "ongoing" ? " badge-accent" : ""}`}>
             {STATUS_LABEL[event.status] ?? event.status}
           </span>
           {d && <span className="badge">{d}</span>}
@@ -106,11 +98,11 @@ const EventDetailContent = async ({
         )}
       </nav>
 
-      {event.ongoing.length > 0 && (
+      {(event.ongoing?.length ?? 0) > 0 && (
         <section className="event-section">
           <h3>진행 중인 다른 이벤트</h3>
           <div className="event-ongoing">
-            {event.ongoing.map((e) => (
+            {(event.ongoing ?? []).map((e) => (
               <AppLink key={e.id} href={`/event/${e.id}`}>
                 <div className="event-thumb">
                   {e.thumbnail_url ? (
@@ -135,7 +127,7 @@ const EventDetailContent = async ({
 };
 
 const EventDetailPage = (props: { params: Promise<{ id: string }> }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductDetailSkeleton />}>
     <EventDetailContent {...props} />
   </Suspense>
 );

@@ -16,9 +16,8 @@ const DepositWithdraw = () => {
   const reauth = useReauth();
   const queryClient = useQueryClient();
   const [all, setAll] = useState(false);
-  const [result, setResult] = useState<{ fee: number; status: string } | null>(
-    null,
-  );
+  const [key, setKey] = useState(idempotencyKey);
+  const [result, setResult] = useState<{ fee: number; status: string } | null>(null);
 
   const [state, formAction, pending] = useActionState<FormState, FormData>(
     async (_prev, formData) => {
@@ -38,25 +37,22 @@ const DepositWithdraw = () => {
             "post",
             "/api/deposit/withdraw",
             body,
-            { idempotencyKey: idempotencyKey(), reauthToken: token },
+            { idempotencyKey: key, reauthToken: token },
           );
           setResult(res);
-          queryClient.invalidateQueries({ queryKey: ["deposit-account"] });
+          setKey(idempotencyKey());
+          queryClient.invalidateQueries({ queryKey: ["deposit", "account"] });
           queryClient.invalidateQueries({ queryKey: ["deposit-history"] });
           queryClient.invalidateQueries({ queryKey: ["me-dashboard"] });
           return null;
         } catch (err) {
-          if (
-            err instanceof ApiRequestError &&
-            err.code === "REAUTH_REQUIRED"
-          ) {
+          if (err instanceof ApiRequestError && err.code === "REAUTH_REQUIRED") {
             reauth?.reset();
             continue;
           }
           return {
             error:
-              err instanceof ApiRequestError &&
-              err.code === "INSUFFICIENT_DEPOSIT"
+              err instanceof ApiRequestError && err.code === "INSUFFICIENT_DEPOSIT"
                 ? "출금 가능한 금액을 초과했어요"
                 : apiErrorMessage(err),
           };
@@ -95,8 +91,7 @@ const DepositWithdraw = () => {
 
       {result && (
         <p className="ok-msg">
-          출금 요청이 접수됐어요 ({WITHDRAWAL_STATUS_LABELS[result.status] ??
-            result.status}
+          출금 요청이 접수됐어요 ({WITHDRAWAL_STATUS_LABELS[result.status] ?? result.status}
           {result.fee > 0 ? `, 수수료 ${fmtWon(result.fee)}` : ", 수수료 무료"})
         </p>
       )}
@@ -116,14 +111,14 @@ const DepositWithdraw = () => {
           />
         )}
         <label className="form-check">
-          <input
-            type="checkbox"
-            checked={all}
-            onChange={(e) => setAll(e.target.checked)}
-          />
+          <input type="checkbox" checked={all} onChange={(e) => setAll(e.target.checked)} />
           전액 출금
         </label>
-        {state?.error && <p className="form-error">{state.error}</p>}
+        {state?.error && (
+          <p className="form-error" role="alert">
+            {state.error}
+          </p>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "요청 중…" : "출금하기"}
         </Button>

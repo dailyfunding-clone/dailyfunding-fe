@@ -1,19 +1,17 @@
 import { Suspense } from "react";
 
-import {
-  firstParam,
-} from "@/entities/content";
+import ProductListSkeleton from "@/app/(site)/investment/_components/product-list-skeleton";
+import { firstParam } from "@/entities/content";
 import { fetchJson } from "@/entities/content/index.server";
 import { fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
 
-import { CATEGORY_LABEL } from "./types";
+import { CATEGORY_LABEL, rateText } from "./types";
 
 import type { LoanProduct } from "./types";
 import "./loan.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "대출받기" };
-
 
 const CATEGORIES = [
   { key: "all", label: "전체" },
@@ -26,10 +24,9 @@ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 const LoanListContent = async ({ searchParams }: { searchParams: SearchParams }) => {
   const params = await searchParams;
   const category = firstParam(params.category) ?? "all";
-  const data = await fetchJson<{ results: LoanProduct[] }>(
-    `/loans?category=${category}`,
-  );
-  const loans = data?.results ?? [];
+  const data = await fetchJson<{ results: LoanProduct[] }>("/loans");
+  const all = data?.results ?? [];
+  const loans = category === "all" ? all : all.filter((l) => l.category === category);
   return (
     <main className="container">
       <div className="loan-head">
@@ -60,17 +57,13 @@ const LoanListContent = async ({ searchParams }: { searchParams: SearchParams })
         <div className="card-grid loan-cards">
           {loans.map((l) => (
             <AppLink key={l.id} href={`/loan/${l.id}`} className="card loan-card">
-              <span
-                className={`badge${l.category === "personal" ? " badge-accent" : ""}`}
-              >
+              <span className={`badge${l.category === "personal" ? " badge-accent" : ""}`}>
                 {CATEGORY_LABEL[l.category] ?? l.category}
               </span>
               <h3>{l.name}</h3>
               <p className="loan-card-target">{l.target}</p>
               <div className="loan-card-rate">
-                <strong>
-                  연 {l.rate_range[0]}~{l.rate_range[1]}%
-                </strong>
+                <strong>{rateText(l.rate_range)}</strong>
               </div>
               <div className="loan-card-meta">
                 <span>
@@ -95,7 +88,7 @@ const LoanListContent = async ({ searchParams }: { searchParams: SearchParams })
 };
 
 const LoanListPage = (props: { searchParams: SearchParams }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductListSkeleton />}>
     <LoanListContent {...props} />
   </Suspense>
 );

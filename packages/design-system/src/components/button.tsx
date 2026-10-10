@@ -5,8 +5,5 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 export const Button = ({ variant = "primary", className, ...props }: Props) => (
-  <button
-    className={["btn", `btn-${variant}`, className].filter(Boolean).join(" ")}
-    {...props}
-  />
+  <button className={["btn", `btn-${variant}`, className].filter(Boolean).join(" ")} {...props} />
 );

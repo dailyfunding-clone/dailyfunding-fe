@@ -1,8 +1,10 @@
 import * as LocalAuthentication from "expo-local-authentication";
 import * as SecureStore from "expo-secure-store";
 
-const PIN_KEY = "pin_biometric";
-const ENABLED_KEY = "biometric_enabled";
+import { STORAGE_KEYS } from "@/shared";
+
+const PIN_KEY = STORAGE_KEYS.pinBiometric;
+const ENABLED_KEY = STORAGE_KEYS.biometricEnabled;
 
 export const biometricSupported = async () => {
   const [hardware, enrolled] = await Promise.all([
@@ -14,9 +16,7 @@ export const biometricSupported = async () => {
 
 export const biometricLabel = async () => {
   const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
-  if (
-    types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)
-  ) {
+  if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) {
     return "Face ID";
   }
   if (types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT)) {

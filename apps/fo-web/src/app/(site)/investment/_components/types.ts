@@ -1,36 +1,20 @@
-export type ProductListItem = {
-  id: number;
-  product_no: string;
-  name: string;
-  type: string;
-  annual_rate: string;
-  term_months: number;
-  target_amount: number;
+import type { components } from "@dailyfunding/api-client";
+
+export type ProductListItem = Omit<
+  components["schemas"]["ProductList"],
+  "raised_amount" | "status" | "tags"
+> & {
   raised_amount: number;
-  progress_pct: string;
   status: string;
   tags?: string[];
-  registered_at: string;
 };
 
-export type ProductDetail = ProductListItem & {
-  repay_type: string;
-  platform_fee_rate: string;
-  repay_day: number;
-  remaining_amount: number;
-  recruit_open_at: string | null;
-  tabs?: {
-    overview?: Record<string, unknown>;
-    detail?: Record<string, unknown>;
-    notice?: string;
+export type ProductDetail = ProductListItem &
+  Omit<components["schemas"]["ProductDetail"], keyof ProductListItem> & {
+    platform_fee_rate: string;
+    repay_day: number;
+    recruit_open_at: string | null;
   };
-  my?: {
-    deposit: number;
-    investable: number;
-    grade_remaining_limit: number | null;
-    same_borrower_remaining: number | null;
-  };
-};
 
 export type ScheduleRow = {
   seq: number;
@@ -108,17 +92,9 @@ export type CartList = {
   count: number;
 };
 
-export type EligibleInvestment = {
-  investment_id: number;
-  product_id: number;
-  product_name: string;
-  amount: number;
-  maturity_date: string;
-  refinance_open: boolean;
-};
+export type EligibleInvestment = components["schemas"]["ReservationEligibleItem"];
 
-export type Reservation = {
-  id: number;
-  status: string;
-  amount: number;
-};
+export type Reservation = Omit<
+  components["schemas"]["ReservationResponse"],
+  "investment_id" | "product_name" | "created_at"
+>;

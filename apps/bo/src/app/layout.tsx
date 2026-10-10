@@ -2,6 +2,7 @@ import { RootProviders } from "@/apps/providers";
 
 import type { Metadata } from "next";
 import "@dailyfunding/design-system/tokens.css";
+import "@dailyfunding/design-system/components.css";
 import "./globals.scss";
 
 export const metadata: Metadata = {

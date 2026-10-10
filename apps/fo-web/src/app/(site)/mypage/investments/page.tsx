@@ -12,7 +12,6 @@ import { fmtDate } from "../_components";
 
 import "../mypage.scss";
 
-
 type InvestmentItem = {
   id: number;
   product_id: number;
@@ -72,10 +71,10 @@ const TYPE_CHIPS = [
 const InvestmentsPage = () => {
   useDocumentTitle("투자내역");
   return (
-  <AuthGate>
-    <Investments />
-  </AuthGate>
-);
+    <AuthGate title="투자내역">
+      <Investments />
+    </AuthGate>
+  );
 };
 
 const Investments = () => {
@@ -87,13 +86,9 @@ const Investments = () => {
   if (status) params.set("status", status);
   if (type) params.set("type", type);
 
-  const { data } = useQuery<InvestmentList>({
+  const { data, isPending, isError, refetch } = useQuery<InvestmentList>({
     queryKey: ["me-investments", status, type],
-    queryFn: () =>
-      api.request<InvestmentList>(
-        "get",
-        `/api/me/investments?${params.toString()}`,
-      ),
+    queryFn: () => api.request<InvestmentList>("get", `/api/me/investments?${params.toString()}`),
   });
 
   return (
@@ -127,9 +122,16 @@ const Investments = () => {
         </div>
       </div>
 
-      {!data ? (
+      {isPending ? (
         <div className="empty">불러오는 중…</div>
-      ) : data.results.length === 0 ? (
+      ) : isError ? (
+        <div className="empty">
+          <p>투자 내역을 불러오지 못했어요</p>
+          <button type="button" className="btn btn-outline" onClick={() => void refetch()}>
+            다시 시도
+          </button>
+        </div>
+      ) : !data || data.results.length === 0 ? (
         <div className="empty">투자 내역이 없어요</div>
       ) : (
         <>
@@ -140,9 +142,7 @@ const Investments = () => {
                 key={inv.id}
                 inv={inv}
                 open={openId === inv.id}
-                onToggle={() =>
-                  setOpenId(openId === inv.id ? null : inv.id)
-                }
+                onToggle={() => setOpenId(openId === inv.id ? null : inv.id)}
               />
             ))}
           </div>
@@ -179,8 +179,7 @@ const InvestmentCard = ({
       </div>
       <div className="row-between">
         <span className="muted">
-          {inv.product_no} · {PRODUCT_TYPE_LABELS[inv.type] ?? inv.type} ·{" "}
-          {fmtDate(inv.created_at)}
+          {inv.product_no} · {PRODUCT_TYPE_LABELS[inv.type] ?? inv.type} · {fmtDate(inv.created_at)}
         </span>
       </div>
       <div className="row-between">
@@ -196,12 +195,12 @@ const InvestmentCard = ({
 );
 
 const InvestmentDetailView = ({ id }: { id: number }) => {
-  const { data } = useQuery<InvestmentDetail>({
+  const { data, isError } = useQuery<InvestmentDetail>({
     queryKey: ["investment", id],
-    queryFn: () =>
-      api.request<InvestmentDetail>("get", `/api/investments/${id}`),
+    queryFn: () => api.request<InvestmentDetail>("get", `/api/investments/${id}`),
   });
 
+  if (isError) return <div className="inv-detail muted">불러오지 못했어요</div>;
   if (!data) return <div className="inv-detail muted">불러오는 중…</div>;
 
   return (

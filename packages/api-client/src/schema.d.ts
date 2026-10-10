@@ -525,6 +525,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** @description 저장된 세션(로그인 상태) 사용자의 간편비밀번호 잠금 해제. */
         post: operations["api_auth_login_pin_create"];
         delete?: never;
         options?: never;
@@ -1148,6 +1149,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/metrics/vitals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_metrics_vitals_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/news": {
         parameters: {
             query?: never;
@@ -1219,9 +1236,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** @description GET/POST /api/notifications/settings — 알림 설정 조회·변경. */
+        get: operations["api_notifications_settings_retrieve"];
         put?: never;
-        /** @description POST /api/notifications/settings — 카테고리별 ON/OFF. */
+        /** @description GET/POST /api/notifications/settings — 알림 설정 조회·변경. */
         post: operations["api_notifications_settings_create"];
         delete?: never;
         options?: never;
@@ -1323,6 +1341,22 @@ export interface paths {
         };
         /** @description GET /api/products/{id}/schedule-preview?amount= — 예상수익 (F-INV-03). */
         get: operations["api_products_schedule_preview_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_products_stream_retrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2050,6 +2084,9 @@ export interface components {
         NotificationListResponse: {
             results: components["schemas"]["NotificationItem"][];
         };
+        NotificationSettingsGet: {
+            enabled: boolean;
+        };
         NotifyIntent: {
             sender_name: string;
             amount: number;
@@ -2173,8 +2210,6 @@ export interface components {
         };
         PinLogin: {
             pin: string;
-            /** Format: email */
-            email?: string;
         };
         PinRegister: {
             pin: string;
@@ -2236,6 +2271,8 @@ export interface components {
             remaining_amount: number;
             /** Format: date-time */
             recruit_open_at?: string | null;
+            readonly tabs: components["schemas"]["ProductTabs"];
+            readonly my: components["schemas"]["ProductMy"] | null;
         };
         ProductList: {
             readonly id: number;
@@ -2254,6 +2291,27 @@ export interface components {
             tags?: unknown;
             /** Format: date-time */
             readonly registered_at: string;
+        };
+        ProductMy: {
+            deposit: number;
+            investable: number;
+            grade_remaining_limit: number | null;
+            same_borrower_remaining: number | null;
+        };
+        ProductProgress: {
+            id: number;
+            raised_amount: number;
+            remaining: number;
+            status: components["schemas"]["StatusEnum"];
+        };
+        ProductTabs: {
+            overview: {
+                [key: string]: unknown;
+            };
+            detail: {
+                [key: string]: unknown;
+            };
+            notice: string;
         };
         ProductUpsert: {
             product_no?: string;
@@ -2280,7 +2338,8 @@ export interface components {
             refinance_of?: number | null;
         };
         Reauth: {
-            password: string;
+            password?: string;
+            pin?: string;
         };
         ReauthResponse: {
             reauth_token: string;
@@ -2492,6 +2551,14 @@ export interface components {
          * @enum {string}
          */
         UserMemberTypeEnum: "personal" | "corporate";
+        Vital: {
+            name: string;
+            /** Format: double */
+            value: number;
+            path: string;
+            /** Format: double */
+            ts: number;
+        };
         Withdraw: {
             amount?: number;
             /** @default false */
@@ -2915,7 +2982,9 @@ export interface operations {
     };
     api_admin_grade_requests_retrieve: {
         parameters: {
-            query?: never;
+            query?: {
+                status?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2961,7 +3030,9 @@ export interface operations {
     };
     api_admin_loan_applications_retrieve: {
         parameters: {
-            query?: never;
+            query?: {
+                status?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -3626,7 +3697,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
                 "application/json": components["schemas"]["Reauth"];
                 "application/x-www-form-urlencoded": components["schemas"]["Reauth"];
@@ -4393,6 +4464,30 @@ export interface operations {
             };
         };
     };
+    api_metrics_vitals_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Vital"];
+                "application/x-www-form-urlencoded": components["schemas"]["Vital"];
+                "multipart/form-data": components["schemas"]["Vital"];
+            };
+        };
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     api_news_retrieve: {
         parameters: {
             query?: never;
@@ -4467,6 +4562,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["NotificationListResponse"];
+                };
+            };
+        };
+    };
+    api_notifications_settings_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSettingsGet"];
                 };
             };
         };
@@ -4562,6 +4676,8 @@ export interface operations {
     api_products_list: {
         parameters: {
             query?: {
+                /** @description Comma-separated positive product IDs (up to 100). */
+                ids?: string;
                 include_closed?: boolean;
                 max_amount?: number;
                 max_rate?: number;
@@ -4631,6 +4747,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SchedulePreview"];
+                };
+            };
+        };
+    };
+    api_products_stream_retrieve: {
+        parameters: {
+            query?: {
+                /** @description Comma-separated positive product IDs (up to 100). Omit for all public products. */
+                ids?: string;
+            };
+            header?: {
+                "Last-Event-ID"?: number;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ProductProgress"];
                 };
             };
         };

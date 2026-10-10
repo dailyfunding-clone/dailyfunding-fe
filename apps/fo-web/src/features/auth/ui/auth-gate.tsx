@@ -5,7 +5,7 @@ import { useMe } from "@/shared/session";
 
 import type { ReactNode } from "react";
 
-const AuthGate = ({ children }: { children: ReactNode }) => {
+const AuthGate = ({ children, title }: { children: ReactNode; title?: string }) => {
   const me = useMe();
   const nav = useAppNavigate();
 
@@ -19,7 +19,7 @@ const AuthGate = ({ children }: { children: ReactNode }) => {
   if (!me.data) {
     return (
       <div className="container">
-        <h1 className="page-title">마이페이지</h1>
+        {title && <h1 className="page-title">{title}</h1>}
         <div className="empty">
           <p>로그인이 필요한 서비스예요</p>
           <button

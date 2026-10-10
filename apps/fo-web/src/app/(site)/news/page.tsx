@@ -8,7 +8,6 @@ import "./news.scss";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "언론보도" };
 
-
 const NewsPage = async () => {
   const data = await fetchJson<{
     results: NewsItem[];
@@ -27,9 +26,7 @@ const NewsPage = async () => {
           ))}
         </div>
       )}
-      <NewsMore
-        initialCursor={items.length >= 20 ? (data?.next_cursor ?? null) : null}
-      />
+      <NewsMore initialCursor={data?.next_cursor ?? null} />
     </main>
   );
 };

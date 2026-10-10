@@ -9,7 +9,9 @@ import { errMsg } from "@/shared/lib";
 
 import { STATUS_LABEL } from "../_components";
 
-type SeedResult = { created: number; ids: number[] };
+import type { components } from "@dailyfunding/api-client";
+
+type SeedResult = components["schemas"]["SeedProductsResponse"];
 
 const SeedPage = () => {
   const qc = useQueryClient();
@@ -19,16 +21,19 @@ const SeedPage = () => {
   >(async (_prev, formData) => {
     const parsed = parseForm(adminSeedSchema, formData);
     if ("error" in parsed) return { error: parsed.error };
-    const body: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(parsed.data)) {
-      if (v !== undefined && v !== "") body[k] = v;
-    }
+    const body: components["schemas"]["SeedProductsRequest"] = {
+      count: parsed.data.count ?? 10,
+    };
+    if (parsed.data.status) body.status = parsed.data.status as components["schemas"]["StatusEnum"];
+    if (parsed.data.rate_min !== undefined) body.rate_min = parsed.data.rate_min;
+    if (parsed.data.rate_max !== undefined) body.rate_max = parsed.data.rate_max;
+    if (parsed.data.amount_min !== undefined) body.amount_min = parsed.data.amount_min;
+    if (parsed.data.amount_max !== undefined) body.amount_max = parsed.data.amount_max;
+    if (parsed.data.term_min !== undefined) body.term_min = parsed.data.term_min;
+    if (parsed.data.term_max !== undefined) body.term_max = parsed.data.term_max;
+    if (parsed.data.seed !== undefined) body.seed = parsed.data.seed;
     try {
-      const result = await api.request<SeedResult>(
-        "post",
-        "/api/admin/seed/products",
-        body,
-      );
+      const result = await api.post("/api/admin/seed/products", body);
       qc.invalidateQueries({ queryKey: ["admin", "products"] });
       return { result };
     } catch (e) {
@@ -48,13 +53,7 @@ const SeedPage = () => {
         <div className="form-row">
           <label className="field">
             <span className="field-label">개수 (기본 10)</span>
-            <input
-              className="input"
-              name="count"
-              type="number"
-              min="1"
-              placeholder="10"
-            />
+            <input className="input" name="count" type="number" min="1" placeholder="10" />
           </label>
         </div>
         <div className="form-row">
@@ -74,13 +73,7 @@ const SeedPage = () => {
           <label className="field">
             <span className="field-label">금리 범위 (%) — 기본 6.0 ~ 15.0</span>
             <div className="admin-actions">
-              <input
-                className="input"
-                name="rate_min"
-                type="number"
-                step="0.1"
-                placeholder="6.0"
-              />
+              <input className="input" name="rate_min" type="number" step="0.1" placeholder="6.0" />
               <input
                 className="input"
                 name="rate_max"
@@ -93,9 +86,7 @@ const SeedPage = () => {
         </div>
         <div className="form-row">
           <label className="field">
-            <span className="field-label">
-              모집금액 범위 (원) — 기본 1천만 ~ 5억
-            </span>
+            <span className="field-label">모집금액 범위 (원) — 기본 1천만 ~ 5억</span>
             <div className="admin-actions">
               <input
                 className="input"
@@ -118,20 +109,8 @@ const SeedPage = () => {
           <label className="field">
             <span className="field-label">기간 범위 (개월) — 기본 3 ~ 24</span>
             <div className="admin-actions">
-              <input
-                className="input"
-                name="term_min"
-                type="number"
-                min="1"
-                placeholder="3"
-              />
-              <input
-                className="input"
-                name="term_max"
-                type="number"
-                min="1"
-                placeholder="24"
-              />
+              <input className="input" name="term_min" type="number" min="1" placeholder="3" />
+              <input className="input" name="term_max" type="number" min="1" placeholder="24" />
             </div>
           </label>
         </div>
@@ -141,14 +120,8 @@ const SeedPage = () => {
             <input className="input" name="seed" type="number" />
           </label>
         </div>
-        {state && "error" in state && (
-          <p className="form-error">{state.error}</p>
-        )}
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={pending}
-        >
+        {state && "error" in state && <p className="form-error">{state.error}</p>}
+        <button type="submit" className="btn btn-primary" disabled={pending}>
           생성
         </button>
       </form>

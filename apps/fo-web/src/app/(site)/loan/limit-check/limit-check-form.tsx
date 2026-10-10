@@ -7,6 +7,8 @@ import { api, fmtWon } from "@/shared/api";
 import { limitCheckSchema, parseForm } from "@/shared/lib";
 import { AppLink } from "@/shared/ui";
 
+import { rateText } from "../types";
+
 type LimitResult = {
   limit: number;
   rate_range: string[];
@@ -19,22 +21,10 @@ const TYPES = [
 
 const LimitCheckForm = ({ loanId }: { loanId: number | null }) => {
   const [nonce, setNonce] = useState(0);
-  return (
-    <LimitCheckInner
-      key={nonce}
-      loanId={loanId}
-      onReset={() => setNonce((n) => n + 1)}
-    />
-  );
+  return <LimitCheckInner key={nonce} loanId={loanId} onReset={() => setNonce((n) => n + 1)} />;
 };
 
-const LimitCheckInner = ({
-  loanId,
-  onReset,
-}: {
-  loanId: number | null;
-  onReset: () => void;
-}) => {
+const LimitCheckInner = ({ loanId, onReset }: { loanId: number | null; onReset: () => void }) => {
   const [type, setType] = useState<"mortgage" | "credit">("mortgage");
   const [state, formAction, pending] = useActionState<
     { error: string } | { result: LimitResult } | null,
@@ -43,11 +33,7 @@ const LimitCheckInner = ({
     const parsed = parseForm(limitCheckSchema, formData);
     if ("error" in parsed) return { error: parsed.error };
     try {
-      const result = await api.request<LimitResult>(
-        "post",
-        "/api/loans/limit-check",
-        parsed.data,
-      );
+      const result = await api.request<LimitResult>("post", "/api/loans/limit-check", parsed.data);
       return { result };
     } catch {
       return {
@@ -64,24 +50,13 @@ const LimitCheckInner = ({
           <dt>예상 대출 한도</dt>
           <dd>{fmtWon(result.limit)}</dd>
         </dl>
-        <p className="limit-result-rate">
-          예상 금리 연 {result.rate_range[0]}~{result.rate_range[1]}%
-        </p>
-        <p className="limit-result-note">
-          모의 조회 결과예요. 신용도에는 영향이 없어요.
-        </p>
+        <p className="limit-result-rate">예상 금리 {rateText(result.rate_range)}</p>
+        <p className="limit-result-note">모의 조회 결과예요. 신용도에는 영향이 없어요.</p>
         <div className="limit-actions">
-          <AppLink
-            href={loanId ? `/loan/${loanId}/apply` : "/loan"}
-            className="btn btn-primary"
-          >
+          <AppLink href={loanId ? `/loan/${loanId}/apply` : "/loan"} className="btn btn-primary">
             사전심사 신청하기
           </AppLink>
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={onReset}
-          >
+          <button type="button" className="btn btn-outline" onClick={onReset}>
             다시 조회하기
           </button>
         </div>
@@ -108,12 +83,7 @@ const LimitCheckInner = ({
       {type === "mortgage" ? (
         <>
           <div className="form-row">
-            <Field
-              label="아파트 단지명"
-              name="complex"
-              placeholder="예) 래미안 데일리"
-              required
-            />
+            <Field label="아파트 단지명" name="complex" placeholder="예) 래미안 데일리" required />
           </div>
           <div className="form-row">
             <Field
@@ -136,16 +106,13 @@ const LimitCheckInner = ({
         </>
       ) : (
         <div className="form-row">
-          <Field
-            label="사업자등록번호"
-            name="biz_no"
-            placeholder="- 없이 입력해 주세요"
-            required
-          />
+          <Field label="사업자등록번호" name="biz_no" placeholder="- 없이 입력해 주세요" required />
         </div>
       )}
       {state && "error" in state && (
-        <p className="form-error">{state.error}</p>
+        <p className="form-error" role="alert">
+          {state.error}
+        </p>
       )}
       <button type="submit" className="btn btn-primary" disabled={pending}>
         {pending ? "조회 중..." : "한도 조회하기"}

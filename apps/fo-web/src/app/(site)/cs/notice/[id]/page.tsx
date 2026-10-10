@@ -1,10 +1,8 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import {
-  fileUrl,
-  fmtDate,
-} from "@/entities/content";
+import ProductDetailSkeleton from "@/app/(site)/investment/_components/product-detail-skeleton";
+import { fileUrl, fmtDate } from "@/entities/content";
 import { fetchJson } from "@/entities/content/index.server";
 import { AppLink } from "@/shared/ui";
 
@@ -19,7 +17,6 @@ export const generateMetadata = async ({
   const notice = await fetchJson<{ title?: string }>(`/notices/${id}`);
   return { title: notice?.title ?? "공지사항" };
 };
-
 
 const CATEGORY_LABEL: Record<string, string> = {
   important: "중요공지",
@@ -48,11 +45,7 @@ const attachmentOf = (v: unknown): { name: string; url: string } | null => {
   return null;
 };
 
-const NoticeDetailContent = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+const NoticeDetailContent = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const notice = await fetchJson<NoticeDetail>(`/notices/${id}`);
   if (!notice) notFound();
@@ -62,9 +55,7 @@ const NoticeDetailContent = async ({
   return (
     <article>
       <header className="notice-head">
-        <span
-          className={`badge${notice.category === "important" ? " badge-accent" : ""}`}
-        >
+        <span className={`badge${notice.category === "important" ? " badge-accent" : ""}`}>
           {CATEGORY_LABEL[notice.category] ?? notice.category}
         </span>
         <h2>{notice.title}</h2>
@@ -96,7 +87,7 @@ const NoticeDetailContent = async ({
 };
 
 const NoticeDetailPage = (props: { params: Promise<{ id: string }> }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductDetailSkeleton />}>
     <NoticeDetailContent {...props} />
   </Suspense>
 );

@@ -33,9 +33,7 @@ const EnterButton = ({ eventId }: { eventId: number }) => {
           nav.push("/auth/signin", "로그인");
           return;
         }
-        setError(
-          err.message ?? "참여에 실패했어요. 잠시 후 다시 시도해 주세요",
-        );
+        setError(err.message ?? "참여에 실패했어요. 잠시 후 다시 시도해 주세요");
       } else {
         setError("네트워크 오류가 발생했어요. 다시 시도해 주세요");
       }
@@ -55,13 +53,12 @@ const EnterButton = ({ eventId }: { eventId: number }) => {
 
   return (
     <>
-      {error && <p className="form-error">{error}</p>}
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={enter}
-        disabled={pending}
-      >
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
+      <button type="button" className="btn btn-primary" onClick={enter} disabled={pending}>
         {pending ? "참여 중..." : "이벤트 참여하기"}
       </button>
     </>

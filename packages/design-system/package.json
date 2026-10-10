@@ -9,7 +9,8 @@
     ".": "./src/index.ts",
     "./components": "./src/components/index.ts",
     "./tokens.json": "./dist/tokens.json",
-    "./tokens.css": "./dist/tokens.css"
+    "./tokens.css": "./dist/tokens.css",
+    "./components.css": "./src/components/components.css"
   },
   "scripts": {
     "build": "node --experimental-strip-types scripts/generate.mjs",

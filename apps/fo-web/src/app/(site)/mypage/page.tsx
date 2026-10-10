@@ -4,14 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { AuthGate } from "@/features/auth";
-import { api, fmtMan, fmtWon } from "@/shared/api";
+import { api, fmtMan, fmtPoint, fmtWon } from "@/shared/api";
 import { useDocumentTitle } from "@/shared/lib";
 import { AppLink } from "@/shared/ui";
 
 import { GRADE_LABELS } from "./_components";
 
 import "./mypage.scss";
-
 
 type Dashboard = {
   profile: {
@@ -56,18 +55,31 @@ const MENU = [
 const MyPage = () => {
   useDocumentTitle("마이페이지");
   return (
-  <AuthGate>
-    <Dashboard />
-  </AuthGate>
-);
+    <AuthGate title="마이페이지">
+      <Dashboard />
+    </AuthGate>
+  );
 };
 
 const Dashboard = () => {
-  const { data } = useQuery<Dashboard>({
+  const { data, isError, refetch } = useQuery<Dashboard>({
     queryKey: ["me-dashboard"],
     queryFn: () => api.request<Dashboard>("get", "/api/me/dashboard"),
   });
   const [copied, setCopied] = useState(false);
+
+  if (isError) {
+    return (
+      <div className="container">
+        <div className="empty">
+          <p>정보를 불러오지 못했어요</p>
+          <button type="button" className="btn btn-outline" onClick={() => void refetch()}>
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!data) {
     return (
@@ -122,11 +134,7 @@ const Dashboard = () => {
             </p>
             <p className="muted acct-holder">예금주 {data.virtual_account.holder}</p>
             <div className="card-links">
-              <button
-                type="button"
-                className="btn btn-outline"
-                onClick={copyAccount}
-              >
+              <button type="button" className="btn btn-outline" onClick={copyAccount}>
                 {copied ? "복사했어요" : "계좌번호 복사"}
               </button>
             </div>
@@ -148,7 +156,7 @@ const Dashboard = () => {
 
         <div className="card">
           <p className="muted">포인트</p>
-          <p className="amount-lg">{fmtWon(data.points)}</p>
+          <p className="amount-lg">{fmtPoint(data.points)}</p>
           <div className="card-links">
             <AppLink href="/mypage/points" className="btn btn-outline">
               포인트 내역

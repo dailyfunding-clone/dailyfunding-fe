@@ -5,25 +5,14 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
 import { AuthGate } from "@/features/auth";
-import {
-  ApiRequestError,
-  api,
-  apiFetch,
-  fmtWon,
-  idempotencyKey,
-} from "@/shared/api";
-import {
-  parseForm,
-  pointConvertSchema,
-  type FormState,
-} from "@/shared/lib";
+import { ApiRequestError, api, apiFetch, fmtPoint, idempotencyKey } from "@/shared/api";
+import { parseForm, pointConvertSchema, type FormState } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
 
 import { apiErrorMessage, POINT_KIND_LABELS } from "../_components";
 import { daysAgo, fmtDate, monthsAgo, today } from "../_components";
 
 import "../mypage.scss";
-
 
 type PointBalance = {
   balance: number;
@@ -57,10 +46,10 @@ const RANGE_CHIPS = [
 const PointsPage = () => {
   useDocumentTitle("포인트");
   return (
-  <AuthGate>
-    <Points />
-  </AuthGate>
-);
+    <AuthGate title="포인트">
+      <Points />
+    </AuthGate>
+  );
 };
 
 const Points = () => {
@@ -71,6 +60,7 @@ const Points = () => {
   const [range, setRange] = useState("1m");
   const [convertDone, setConvertDone] = useState<number | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [convertKey, setConvertKey] = useState(idempotencyKey);
 
   const balance = useQuery<PointBalance>({
     queryKey: ["points"],
@@ -84,11 +74,7 @@ const Points = () => {
 
   const history = useQuery<PointHistory>({
     queryKey: ["points-history", kind, from, to],
-    queryFn: () =>
-      api.request<PointHistory>(
-        "get",
-        `/api/points/history?${params.toString()}`,
-      ),
+    queryFn: () => api.request<PointHistory>("get", `/api/points/history?${params.toString()}`),
   });
 
   const applyRange = (key: string) => {
@@ -105,31 +91,32 @@ const Points = () => {
     );
   };
 
-  const [convertState, convertAction, converting] = useActionState<
-    FormState,
-    FormData
-  >(async (_prev, formData) => {
-    setConvertDone(null);
-    const parsed = parseForm(pointConvertSchema, formData);
-    if ("error" in parsed) return { error: parsed.error };
-    try {
-      await api.post("/api/points/convert", parsed.data, {
-        idempotencyKey: idempotencyKey(),
-      });
-      setConvertDone(parsed.data.amount);
-      queryClient.invalidateQueries({ queryKey: ["points"] });
-      queryClient.invalidateQueries({ queryKey: ["points-history"] });
-      queryClient.invalidateQueries({ queryKey: ["me-dashboard"] });
-      return null;
-    } catch (err) {
-      return {
-        error:
-          err instanceof ApiRequestError && err.code === "VALIDATION_ERROR"
-            ? "보유 포인트보다 많이 전환할 수 없어요"
-            : apiErrorMessage(err, "전환에 실패했어요"),
-      };
-    }
-  }, null);
+  const [convertState, convertAction, converting] = useActionState<FormState, FormData>(
+    async (_prev, formData) => {
+      setConvertDone(null);
+      const parsed = parseForm(pointConvertSchema, formData);
+      if ("error" in parsed) return { error: parsed.error };
+      try {
+        await api.post("/api/points/convert", parsed.data, {
+          idempotencyKey: convertKey,
+        });
+        setConvertDone(parsed.data.amount);
+        setConvertKey(idempotencyKey());
+        queryClient.invalidateQueries({ queryKey: ["points"] });
+        queryClient.invalidateQueries({ queryKey: ["points-history"] });
+        queryClient.invalidateQueries({ queryKey: ["me-dashboard"] });
+        return null;
+      } catch (err) {
+        return {
+          error:
+            err instanceof ApiRequestError && err.code === "VALIDATION_ERROR"
+              ? "보유 포인트보다 많이 전환할 수 없어요"
+              : apiErrorMessage(err, "전환에 실패했어요"),
+        };
+      }
+    },
+    null,
+  );
 
   const downloadCsv = async () => {
     setDownloading(true);
@@ -156,20 +143,17 @@ const Points = () => {
 
       <div className="card point-balance-card mb-16">
         <p className="muted">보유 포인트</p>
-        <p className="amount-lg">{fmtWon(balance.data?.balance ?? 0)}</p>
+        <p className="amount-lg">{fmtPoint(balance.data?.balance ?? 0)}</p>
         {(balance.data?.expiring_this_month ?? 0) > 0 && (
           <p className="muted">
-            이번 달 {fmtWon(balance.data?.expiring_this_month ?? 0)}이
-            사라져요
+            이번 달 {fmtPoint(balance.data?.expiring_this_month ?? 0)}이 사라져요
           </p>
         )}
       </div>
 
       <div className="card mb-16">
         {convertDone !== null && (
-          <p className="ok-msg">
-            {fmtWon(convertDone)}을 예치금으로 전환했어요.
-          </p>
+          <p className="ok-msg">{fmtPoint(convertDone)}을 예치금으로 전환했어요.</p>
         )}
         <form className="auth-form" action={convertAction}>
           <Field
@@ -184,7 +168,9 @@ const Points = () => {
             required
           />
           {convertState?.error && (
-            <p className="form-error">{convertState.error}</p>
+            <p className="form-error" role="alert">
+              {convertState.error}
+            </p>
           )}
           <Button type="submit" variant="outline" disabled={converting}>
             {converting ? "전환 중…" : "예치금으로 전환"}
@@ -265,15 +251,12 @@ const Points = () => {
                   <div className="hist-row-main">
                     <span>{e.memo || POINT_KIND_LABELS[e.kind] || e.kind}</span>
                     <small>
-                      {POINT_KIND_LABELS[e.kind] ?? e.kind} ·{" "}
-                      {fmtDate(e.created_at)}
+                      {POINT_KIND_LABELS[e.kind] ?? e.kind} · {fmtDate(e.created_at)}
                     </small>
                   </div>
-                  <div
-                    className={`hist-amount${e.amount > 0 ? " is-plus" : ""}`}
-                  >
+                  <div className={`hist-amount${e.amount > 0 ? " is-plus" : ""}`}>
                     {e.amount > 0 ? "+" : ""}
-                    {fmtWon(e.amount)}
+                    {fmtPoint(e.amount)}
                   </div>
                 </li>
               ))}

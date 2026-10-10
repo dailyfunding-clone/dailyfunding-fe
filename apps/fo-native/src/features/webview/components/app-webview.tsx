@@ -1,58 +1,69 @@
 import { tokens } from "@dailyfunding/design-system";
-import { forwardRef, useImperativeHandle, useRef } from "react";
-import {
-  Linking,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
-import { WEB_BASE_URL } from "@/shared";
+import { WEB_ORIGIN, resolveWebUrl } from "../url";
 
-import type {
-  WebViewMessageEvent,
-  WebViewNavigation,
-} from "react-native-webview";
+import type { ComponentProps } from "react";
+import type { WebViewMessageEvent, WebViewNavigation } from "react-native-webview";
 
+const MAX_CRASH_RETRIES = 2;
+const EXTERNAL_PROTOCOLS = new Set(["http:", "https:", "tel:", "mailto:", "intent:"]);
 
 type Props = {
   path: string;
-  refreshToken?: string | null;
   onMessage?: (event: WebViewMessageEvent) => void;
   onNavigationStateChange?: (navState: WebViewNavigation) => void;
+  onScroll?: ComponentProps<typeof WebView>["onScroll"];
   onLoadEnd?: () => void;
 };
 
 const AppWebView = forwardRef<WebView, Props>(
-  (
-    { path, refreshToken, onMessage, onNavigationStateChange, onLoadEnd },
-    ref,
-  ) => {
+  ({ path, onMessage, onNavigationStateChange, onScroll, onLoadEnd }, ref) => {
     const innerRef = useRef<WebView>(null);
+    const crashRetries = useRef(0);
+    const [crashed, setCrashed] = useState(false);
+    const [instance, setInstance] = useState(0);
     useImperativeHandle(ref, () => innerRef.current as WebView);
-    const reload = () => innerRef.current?.reload();
+    const reload = () => {
+      crashRetries.current = 0;
+      setCrashed(false);
+      setInstance((i) => i + 1);
+    };
 
-    const restore = refreshToken
-      ? `window.__restoreSession=fetch('/api/auth/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh:${JSON.stringify(refreshToken)}})}).then(()=>{}).catch(()=>{});`
-      : "window.__restoreSession=Promise.resolve();";
+    const handleCrash = () => {
+      if (crashRetries.current >= MAX_CRASH_RETRIES) {
+        setCrashed(true);
+        return;
+      }
+      crashRetries.current += 1;
+      if (Platform.OS === "android") {
+        setInstance((i) => i + 1);
+        return;
+      }
+      innerRef.current?.reload();
+    };
 
     const onShouldStartLoadWithRequest = (req: { url: string }) => {
       const { url } = req;
-      if (
-        url.startsWith(WEB_BASE_URL) ||
-        url.startsWith("about:") ||
-        url.startsWith("data:")
-      ) {
-        return true;
+      if (url.startsWith("about:")) return true;
+      try {
+        const parsed = new URL(url);
+        if (parsed.origin === WEB_ORIGIN) return true;
+        if (EXTERNAL_PROTOCOLS.has(parsed.protocol)) {
+          void Linking.openURL(url).catch(() => {});
+        }
+      } catch {
+        return false;
       }
-      void Linking.openURL(url);
       return false;
     };
 
-    const handleLoadEnd = () => onLoadEnd?.();
+    const handleLoadEnd = () => {
+      crashRetries.current = 0;
+      onLoadEnd?.();
+    };
 
     const renderErrorView = () => (
       <View style={styles.error}>
@@ -64,20 +75,26 @@ const AppWebView = forwardRef<WebView, Props>(
       </View>
     );
 
+    if (crashed) {
+      return <View style={styles.container}>{renderErrorView()}</View>;
+    }
+
     return (
       <View style={styles.container}>
         <WebView
+          key={instance}
           ref={innerRef}
-          source={{ uri: `${WEB_BASE_URL}${path}` }}
+          source={{ uri: resolveWebUrl(path) }}
           style={styles.webview}
-          originWhitelist={[`${WEB_BASE_URL}*`, "about:*", "data:*"]}
+          originWhitelist={[WEB_ORIGIN, "about:*"]}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          injectedJavaScriptBeforeContentLoaded={`document.documentElement.classList.add('in-app');${restore}true;`}
+          injectedJavaScriptBeforeContentLoaded="document.documentElement.classList.add('in-app');true;"
           onMessage={onMessage}
           onNavigationStateChange={onNavigationStateChange}
+          onScroll={onScroll}
           onLoadEnd={handleLoadEnd}
-          onContentProcessDidTerminate={reload}
-          onRenderProcessGone={reload}
+          onContentProcessDidTerminate={handleCrash}
+          onRenderProcessGone={handleCrash}
           renderError={renderErrorView}
           pullToRefreshEnabled={Platform.OS === "ios"}
           allowsBackForwardNavigationGestures

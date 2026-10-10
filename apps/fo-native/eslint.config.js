@@ -9,13 +9,7 @@ module.exports = defineConfig([
       "import/order": [
         "error",
         {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            ["parent", "sibling", "index"],
-            "type",
-          ],
+          groups: ["builtin", "external", "internal", ["parent", "sibling", "index"], "type"],
           "newlines-between": "always",
           alphabetize: { order: "asc", caseInsensitive: true },
           pathGroups: [{ pattern: "@/**", group: "internal" }],

@@ -1,14 +1,14 @@
-import { createClient } from "@dailyfunding/api-client";
+import { createClient, readCsrfToken } from "@dailyfunding/api-client";
 import ky from "ky";
+
+import {
+  invalidateNativeSession,
+  restoreNativeSession,
+  subscribeNativeSession,
+} from "./native-session";
 
 export { ApiRequestError } from "@dailyfunding/api-client";
 export type { ApiError } from "@dailyfunding/api-client";
-
-declare global {
-  interface Window {
-    __restoreSession?: Promise<void>;
-  }
-}
 
 const AUTH_FLAG = "df_auth";
 
@@ -26,22 +26,44 @@ export const markSession = (on: boolean) => {
   }
 };
 
+export const csrfHeaders = () => {
+  const token = readCsrfToken();
+  return token ? { "X-CSRF-Token": token } : {};
+};
+
 export const refreshSession = async () => {
-  const res = await ky.post("/api/auth/refresh", { credentials: "include" });
-  if (res.ok) {
+  const res = await ky
+    .post("/api/auth/refresh", {
+      credentials: "include",
+      headers: csrfHeaders(),
+    })
+    .catch(() => null);
+  if (res?.ok) {
+    markSession(true);
+    return true;
+  }
+  invalidateNativeSession();
+  const ok = await restoreNativeSession();
+  if (ok) {
     markSession(true);
   }
-  return res.ok;
+  return ok;
 };
+
+if (typeof window !== "undefined") {
+  subscribeNativeSession((state) => {
+    if (state.status === "signedOut") {
+      markSession(false);
+    }
+  });
+}
 
 const http = ky.create({
   credentials: "include",
   hooks: {
     beforeRequest: [
       async () => {
-        if (typeof window !== "undefined" && window.__restoreSession) {
-          await window.__restoreSession;
-        }
+        await restoreNativeSession();
       },
     ],
     afterResponse: [
@@ -54,25 +76,27 @@ const http = ky.create({
   },
 });
 
-const waitSessionRestore = async () => {
-  if (typeof window !== "undefined" && window.__restoreSession) {
-    await window.__restoreSession;
-  }
-};
-
 export const api = createClient({
-  beforeRequest: waitSessionRestore,
   onUnauthorized: refreshSession,
 });
 
-export const apiFetch = (path: string, init?: RequestInit) => http(path, init);
+export const apiFetch = (path: string, init?: RequestInit & { idempotencyKey?: string }) => {
+  const { idempotencyKey: key, ...rest } = init ?? {};
+  const csrf = (rest.method ?? "GET").toUpperCase() !== "GET" ? readCsrfToken() : undefined;
+  if (!key && !csrf) return http(path, rest);
+  const headers = new Headers(rest.headers);
+  if (key) headers.set("Idempotency-Key", key);
+  if (csrf) headers.set("X-CSRF-Token", csrf);
+  return http(path, { ...rest, headers });
+};
 
-export const API_URL =
-  process.env.API_INTERNAL_URL ?? "http://localhost:8000/api";
+export const API_URL = `${process.env.API_INTERNAL_URL ?? "http://localhost:8000"}/api`;
 
 export const idempotencyKey = () => crypto.randomUUID();
 
 export const fmtWon = (n: number) => `${n.toLocaleString("ko-KR")}원`;
+
+export const fmtPoint = (n: number) => `${n.toLocaleString("ko-KR")}P`;
 
 export const fmtMan = (n: number) =>
   n >= 100_000_000

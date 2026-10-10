@@ -4,24 +4,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { api } from "@/shared/api";
-import { apiPatch } from "@/shared/api";
 import { errMsg, fmtDateTime } from "@/shared/lib";
 
 import { AdminModal } from "../_components";
-import {
-  DECISION_LABEL,
-  GRADE_LABEL,
-  badgeClass,
-} from "../_components";
+import { DECISION_LABEL, GRADE_LABEL, badgeClass } from "../_components";
 
-type GradeRequest = {
-  id: number;
-  user_id: number;
-  email: string;
-  to_grade: string;
-  status: string;
-  created_at: string;
-};
+import type { components } from "@dailyfunding/api-client";
+
+type GradeRequest = components["schemas"]["AdminGradeRequestItem"];
 
 const FILTERS = [
   { value: "", label: "전체" },
@@ -37,13 +27,18 @@ const GradeRequestsPage = () => {
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
 
-  const { data, isLoading } = useQuery({
+  const {
+    data,
+    isLoading,
+    error: listError,
+    refetch,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "grade-requests", status],
     queryFn: () =>
-      api.request<{ results: GradeRequest[] }>(
-        "get",
-        `/api/admin/grade-requests${status ? `?status=${status}` : ""}`,
-      ),
+      api.get("/api/admin/grade-requests", {
+        query: { status: status || undefined },
+      }),
   });
   const decide = useMutation({
     mutationFn: ({
@@ -55,10 +50,14 @@ const GradeRequestsPage = () => {
       action: "approve" | "reject";
       rejectReason?: string;
     }) =>
-      apiPatch(`/api/admin/grade-requests/${id}`, {
-        action,
-        ...(rejectReason ? { reason: rejectReason } : {}),
-      }),
+      api.patch(
+        "/api/admin/grade-requests/{id}",
+        {
+          action,
+          ...(rejectReason ? { reason: rejectReason } : {}),
+        },
+        { path: { id } },
+      ),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "grade-requests"] });
       setSelected(null);
@@ -86,6 +85,19 @@ const GradeRequestsPage = () => {
       </div>
       {isLoading ? (
         <div className="empty">불러오는 중이에요</div>
+      ) : listError ? (
+        <div className="empty">
+          <p>{errMsg(listError)}</p>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            style={{ margin: "8px auto 0" }}
+            disabled={isFetching}
+            onClick={() => void refetch()}
+          >
+            다시 시도
+          </button>
+        </div>
       ) : rows.length === 0 ? (
         <div className="empty">신청 내역이 없어요</div>
       ) : (
@@ -132,10 +144,7 @@ const GradeRequestsPage = () => {
         </div>
       )}
       {selected && (
-        <AdminModal
-          title={`등급 변경 신청 #${selected.id}`}
-          onClose={() => setSelected(null)}
-        >
+        <AdminModal title={`등급 변경 신청 #${selected.id}`} onClose={() => setSelected(null)}>
           <dl>
             <div className="admin-kv">
               <dt>이메일</dt>
@@ -173,11 +182,7 @@ const GradeRequestsPage = () => {
                   className="btn btn-outline"
                   disabled={decide.isPending}
                   onClick={() => {
-                    if (
-                      window.confirm(
-                        `${selected.email} 님의 등급 변경을 거절할까요?`,
-                      )
-                    ) {
+                    if (window.confirm(`${selected.email} 님의 등급 변경을 거절할까요?`)) {
                       decide.mutate({
                         id: selected.id,
                         action: "reject",
@@ -191,9 +196,7 @@ const GradeRequestsPage = () => {
                 <button
                   className="btn btn-primary"
                   disabled={decide.isPending}
-                  onClick={() =>
-                    decide.mutate({ id: selected.id, action: "approve" })
-                  }
+                  onClick={() => decide.mutate({ id: selected.id, action: "approve" })}
                 >
                   승인
                 </button>

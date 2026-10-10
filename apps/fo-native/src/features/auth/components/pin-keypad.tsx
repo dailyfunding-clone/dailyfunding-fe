@@ -14,14 +14,17 @@ const shuffle = (arr: string[]) => {
 const PinKeypad = ({
   value,
   onChange,
+  disabled = false,
 }: {
   value: string;
   onChange: (next: string) => void;
+  disabled?: boolean;
 }) => {
   const [keys, setKeys] = useState(() =>
     shuffle(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]),
   );
   const press = (key: string) => {
+    if (disabled) return;
     if (key === "back") {
       onChange(value.slice(0, -1));
       return;
@@ -31,7 +34,7 @@ const PinKeypad = ({
   };
 
   return (
-    <View style={styles.wrap}>
+    <View style={[styles.wrap, disabled && styles.disabled]}>
       <View style={styles.dots}>
         {Array.from({ length: 6 }, (_, i) => (
           <View key={i} style={[styles.dot, i < value.length && styles.dotOn]} />
@@ -39,29 +42,18 @@ const PinKeypad = ({
       </View>
       <View style={styles.grid}>
         {keys.slice(0, 9).map((key, i) => (
-          <Pressable
-            key={i}
-            style={styles.key}
-            onPress={() => press(key)}
-            hitSlop={8}
-          >
+          <Pressable key={i} style={styles.key} onPress={() => press(key)} hitSlop={8}>
             <Text style={styles.keyText}>{key}</Text>
           </Pressable>
         ))}
         <Pressable
           style={styles.key}
-          onPress={() =>
-            setKeys(shuffle(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]))
-          }
+          onPress={() => setKeys(shuffle(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]))}
           hitSlop={8}
         >
           <Text style={styles.keyText}>↺</Text>
         </Pressable>
-        <Pressable
-          style={styles.key}
-          onPress={() => press(keys[9])}
-          hitSlop={8}
-        >
+        <Pressable style={styles.key} onPress={() => press(keys[9])} hitSlop={8}>
           <Text style={styles.keyText}>{keys[9]}</Text>
         </Pressable>
         <Pressable style={styles.key} onPress={() => press("back")} hitSlop={8}>
@@ -74,6 +66,7 @@ const PinKeypad = ({
 
 const styles = StyleSheet.create({
   wrap: { alignItems: "center" },
+  disabled: { opacity: 0.4 },
   dots: { flexDirection: "row", gap: 16, marginBottom: 40 },
   dot: {
     width: 14,

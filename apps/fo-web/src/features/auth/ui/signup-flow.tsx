@@ -5,24 +5,20 @@ import { Button, Field, Steps } from "@dailyfunding/design-system/components";
 import ky from "ky";
 import { useActionState, useState } from "react";
 
+import { csrfHeaders } from "@/shared/api";
 import {
   parseForm,
   signupAccountSchema,
   signupVerifySchema,
+  useAppNavigate,
   type FormState,
 } from "@/shared/lib";
 
-import SignupTerms from "./signup-terms";
+import SignupTerms, { termIds } from "./signup-terms";
 
 const STEP_LABELS = ["계정 정보", "본인인증"];
 
-const REQUIRED_TERMS = [
-  "service",
-  "investment",
-  "privacy",
-  "credit_info",
-  "electronic_finance",
-];
+const REQUIRED_TERMS = ["service", "investment", "privacy", "credit_info", "electronic_finance"];
 
 const BORROWER_EXTRA_TERMS = ["credit_inquiry", "loan_terms"];
 
@@ -32,8 +28,10 @@ type Props = {
 };
 
 const SignupFlow = ({ memberType, role = "investor" }: Props) => {
+  const nav = useAppNavigate();
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
+  const [taken, setTaken] = useState(false);
   const [account, setAccount] = useState<{
     email: string;
     password: string;
@@ -41,103 +39,110 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
     agreements: { term: string; agreed: boolean }[];
   } | null>(null);
 
-  const [nextState, nextAction] = useActionState<FormState, FormData>(
-    (_prev, formData) => {
-      const parsed = parseForm(signupAccountSchema, formData);
+  const [nextState, nextAction] = useActionState<FormState, FormData>((_prev, formData) => {
+    const parsed = parseForm(signupAccountSchema, formData);
+    if ("error" in parsed) return { error: parsed.error };
+    const checked = new Set(formData.getAll("term").map(String));
+    const required =
+      role === "borrower" ? [...REQUIRED_TERMS, ...BORROWER_EXTRA_TERMS] : REQUIRED_TERMS;
+    if (!required.every((t) => checked.has(t))) {
+      return { error: "필수 약관에 모두 동의해 주세요" };
+    }
+    const agreements = termIds(role === "borrower").map((term) => ({
+      term,
+      agreed: checked.has(term),
+    }));
+    setAccount({
+      email: parsed.data.email,
+      password: parsed.data.password,
+      referrer: parsed.data.referrer || undefined,
+      agreements,
+    });
+    setStep(1);
+    return null;
+  }, null);
+
+  const [verifyState, verifyAction, pending] = useActionState<FormState, FormData>(
+    async (_prev, formData) => {
+      if (!account) return { error: "계정 정보를 다시 입력해 주세요" };
+      setTaken(false);
+      const parsed = parseForm(signupVerifySchema, formData);
       if ("error" in parsed) return { error: parsed.error };
-      const checked = new Set(formData.getAll("term").map(String));
-      const required =
-        role === "borrower"
-          ? [...REQUIRED_TERMS, ...BORROWER_EXTRA_TERMS]
-          : REQUIRED_TERMS;
-      if (!required.every((t) => checked.has(t))) {
-        return { error: "필수 약관에 모두 동의해 주세요" };
+      try {
+        if (memberType === "corporate") {
+          const biz = parsed.data.businessNumber;
+          if (!/^\d{10}$/.test(biz)) {
+            return { error: "사업자등록번호 10자리를 입력해 주세요" };
+          }
+          const bizRes = await ky.post("/api/auth/business-number/verify", {
+            json: { business_number: biz },
+            headers: csrfHeaders(),
+            throwHttpErrors: false,
+          });
+          const bizBody = (await bizRes.json().catch(() => null)) as {
+            verified?: boolean;
+          } | null;
+          if (!bizRes.ok || !bizBody?.verified) {
+            return { error: "등록되지 않은 사업자등록번호예요" };
+          }
+        }
+        const signupRes = await ky.post(
+          role === "borrower" ? "/api/auth/signup/borrower" : "/api/auth/signup",
+          {
+            json: {
+              email: account.email,
+              password: account.password,
+              name: parsed.data.name,
+              member_type: memberType,
+              business_number: memberType === "corporate" ? parsed.data.businessNumber : "",
+              referrer_email: account.referrer,
+              agreements: account.agreements,
+            },
+            headers: csrfHeaders(),
+            throwHttpErrors: false,
+          },
+        );
+        if (!signupRes.ok) {
+          const signupBody = (await signupRes.json().catch(() => null)) as {
+            code?: string;
+          } | null;
+          if (signupBody?.code !== "EMAIL_TAKEN") {
+            setAccount(null);
+            setStep(0);
+            return { error: "가입에 실패했어요. 이메일을 확인해 주세요" };
+          }
+          setTaken(true);
+        }
+        const res = await ky.post("/api/auth/identity/verify", {
+          json: { ...parsed.data, email: account.email },
+          credentials: "include",
+          headers: csrfHeaders(),
+          throwHttpErrors: false,
+        });
+        if (!res.ok) {
+          return { error: "인증에 실패했어요. 정보를 확인해 주세요" };
+        }
+        setDone(true);
+        return null;
+      } catch {
+        return { error: "잠시 후 다시 시도해 주세요" };
       }
-      const agreements = formData
-        .getAll("term")
-        .map((t) => ({ term: String(t), agreed: true }));
-      setAccount({
-        email: parsed.data.email,
-        password: parsed.data.password,
-        referrer: parsed.data.referrer || undefined,
-        agreements,
-      });
-      setStep(1);
-      return null;
     },
     null,
   );
-
-  const [verifyState, verifyAction, pending] = useActionState<
-    FormState,
-    FormData
-  >(async (_prev, formData) => {
-    if (!account) return { error: "계정 정보를 다시 입력해 주세요" };
-    const parsed = parseForm(signupVerifySchema, formData);
-    if ("error" in parsed) return { error: parsed.error };
-    try {
-      if (memberType === "corporate") {
-        const biz = parsed.data.businessNumber;
-        if (!/^\d{10}$/.test(biz)) {
-          return { error: "사업자등록번호 10자리를 입력해 주세요" };
-        }
-        const bizRes = await ky.post("/api/auth/business-number/verify", {
-          json: { business_number: biz },
-          throwHttpErrors: false,
-        });
-        const bizBody = (await bizRes.json().catch(() => null)) as {
-          verified?: boolean;
-        } | null;
-        if (!bizRes.ok || !bizBody?.verified) {
-          return { error: "등록되지 않은 사업자등록번호예요" };
-        }
-      }
-      const signupRes = await ky.post(
-        role === "borrower" ? "/api/auth/signup/borrower" : "/api/auth/signup",
-        {
-          json: {
-            email: account.email,
-            password: account.password,
-            name: parsed.data.name,
-            member_type: memberType,
-            business_number:
-              memberType === "corporate" ? parsed.data.businessNumber : "",
-            referrer_email: account.referrer,
-            agreements: account.agreements,
-          },
-          throwHttpErrors: false,
-        },
-      );
-      if (!signupRes.ok) {
-        setAccount(null);
-        setStep(0);
-        return { error: "가입에 실패했어요. 이메일을 확인해 주세요" };
-      }
-      const res = await ky.post("/api/auth/identity/verify", {
-        json: { ...parsed.data, email: account.email },
-        credentials: "include",
-        throwHttpErrors: false,
-      });
-      if (!res.ok) {
-        return { error: "인증에 실패했어요. 정보를 확인해 주세요" };
-      }
-      setDone(true);
-      return null;
-    } catch {
-      return { error: "잠시 후 다시 시도해 주세요" };
-    }
-  }, null);
 
   const registerPin = async () => {
     if (!account || !isInWebView()) return;
     const loginRes = await ky.post("/api/auth/login", {
       json: { email: account.email, password: account.password },
       credentials: "include",
+      headers: csrfHeaders(),
       throwHttpErrors: false,
     });
     if (!loginRes.ok) return;
     const codeRes = await ky.post("/api/auth/app-code", {
       credentials: "include",
+      headers: csrfHeaders(),
       throwHttpErrors: false,
     });
     if (!codeRes.ok) return;
@@ -150,18 +155,13 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
       <div className="auth-done">
         <h2 className="auth-question">가입이 완료됐어요</h2>
         {role === "borrower" && (
-          <p className="auth-desc">
-            대출 신청을 위해 연결계좌 등록이 필요해요
-          </p>
+          <p className="auth-desc">대출 신청을 위해 연결계좌 등록이 필요해요</p>
         )}
         <div className="auth-actions">
           {memberType === "personal" && isInWebView() && (
             <Button onClick={registerPin}>간편비밀번호 등록하기</Button>
           )}
-          <Button
-            variant="outline"
-            onClick={() => bridge.push("/auth/signin", "로그인")}
-          >
+          <Button variant="outline" onClick={() => bridge.push("/auth/signin", "로그인")}>
             로그인하기
           </Button>
         </div>
@@ -203,7 +203,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
           )}
           <SignupTerms borrower={role === "borrower"} />
           {(nextState?.error ?? verifyState?.error) && (
-            <p className="form-error">
+            <p className="form-error" role="alert">
               {nextState?.error ?? verifyState?.error}
             </p>
           )}
@@ -217,13 +217,7 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
     <>
       <Steps items={STEP_LABELS} current={1} />
       <form key="verify" className="auth-form" action={verifyAction} autoComplete="off">
-        <Field
-          label="이름"
-          type="text"
-          name="name"
-          autoComplete="name"
-          required
-        />
+        <Field label="이름" type="text" name="name" autoComplete="name" required />
         <Field
           label="생년월일"
           type="text"
@@ -256,8 +250,22 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
             required
           />
         )}
+        {taken && (
+          <p className="form-error" role="alert">
+            이미 가입된 이메일이에요. 본인인증을 이어서 진행하거나{" "}
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => nav.push("/auth/signin", "로그인")}
+            >
+              로그인하기
+            </button>
+          </p>
+        )}
         {verifyState?.error && (
-          <p className="form-error">{verifyState.error}</p>
+          <p className="form-error" role="alert">
+            {verifyState.error}
+          </p>
         )}
         <Button type="submit" disabled={pending}>
           인증하고 가입하기

@@ -1,14 +1,14 @@
 import { z } from "zod";
 
+const MAX_AMOUNT = 100_000_000_000;
+const MAX_MAN = 10_000_000;
+const MAX_AMOUNT_MSG = "금액이 너무 커요";
+
 export const emailSchema = z.email("이메일 형식이 아니에요");
 
-export const passwordSchema = z
-  .string()
-  .min(8, "비밀번호는 8자 이상이어야 해요");
+export const passwordSchema = z.string().min(8, "비밀번호는 8자 이상이어야 해요");
 
-export const pinSchema = z
-  .string()
-  .regex(/^\d{6}$/, "숫자 6자리를 입력해 주세요");
+export const pinSchema = z.string().regex(/^\d{6}$/, "숫자 6자리를 입력해 주세요");
 
 export const signInSchema = z.object({
   email: emailSchema,
@@ -17,26 +17,24 @@ export const signInSchema = z.object({
 
 export const findIdSchema = z.object({
   name: z.string().min(1, "이름을 입력해 주세요"),
-  birth_date: z
-    .string()
-    .regex(/^\d{8}$/, "생년월일 8자리를 입력해 주세요"),
-  phone: z
-    .string()
-    .regex(/^\d{10,11}$/, "휴대폰 번호를 숫자만 입력해 주세요"),
+  birth_date: z.string().regex(/^\d{8}$/, "생년월일 8자리를 입력해 주세요"),
+  phone: z.string().regex(/^\d{10,11}$/, "휴대폰 번호를 숫자만 입력해 주세요"),
 });
 
 export const passwordResetRequestSchema = z.object({
   email: emailSchema,
 });
 
-export const passwordResetSchema = z.object({
-  token: z.string().min(1),
-  password: passwordSchema,
-  password_confirm: z.string().min(1, "비밀번호 확인을 입력해 주세요"),
-}).refine((d) => d.password === d.password_confirm, {
-  path: ["password_confirm"],
-  message: "비밀번호가 일치하지 않아요",
-});
+export const passwordResetSchema = z
+  .object({
+    token: z.string().min(1),
+    password: passwordSchema,
+    password_confirm: z.string().min(1, "비밀번호 확인을 입력해 주세요"),
+  })
+  .refine((d) => d.password === d.password_confirm, {
+    path: ["password_confirm"],
+    message: "비밀번호가 일치하지 않아요",
+  });
 
 export const reauthSchema = z.object({
   password: z.string().min(1, "비밀번호를 입력해 주세요"),
@@ -73,21 +71,21 @@ export const depositChargeSchema = z.object({
   amount: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("1원 이상 입력해 주세요"),
+    .positive("1원 이상 입력해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG),
 });
 
 export const withdrawAmountSchema = z.object({
   amount: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("1원 이상 입력해 주세요"),
+    .positive("1원 이상 입력해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG),
 });
 
 export const linkedAccountSchema = z.object({
   bank_name: z.string().min(1, "은행을 선택해 주세요"),
-  account_no: z
-    .string()
-    .regex(/^\d+$/, "계좌번호는 숫자만 입력해 주세요"),
+  account_no: z.string().regex(/^\d+$/, "계좌번호는 숫자만 입력해 주세요"),
   holder: z.string().min(1, "예금주를 입력해 주세요"),
 });
 
@@ -99,14 +97,16 @@ export const pointConvertSchema = z.object({
   amount: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("1포인트 이상 입력해 주세요"),
+    .positive("1포인트 이상 입력해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG),
 });
 
 export const schedulePreviewSchema = z.object({
   man: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("투자금액을 입력해 주세요"),
+    .positive("투자금액을 입력해 주세요")
+    .max(MAX_MAN, MAX_AMOUNT_MSG),
 });
 
 export const limitCheckSchema = z.discriminatedUnion("type", [
@@ -125,9 +125,7 @@ export const limitCheckSchema = z.discriminatedUnion("type", [
 
 export const loanApplyInfoSchema = z.object({
   name: z.string().min(1, "이름을 입력해 주세요"),
-  phone: z
-    .string()
-    .regex(/^\d+$/, "연락처는 - 없이 숫자만 입력해 주세요"),
+  phone: z.string().regex(/^\d+$/, "연락처는 - 없이 숫자만 입력해 주세요"),
   email: z.email("이메일 형식을 확인해 주세요"),
   company: z.string().default(""),
   biz_type: z.string().default(""),
@@ -142,7 +140,8 @@ export const loanApplyFundsSchema = z.object({
   amount: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("필요 자금을 입력해 주세요"),
+    .positive("필요 자금을 입력해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG),
   term_months: z.coerce
     .number()
     .int("기간을 확인해 주세요")
@@ -156,18 +155,19 @@ export const orderSchema = z.object({
   man: z.coerce
     .number()
     .int("투자 금액을 입력해 주세요")
-    .positive("투자 금액을 입력해 주세요"),
+    .positive("투자 금액을 입력해 주세요")
+    .max(MAX_MAN, MAX_AMOUNT_MSG),
   points: z.coerce
     .number()
     .nonnegative("포인트를 확인해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG)
     .default(0),
   confirm: z.literal("네", {
     message: "유의사항을 확인하고 '네'를 입력해 주세요",
   }),
 });
 
-const firstError = (error: z.ZodError) =>
-  error.issues[0]?.message ?? "입력값을 확인해 주세요";
+const firstError = (error: z.ZodError) => error.issues[0]?.message ?? "입력값을 확인해 주세요";
 
 export type FormState = { error: string } | null;
 
@@ -177,7 +177,5 @@ export const parseForm = <T extends z.ZodType>(
 ): { data: z.infer<T> } | { error: string } => {
   const raw = input instanceof FormData ? Object.fromEntries(input) : input;
   const parsed = schema.safeParse(raw);
-  return parsed.success
-    ? { data: parsed.data }
-    : { error: firstError(parsed.error) };
+  return parsed.success ? { data: parsed.data } : { error: firstError(parsed.error) };
 };

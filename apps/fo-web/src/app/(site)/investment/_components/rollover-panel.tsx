@@ -1,9 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-import { ApiRequestError, api, fmtWon } from "@/shared/api";
+import { ApiRequestError, api, fmtWon, idempotencyKey } from "@/shared/api";
 import { useAppNavigate } from "@/shared/lib";
 import { useMe } from "@/shared/session";
 
@@ -24,43 +24,51 @@ const RolloverPanel = () => {
   const [drafts, setDrafts] = useState<Record<number, string>>({});
   const [errors, setErrors] = useState<Record<number, string>>({});
 
+  const keys = useRef(new Map<number, string>());
+  const draftKey = (id: number) => {
+    let k = keys.current.get(id);
+    if (!k) {
+      k = idempotencyKey();
+      keys.current.set(id, k);
+    }
+    return k;
+  };
+  const resetKey = (id: number) => keys.current.delete(id);
+
   const eligible = useQuery<{ results: EligibleInvestment[] }>({
     queryKey: ["reservations", "eligible"],
-    queryFn: () =>
-      api.request<{ results: EligibleInvestment[] }>(
-        "get",
-        "/api/reservations/eligible",
-      ),
+    queryFn: () => api.get("/api/reservations/eligible"),
     enabled: !!me.data,
   });
 
   const list = useQuery<ServerReservation[]>({
     queryKey: ["reservations", "list"],
-    queryFn: () =>
-      api.request<ServerReservation[]>("get", "/api/reservations"),
+    queryFn: () => api.get("/api/reservations").then((rows) => rows as ServerReservation[]),
     enabled: !!me.data,
   });
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: ["reservations"] });
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["reservations"] });
 
   const setError = (invId: number, e: unknown) => {
     setErrors((prev) => ({
       ...prev,
       [invId]:
-        e instanceof ApiRequestError
-          ? e.message || "요청에 실패했어요"
-          : "요청에 실패했어요",
+        e instanceof ApiRequestError ? e.message || "요청에 실패했어요" : "요청에 실패했어요",
     }));
   };
 
   const create = useMutation({
     mutationFn: ({ investmentId, amount }: { investmentId: number; amount: number }) =>
-      api.post("/api/reservations", {
-        investment_id: investmentId,
-        amount,
-      }),
+      api.post(
+        "/api/reservations",
+        {
+          investment_id: investmentId,
+          amount,
+        },
+        { idempotencyKey: draftKey(investmentId) },
+      ),
     onSuccess: (_r, vars) => {
+      resetKey(vars.investmentId);
       setErrors((prev) => ({ ...prev, [vars.investmentId]: "" }));
       invalidate();
     },
@@ -68,15 +76,30 @@ const RolloverPanel = () => {
   });
 
   const patch = useMutation({
-    mutationFn: ({ id, amount }: { id: number; amount: number }) =>
-      api.request("patch", `/api/reservations/${id}`, { amount }),
-    onSuccess: invalidate,
+    mutationFn: ({ id, amount }: { id: number; amount: number; investmentId: number }) =>
+      api.patch(
+        "/api/reservations/{id}",
+        { amount },
+        { path: { id }, idempotencyKey: draftKey(id) },
+      ),
+    onSuccess: (_r, vars) => {
+      resetKey(vars.id);
+      invalidate();
+    },
+    onError: (e, vars) => setError(vars.investmentId, e),
   });
 
   const cancel = useMutation({
-    mutationFn: (id: number) =>
-      api.delete("/api/reservations/{id}", { path: { id } }),
-    onSuccess: invalidate,
+    mutationFn: ({ id }: { id: number; investmentId: number }) =>
+      api.delete("/api/reservations/{id}", {
+        path: { id },
+        idempotencyKey: draftKey(id),
+      }),
+    onSuccess: (_r, vars) => {
+      resetKey(vars.id);
+      invalidate();
+    },
+    onError: (e, vars) => setError(vars.investmentId, e),
   });
 
   if (me.isLoading || (me.data && (eligible.isLoading || list.isLoading))) {
@@ -100,9 +123,7 @@ const RolloverPanel = () => {
 
   const items = eligible.data?.results ?? [];
   const reserved = Object.fromEntries(
-    (list.data ?? [])
-      .filter((r) => r.status === "reserved")
-      .map((r) => [r.investment_id, r]),
+    (list.data ?? []).filter((r) => r.status === "reserved").map((r) => [r.investment_id, r]),
   );
   const myReservations = list.data ?? [];
 
@@ -117,8 +138,7 @@ const RolloverPanel = () => {
             {items.map((item) => {
               const r = reserved[item.investment_id];
               const draft =
-                drafts[item.investment_id] ??
-                String((r?.amount ?? item.amount) / 10_000);
+                drafts[item.investment_id] ?? String((r?.amount ?? item.amount) / 10_000);
               const won = Math.round(Number(draft) * 10_000);
               return (
                 <div key={item.investment_id} className="card resv-card">
@@ -147,10 +167,7 @@ const RolloverPanel = () => {
                         onChange={(e) =>
                           setDrafts((prev) => ({
                             ...prev,
-                            [item.investment_id]: e.target.value.replace(
-                              /[^0-9]/g,
-                              "",
-                            ),
+                            [item.investment_id]: e.target.value.replace(/[^0-9]/g, ""),
                           }))
                         }
                       />
@@ -163,7 +180,11 @@ const RolloverPanel = () => {
                           className="btn btn-outline"
                           disabled={patch.isPending || won <= 0}
                           onClick={() =>
-                            patch.mutate({ id: r.id, amount: won })
+                            patch.mutate({
+                              id: r.id,
+                              amount: won,
+                              investmentId: item.investment_id,
+                            })
                           }
                         >
                           금액 변경
@@ -172,7 +193,12 @@ const RolloverPanel = () => {
                           type="button"
                           className="btn btn-outline"
                           disabled={cancel.isPending}
-                          onClick={() => cancel.mutate(r.id)}
+                          onClick={() =>
+                            cancel.mutate({
+                              id: r.id,
+                              investmentId: item.investment_id,
+                            })
+                          }
                         >
                           취소
                         </button>
@@ -199,7 +225,9 @@ const RolloverPanel = () => {
                     </p>
                   )}
                   {errors[item.investment_id] && (
-                    <p className="form-error">{errors[item.investment_id]}</p>
+                    <p className="form-error" role="alert">
+                      {errors[item.investment_id]}
+                    </p>
                   )}
                 </div>
               );

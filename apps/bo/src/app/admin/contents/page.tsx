@@ -5,13 +5,14 @@ import { useActionState, useState } from "react";
 import { z } from "zod";
 
 import { api } from "@/shared/api";
-import { apiDelete, apiPatch } from "@/shared/api";
 import {
   contentFieldSchema,
+  errMsg,
   parseForm,
+  toIso,
+  toLocalInput,
   type FormState,
 } from "@/shared/lib";
-import { errMsg } from "@/shared/lib";
 
 import { AdminModal } from "../_components";
 
@@ -20,14 +21,14 @@ type Row = { id: number } & Record<string, unknown>;
 type FieldDef = {
   name: string;
   label: string;
-  kind: "text" | "textarea" | "number" | "select" | "date" | "datetime" | "json";
+  kind: "text" | "textarea" | "number" | "select" | "date" | "datetime" | "json" | "url";
   options?: { value: string; label: string }[];
   required?: boolean;
   jsonDefault?: unknown;
 };
 
 type ContentDef = {
-  key: string;
+  key: "notices" | "faqs" | "events" | "disclosures" | "news";
   label: string;
   itemLabel: string;
   columns: { key: string; label: string }[];
@@ -102,7 +103,7 @@ const TABS: ContentDef[] = [
           { value: "ended", label: "종료" },
         ],
       },
-      { name: "thumbnail_url", label: "썸네일 URL", kind: "text" },
+      { name: "thumbnail_url", label: "썸네일 URL", kind: "url" },
       { name: "reward_points", label: "리워드 포인트", kind: "number" },
       { name: "start_at", label: "시작일시", kind: "datetime" },
       { name: "end_at", label: "종료일시", kind: "datetime" },
@@ -152,8 +153,8 @@ const TABS: ContentDef[] = [
     fields: [
       { name: "title", label: "제목", kind: "text", required: true },
       { name: "source", label: "매체명", kind: "text" },
-      { name: "url", label: "기사 URL", kind: "text", required: true },
-      { name: "thumbnail_url", label: "썸네일 URL", kind: "text" },
+      { name: "url", label: "기사 URL", kind: "url", required: true },
+      { name: "thumbnail_url", label: "썸네일 URL", kind: "url" },
       { name: "published_at", label: "게재일", kind: "date", required: true },
     ],
   },
@@ -167,9 +168,8 @@ const cellText = (v: unknown) => {
 
 const fieldDefault = (f: FieldDef, row: Row | null) => {
   const v = row?.[f.name];
-  if (f.kind === "json")
-    return JSON.stringify(v ?? f.jsonDefault ?? {}, null, 2);
-  if (f.kind === "datetime" && typeof v === "string") return v.slice(0, 16);
+  if (f.kind === "json") return JSON.stringify(v ?? f.jsonDefault ?? {}, null, 2);
+  if (f.kind === "datetime" && typeof v === "string") return toLocalInput(v);
   return v === null || v === undefined ? "" : String(v);
 };
 
@@ -187,10 +187,7 @@ const ContentForm = ({
     async (_prev, formData) => {
       const schema = z.object(
         Object.fromEntries(
-          def.fields.map((f) => [
-            f.name,
-            contentFieldSchema(f.name, f.label, f.kind, f.required),
-          ]),
+          def.fields.map((f) => [f.name, contentFieldSchema(f.label, f.kind, f.required)]),
         ),
       );
       const parsed = parseForm(schema, formData);
@@ -198,25 +195,51 @@ const ContentForm = ({
       const body: Record<string, unknown> = {};
       for (const f of def.fields) {
         const raw = parsed.data[f.name].trim();
+        let next: unknown;
         if (f.kind === "number") {
-          if (raw !== "") body[f.name] = Number(raw);
-          continue;
+          if (raw === "") continue;
+          const n = Number(raw);
+          if (!Number.isFinite(n)) {
+            return { error: `${f.label}을(를) 숫자로 입력해 주세요` };
+          }
+          next = n;
+        } else if (f.kind === "json") {
+          next = raw === "" ? (f.jsonDefault ?? {}) : JSON.parse(raw);
+        } else if (f.kind === "datetime") {
+          if (raw === "") {
+            next = null;
+          } else {
+            const iso = toIso(raw);
+            if (!iso) {
+              return { error: `${f.label}의 일시 형식을 확인해 주세요` };
+            }
+            next = iso;
+          }
+        } else if (f.kind === "date") {
+          next = raw === "" ? null : raw;
+        } else if (f.kind === "select") {
+          if (raw === "") continue;
+          next = raw;
+        } else {
+          next = raw;
         }
-        if (f.kind === "json") {
-          body[f.name] = raw === "" ? (f.jsonDefault ?? {}) : JSON.parse(raw);
-          continue;
+        if (row) {
+          if (!(f.name in row)) continue;
+          if (raw === fieldDefault(f, row)) continue;
         }
-        if (f.kind === "date" || f.kind === "datetime") {
-          body[f.name] = raw === "" ? null : raw;
-          continue;
-        }
-        body[f.name] = raw;
+        body[f.name] = next;
+      }
+      if (row && Object.keys(body).length === 0) {
+        onClose();
+        return null;
       }
       try {
         if (row) {
-          await apiPatch(`/api/admin/${def.key}/${row.id}`, body);
+          await api.patch(`/api/admin/${def.key}/{id}`, body, {
+            path: { id: row.id },
+          });
         } else {
-          await api.request("post", `/api/admin/${def.key}`, body);
+          await api.post(`/api/admin/${def.key}`, body);
         }
         qc.invalidateQueries({ queryKey: ["admin", "contents", def.key] });
         onClose();
@@ -229,10 +252,7 @@ const ContentForm = ({
   );
 
   return (
-    <AdminModal
-      title={row ? `${def.itemLabel} 수정` : `${def.itemLabel} 등록`}
-      onClose={onClose}
-    >
+    <AdminModal title={row ? `${def.itemLabel} 수정` : `${def.itemLabel} 등록`} onClose={onClose}>
       <form action={formAction}>
         {def.fields.map((f) => (
           <div className="form-row" key={f.name}>
@@ -252,9 +272,14 @@ const ContentForm = ({
                 <select
                   className="input"
                   name={f.name}
-                  defaultValue={fieldDefault(f, row) || f.options?.[0]?.value}
+                  defaultValue={fieldDefault(f, row)}
                   required={f.required}
                 >
+                  {!f.required && <option value="">선택 안 함</option>}
+                  {fieldDefault(f, row) !== "" &&
+                    !(f.options ?? []).some((o) => o.value === fieldDefault(f, row)) && (
+                      <option value={fieldDefault(f, row)}>{fieldDefault(f, row)}</option>
+                    )}
                   {(f.options ?? []).map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
@@ -283,19 +308,10 @@ const ContentForm = ({
         ))}
         {state?.error && <p className="form-error">{state.error}</p>}
         <div className="admin-modal-actions">
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={onClose}
-            disabled={pending}
-          >
+          <button type="button" className="btn btn-outline" onClick={onClose} disabled={pending}>
             취소
           </button>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={pending}
-          >
+          <button type="submit" className="btn btn-primary" disabled={pending}>
             {row ? "수정" : "등록"}
           </button>
         </div>
@@ -308,34 +324,48 @@ const ContentSection = ({ def }: { def: ContentDef }) => {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<Row | "new" | null>(null);
   const [error, setError] = useState("");
-  const { data, isLoading } = useQuery({
+  const {
+    data,
+    isLoading,
+    error: listError,
+    refetch,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "contents", def.key],
-    queryFn: () =>
-      api.request<{ results: Row[] }>("get", `/api/admin/${def.key}`),
+    queryFn: () => api.get(`/api/admin/${def.key}`),
   });
   const del = useMutation({
-    mutationFn: (id: number) => apiDelete(`/api/admin/${def.key}/${id}`),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["admin", "contents", def.key] }),
+    mutationFn: (id: number) => api.delete(`/api/admin/${def.key}/{id}`, { path: { id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "contents", def.key] }),
     onError: (e) => setError(errMsg(e)),
   });
 
-  const rows = data?.results ?? [];
+  const rows = (data?.results ?? []) as Row[];
 
   return (
     <>
       <div className="admin-head">
         <h1>{def.itemLabel}</h1>
-        <button
-          className="btn btn-primary btn-sm"
-          onClick={() => setEditing("new")}
-        >
+        <button className="btn btn-primary btn-sm" onClick={() => setEditing("new")}>
           등록
         </button>
       </div>
       {error && <p className="form-error">{error}</p>}
       {isLoading ? (
         <div className="empty">불러오는 중이에요</div>
+      ) : listError ? (
+        <div className="empty">
+          <p>{errMsg(listError)}</p>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            style={{ margin: "8px auto 0" }}
+            disabled={isFetching}
+            onClick={() => void refetch()}
+          >
+            다시 시도
+          </button>
+        </div>
       ) : rows.length === 0 ? (
         <div className="empty">등록된 {def.itemLabel}이(가) 없어요</div>
       ) : (
@@ -359,10 +389,7 @@ const ContentSection = ({ def }: { def: ContentDef }) => {
                   ))}
                   <td>
                     <div className="admin-actions">
-                      <button
-                        className="btn btn-outline btn-sm"
-                        onClick={() => setEditing(r)}
-                      >
+                      <button className="btn btn-outline btn-sm" onClick={() => setEditing(r)}>
                         수정
                       </button>
                       <button

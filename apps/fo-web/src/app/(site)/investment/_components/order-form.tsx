@@ -1,79 +1,19 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
 import { useReauth } from "@/features/auth";
-import {
-  ApiRequestError,
-  api,
-  fmtWon,
-  idempotencyKey,
-} from "@/shared/api";
+import { api, fmtPoint, fmtWon } from "@/shared/api";
 import { orderSchema, parseForm } from "@/shared/lib";
 import { useAppNavigate } from "@/shared/lib";
 import { useMe } from "@/shared/session";
 import { AppLink } from "@/shared/ui";
 
-import { INVEST_ERROR, fmtDate } from "./constants";
+import { fmtDate } from "./constants";
+import { useInvestOrder } from "./use-invest-order";
 
-import type {
-  DepositAccount,
-  InvestmentResponse,
-  PointBalance,
-  ProductDetail,
-  SuitabilityQuestions,
-} from "./types";
-
-const mapError = (e: unknown): { text: string; code?: string } => {
-  if (!(e instanceof ApiRequestError))
-    return { text: "잠시 후 다시 시도해 주세요" };
-  const { code, details, message } = e;
-  const num = (k: string) =>
-    typeof details?.[k] === "number" ? (details[k] as number) : null;
-  switch (code) {
-    case "GRADE_LIMIT_EXCEEDED": {
-      const remain = num("remaining_limit");
-      return {
-        code,
-        text: remain !== null
-          ? `투자 한도를 초과했어요. 투자 가능 한도 ${fmtWon(remain)}`
-          : INVEST_ERROR[code],
-      };
-    }
-    case "BORROWER_LIMIT_EXCEEDED": {
-      const remain = num("remaining_limit");
-      return {
-        code,
-        text: remain !== null
-          ? `동일 차입자 한도를 초과했어요. 잔여 한도 ${fmtWon(remain)}`
-          : INVEST_ERROR[code],
-      };
-    }
-    case "INSUFFICIENT_DEPOSIT": {
-      const avail = num("available");
-      return {
-        code,
-        text: avail !== null
-          ? `예치금이 부족해요. 사용 가능 금액 ${fmtWon(avail)}`
-          : INVEST_ERROR[code],
-      };
-    }
-    case "INSUFFICIENT_REMAINING": {
-      const remain = num("remaining");
-      return {
-        code,
-        text: remain !== null
-          ? `잔여 모집금액을 초과했어요. 남은 금액 ${fmtWon(remain)}`
-          : INVEST_ERROR[code],
-      };
-    }
-    case "SUITABILITY_REQUIRED":
-      return { code, text: INVEST_ERROR[code] };
-    default:
-      return { code, text: INVEST_ERROR[code ?? ""] ?? message ?? "투자에 실패했어요" };
-  }
-};
+import type { DepositAccount, PointBalance, ProductDetail, SuitabilityQuestions } from "./types";
 
 type Props = {
   product: ProductDetail;
@@ -83,23 +23,19 @@ const OrderForm = ({ product }: Props) => {
   const me = useMe();
   const reauth = useReauth();
   const nav = useAppNavigate();
-  const queryClient = useQueryClient();
-  const [idem, setIdem] = useState(() => idempotencyKey());
   const [man, setMan] = useState("");
   const [points, setPoints] = useState("");
   const [confirm, setConfirm] = useState("");
 
   const detail = useQuery<ProductDetail>({
     queryKey: ["product", product.id],
-    queryFn: () =>
-      api.request<ProductDetail>("get", `/api/products/${product.id}`),
+    queryFn: () => api.request<ProductDetail>("get", `/api/products/${product.id}`),
     enabled: !!me.data,
     initialData: product,
   });
   const deposit = useQuery<DepositAccount>({
     queryKey: ["deposit", "account"],
-    queryFn: () =>
-      api.request<DepositAccount>("get", "/api/deposit/account"),
+    queryFn: () => api.request<DepositAccount>("get", "/api/deposit/account"),
     enabled: !!me.data,
     retry: false,
   });
@@ -111,49 +47,29 @@ const OrderForm = ({ product }: Props) => {
   });
   const suitability = useQuery<SuitabilityQuestions>({
     queryKey: ["suitability"],
-    queryFn: () =>
-      api.request<SuitabilityQuestions>("get", "/api/suitability-test"),
+    queryFn: () => api.request<SuitabilityQuestions>("get", "/api/suitability-test"),
     enabled: !!me.data,
     retry: false,
   });
 
-  const [state, formAction, pending] = useActionState<
-    { error: string; code?: string } | { result: InvestmentResponse } | null,
-    FormData
-  >(async (_prev, formData) => {
-    const parsed = parseForm(orderSchema, formData);
-    if ("error" in parsed) return { error: parsed.error };
-    for (let attempt = 0; attempt < 2; attempt++) {
-      const token = await reauth?.ensure(attempt > 0);
-      if (!token) return { error: "본인 인증이 취소됐어요" };
-      try {
-        const data = await api.request<InvestmentResponse>(
-          "post",
-          "/api/investments",
-          {
-            product_id: product.id,
-            amount: parsed.data.man * 10_000,
-            use_points: parsed.data.points,
-            confirm: "네",
-          },
-          { idempotencyKey: idem, reauthToken: token },
-        );
-        setIdem(idempotencyKey());
-        queryClient.invalidateQueries({ queryKey: ["deposit"] });
-        queryClient.invalidateQueries({ queryKey: ["points"] });
-        queryClient.invalidateQueries({ queryKey: ["investments"] });
-        return { result: data };
-      } catch (e) {
-        if (e instanceof ApiRequestError && e.code === "REAUTH_REQUIRED") {
-          reauth?.reset();
-          continue;
-        }
-        const mapped = mapError(e);
-        return { error: mapped.text, code: mapped.code };
-      }
-    }
-    return { error: "잠시 후 다시 시도해 주세요" };
-  }, null);
+  const order = useInvestOrder({
+    accountId: me.data?.id ?? 0,
+    productId: product.id,
+    reauth,
+  });
+
+  const [state, formAction] = useActionState<{ error: string } | null, FormData>(
+    (_prev, formData) => {
+      const parsed = parseForm(orderSchema, formData);
+      if ("error" in parsed) return { error: parsed.error };
+      void order.submit({
+        amount: parsed.data.man * 10_000,
+        use_points: parsed.data.points,
+      });
+      return null;
+    },
+    null,
+  );
 
   if (me.isLoading) {
     return <div className="empty">불러오는 중이에요…</div>;
@@ -193,14 +109,14 @@ const OrderForm = ({ product }: Props) => {
     );
   }
 
-  if (state && "result" in state) {
-    const result = state.result;
+  if (order.state.status === "done") {
+    const result = order.state.result;
     const rows = result.schedule ?? [];
     return (
       <section className="card result-card">
         <h2>투자가 완료됐어요</h2>
         <p>투자번호 {result.investment_id}</p>
-        <div className="order-lines" style={{ textAlign: "left" }}>
+        <div className="order-lines">
           <div className="order-line">
             <span>투자금액</span>
             <strong>{fmtWon(result.amount)}</strong>
@@ -208,7 +124,7 @@ const OrderForm = ({ product }: Props) => {
           {result.points_used > 0 && (
             <div className="order-line">
               <span>사용 포인트</span>
-              <strong>{fmtWon(result.points_used)}</strong>
+              <strong>{fmtPoint(result.points_used)}</strong>
             </div>
           )}
           <div className="order-line">
@@ -249,6 +165,7 @@ const OrderForm = ({ product }: Props) => {
   const depositAmt = my?.deposit ?? deposit.data?.deposit;
   const investable = my?.investable;
   const pointAmt = pointBalance.data?.balance;
+  const orderError = order.state.status === "failed" ? order.state.error : null;
 
   return (
     <>
@@ -272,7 +189,7 @@ const OrderForm = ({ product }: Props) => {
         {pointAmt !== undefined && (
           <div className="order-line">
             <span>보유 포인트</span>
-            <strong>{pointAmt.toLocaleString("ko-KR")}P</strong>
+            <strong>{fmtPoint(pointAmt)}</strong>
           </div>
         )}
       </div>
@@ -291,9 +208,7 @@ const OrderForm = ({ product }: Props) => {
             />
             <em>만원</em>
           </span>
-          {amount > 0 && (
-            <span className="field-hint">{fmtWon(amount)}</span>
-          )}
+          {amount > 0 && <span className="field-hint">{fmtWon(amount)}</span>}
         </label>
         {pointAmt !== undefined && pointAmt > 0 && (
           <label className="field">
@@ -304,22 +219,17 @@ const OrderForm = ({ product }: Props) => {
                 name="points"
                 inputMode="numeric"
                 value={points}
-                onChange={(e) =>
-                  setPoints(e.target.value.replace(/[^0-9]/g, ""))
-                }
+                onChange={(e) => setPoints(e.target.value.replace(/[^0-9]/g, ""))}
                 placeholder="0"
               />
               <em>P</em>
             </span>
-            <span className="field-hint">
-              보유 {pointAmt.toLocaleString("ko-KR")}P
-            </span>
+            <span className="field-hint">보유 {fmtPoint(pointAmt)}</span>
           </label>
         )}
         <label className="field">
           <span className="field-label">
-            투자 원금과 수익이 보장되지 않음을 확인했어요. 동의하면 “네”를
-            입력해 주세요
+            투자 원금과 수익이 보장되지 않음을 확인했어요. 동의하면 “네”를 입력해 주세요
           </span>
           <input
             className="input"
@@ -330,10 +240,10 @@ const OrderForm = ({ product }: Props) => {
             autoComplete="off"
           />
         </label>
-        {state && "error" in state && (
-          <p className="form-error">
-            {state.error}{" "}
-            {state.code === "SUITABILITY_REQUIRED" && (
+        {(state?.error || orderError) && (
+          <p className="form-error" role="alert">
+            {state?.error ?? orderError?.text}{" "}
+            {orderError?.code === "SUITABILITY_REQUIRED" && (
               <AppLink href="/investment/suitability">테스트 하러가기</AppLink>
             )}
           </p>
@@ -341,9 +251,9 @@ const OrderForm = ({ product }: Props) => {
         <button
           type="submit"
           className="btn btn-primary"
-          disabled={pending || product.status !== "recruiting"}
+          disabled={order.pending || (detail.data?.status ?? product.status) !== "recruiting"}
         >
-          {pending ? "처리 중이에요…" : "투자하기"}
+          {order.pending ? "처리 중이에요…" : "투자하기"}
         </button>
       </form>
     </>

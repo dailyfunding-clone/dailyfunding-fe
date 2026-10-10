@@ -5,12 +5,7 @@ import prettierConfig from "eslint-config-prettier";
 import reactCompiler from "eslint-plugin-react-compiler";
 
 export default defineConfig([
-  globalIgnores([
-    ".next/**",
-    "node_modules/**",
-    "next-env.d.ts",
-    "storybook-static/**",
-  ]),
+  globalIgnores([".next/**", "node_modules/**", "next-env.d.ts", "storybook-static/**"]),
   ...nextVitals,
   ...nextTypescript,
   {
@@ -20,13 +15,7 @@ export default defineConfig([
       "import/order": [
         "error",
         {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            ["parent", "sibling", "index"],
-            "type",
-          ],
+          groups: ["builtin", "external", "internal", ["parent", "sibling", "index"], "type"],
           "newlines-between": "always",
           alphabetize: { order: "asc", caseInsensitive: true },
           pathGroups: [{ pattern: "@/**", group: "internal" }],

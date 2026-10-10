@@ -43,8 +43,7 @@ const renderValue = (v: unknown): React.ReactNode => {
 
 const DictView = ({ data }: { data: Record<string, unknown> }) => {
   const entries = Object.entries(data);
-  if (entries.length === 0)
-    return <p className="empty">등록된 정보가 없어요</p>;
+  if (entries.length === 0) return <p className="empty">등록된 정보가 없어요</p>;
   return (
     <dl className="kv">
       {entries.map(([k, v]) => (
@@ -67,17 +66,18 @@ type Props = {
 
 const ProductTabs = ({ tabs }: Props) => {
   const [active, setActive] = useState<(typeof TABS)[number]["key"]>("overview");
-  const notice =
-    typeof tabs?.notice === "string" && tabs.notice.trim()
-      ? tabs.notice
-      : null;
+  const notice = typeof tabs?.notice === "string" && tabs.notice.trim() ? tabs.notice : null;
   return (
     <>
-      <div className="tabs">
+      <div className="tabs" role="tablist" aria-label="상품 정보">
         {TABS.map((t) => (
           <button
             key={t.key}
             type="button"
+            role="tab"
+            id={`product-tab-${t.key}`}
+            aria-selected={active === t.key}
+            aria-controls={`product-panel-${t.key}`}
             className={active === t.key ? "is-active" : undefined}
             onClick={() => setActive(t.key)}
           >
@@ -85,7 +85,12 @@ const ProductTabs = ({ tabs }: Props) => {
           </button>
         ))}
       </div>
-      <div className="tab-panel">
+      <div
+        className="tab-panel"
+        role="tabpanel"
+        id={`product-panel-${active}`}
+        aria-labelledby={`product-tab-${active}`}
+      >
         {active === "overview" && <DictView data={tabs?.overview ?? {}} />}
         {active === "detail" && <DictView data={tabs?.detail ?? {}} />}
         {active === "notice" &&
