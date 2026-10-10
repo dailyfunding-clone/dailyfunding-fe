@@ -1,3 +1,4 @@
+import { readCsrfToken } from "@dailyfunding/api-client";
 import { createWebBridge } from "@dailyfunding/bridge";
 
 import type { AuthState } from "@dailyfunding/bridge";
@@ -61,9 +62,13 @@ export const restoreNativeSession = (): Promise<boolean> => {
     if (state.status !== "signedIn") return false;
     const code = await b.requestAppCode();
     if (!code) return false;
+    const csrf = readCsrfToken();
     const res = await fetch("/api/auth/app-code/exchange", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+      },
       credentials: "include",
       body: JSON.stringify({ code }),
     }).catch(() => null);

@@ -147,7 +147,7 @@ const LimitCheckInner = ({
         </div>
       )}
       {state && "error" in state && (
-        <p className="form-error">{state.error}</p>
+        <p className="form-error" role="alert">{state.error}</p>
       )}
       <button type="submit" className="btn btn-primary" disabled={pending}>
         {pending ? "조회 중..." : "한도 조회하기"}

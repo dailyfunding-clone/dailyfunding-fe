@@ -5,6 +5,7 @@ import ky from "ky";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useActionState, useState } from "react";
 
+import { csrfHeaders } from "@/shared/api";
 import {
   parseForm,
   passwordResetRequestSchema,
@@ -40,6 +41,7 @@ const FindPasswordInner = () => {
     try {
       const res = await ky.post("/api/auth/password/reset-request", {
           json: parsed.data,
+          headers: csrfHeaders(),
           throwHttpErrors: false,
         });
       const body = (await res.json().catch(() => null)) as {
@@ -67,6 +69,7 @@ const FindPasswordInner = () => {
     try {
       const res = await ky.post("/api/auth/password/reset", {
         json: parsed.data,
+        headers: csrfHeaders(),
         throwHttpErrors: false,
       });
       const body = (await res.json().catch(() => null)) as {
@@ -144,7 +147,7 @@ const FindPasswordInner = () => {
             autoComplete="new-password"
             required
           />
-          {error && <p className="form-error">{error}</p>}
+          {error && <p className="form-error" role="alert">{error}</p>}
           <Button type="submit" disabled={resetPending}>
             {resetPending ? "변경 중…" : "비밀번호 변경"}
           </Button>
@@ -168,7 +171,7 @@ const FindPasswordInner = () => {
           autoComplete="email"
           required
         />
-        {error && <p className="form-error">{error}</p>}
+        {error && <p className="form-error" role="alert">{error}</p>}
         <Button type="submit" disabled={requestPending}>
           {requestPending ? "확인 중…" : "재설정 링크 받기"}
         </Button>

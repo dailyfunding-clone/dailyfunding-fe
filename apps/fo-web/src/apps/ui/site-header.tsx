@@ -12,6 +12,7 @@ const NAV = [
   { href: "/loan", label: "대출받기" },
   { href: "/cs/notice", label: "고객지원" },
   { href: "/event", label: "이벤트" },
+  { href: "/news", label: "언론보도" },
   { href: "/disclosure", label: "공시" },
 ];
 

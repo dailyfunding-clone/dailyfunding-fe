@@ -12,10 +12,10 @@ export const fetchJson = async <T>(
   if (profile === "products") cacheLife("products");
   else cacheLife("content");
   cacheTag(profile);
-  try {
-    const res = await fetch(`${API_URL}${path}`);
-    return res.ok ? ((await res.json()) as T) : null;
-  } catch {
-    return null;
+  const res = await fetch(`${API_URL}${path}`);
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`fetchJson ${path} failed: ${res.status}`);
   }
+  return (await res.json()) as T;
 };

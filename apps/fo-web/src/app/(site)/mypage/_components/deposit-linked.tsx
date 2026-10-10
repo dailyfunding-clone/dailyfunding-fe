@@ -168,7 +168,7 @@ const DepositLinked = () => {
           maxLength={50}
           required
         />
-        {formError && <p className="form-error">{formError}</p>}
+        {formError && <p className="form-error" role="alert">{formError}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "등록 중…" : "연결계좌 등록"}
         </Button>

@@ -4,6 +4,7 @@ import { Button, Field } from "@dailyfunding/design-system/components";
 import ky from "ky";
 import { useActionState } from "react";
 
+import { csrfHeaders } from "@/shared/api";
 import { findIdSchema, parseForm, type FormState } from "@/shared/lib";
 import { useAppNavigate } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
@@ -21,6 +22,7 @@ const FindIdPage = () => {
       try {
         const res = await ky.post("/api/auth/find-id", {
           json: parsed.data,
+          headers: csrfHeaders(),
           throwHttpErrors: false,
         });
         const body = (await res.json().catch(() => null)) as {
@@ -95,7 +97,7 @@ const FindIdPage = () => {
           autoComplete="tel-national"
           required
         />
-        {error && <p className="form-error">{error}</p>}
+        {error && <p className="form-error" role="alert">{error}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "찾는 중…" : "아이디 찾기"}
         </Button>

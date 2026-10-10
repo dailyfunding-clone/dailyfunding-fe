@@ -33,16 +33,15 @@ export const generateMetadata = async ({
 const fetchProduct = async (id: string): Promise<ProductDetail | null> => {
   const store = await cookies();
   const cookie = store.toString();
-  try {
-    const res = await fetch(`${API_URL}/products/${id}`, {
-      headers: cookie ? { cookie } : {},
-      next: { revalidate: 15 },
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as ProductDetail;
-  } catch {
-    return null;
+  const res = await fetch(`${API_URL}/products/${id}`, {
+    headers: cookie ? { cookie } : {},
+    next: { revalidate: 15 },
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`fetchProduct ${id} failed: ${res.status}`);
   }
+  return (await res.json()) as ProductDetail;
 };
 
 type Props = {

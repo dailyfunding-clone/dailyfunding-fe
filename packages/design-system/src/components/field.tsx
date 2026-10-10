@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { InputHTMLAttributes } from "react";
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
+  error?: string;
 };
 
 const EyeIcon = ({ off }: { off?: boolean }) => (
@@ -25,9 +26,10 @@ const EyeIcon = ({ off }: { off?: boolean }) => (
   </svg>
 );
 
-export const Field = ({ label, type, ...props }: Props) => {
+export const Field = ({ label, type, error, ...props }: Props) => {
   const [visible, setVisible] = useState(false);
   const isPassword = type === "password";
+  const errorId = `${useId()}-error`;
 
   return (
     <label className="field">
@@ -36,6 +38,8 @@ export const Field = ({ label, type, ...props }: Props) => {
         <input
           className="input"
           type={isPassword && visible ? "text" : type}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
           {...props}
         />
         {isPassword ? (
@@ -49,6 +53,11 @@ export const Field = ({ label, type, ...props }: Props) => {
           </button>
         ) : null}
       </span>
+      {error ? (
+        <span className="form-error" role="alert" id={errorId}>
+          {error}
+        </span>
+      ) : null}
     </label>
   );
 };

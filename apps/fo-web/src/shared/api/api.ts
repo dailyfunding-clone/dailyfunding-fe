@@ -1,4 +1,4 @@
-import { createClient } from "@dailyfunding/api-client";
+import { createClient, readCsrfToken } from "@dailyfunding/api-client";
 import ky from "ky";
 
 import {
@@ -26,9 +26,17 @@ export const markSession = (on: boolean) => {
   }
 };
 
+export const csrfHeaders = () => {
+  const token = readCsrfToken();
+  return token ? { "X-CSRF-Token": token } : {};
+};
+
 export const refreshSession = async () => {
   const res = await ky
-    .post("/api/auth/refresh", { credentials: "include" })
+    .post("/api/auth/refresh", {
+      credentials: "include",
+      headers: csrfHeaders(),
+    })
     .catch(() => null);
   if (res?.ok) {
     markSession(true);
@@ -72,7 +80,19 @@ export const api = createClient({
   onUnauthorized: refreshSession,
 });
 
-export const apiFetch = (path: string, init?: RequestInit) => http(path, init);
+export const apiFetch = (
+  path: string,
+  init?: RequestInit & { idempotencyKey?: string },
+) => {
+  const { idempotencyKey: key, ...rest } = init ?? {};
+  const csrf =
+    (rest.method ?? "GET").toUpperCase() !== "GET" ? readCsrfToken() : undefined;
+  if (!key && !csrf) return http(path, rest);
+  const headers = new Headers(rest.headers);
+  if (key) headers.set("Idempotency-Key", key);
+  if (csrf) headers.set("X-CSRF-Token", csrf);
+  return http(path, { ...rest, headers });
+};
 
 export const API_URL = `${process.env.API_INTERNAL_URL ?? "http://localhost:8000"}/api`;
 

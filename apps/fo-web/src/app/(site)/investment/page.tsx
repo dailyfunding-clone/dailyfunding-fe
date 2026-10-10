@@ -34,14 +34,12 @@ const fetchProducts = async (
     const v = sp[key];
     if (typeof v === "string" && v) qs.set(key, v);
   }
-  try {
-    const res = await fetch(`${API_URL}/products?${qs.toString()}`);
-    if (!res.ok) return [];
-    const data = (await res.json()) as { results: ProductListItem[] };
-    return data.results ?? [];
-  } catch {
-    return [];
+  const res = await fetch(`${API_URL}/products?${qs.toString()}`);
+  if (!res.ok) {
+    throw new Error(`fetchProducts failed: ${res.status}`);
   }
+  const data = (await res.json()) as { results: ProductListItem[] };
+  return data.results ?? [];
 };
 
 type Props = {

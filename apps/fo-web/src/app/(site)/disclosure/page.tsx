@@ -1,6 +1,7 @@
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import ProductListSkeleton from "@/app/(site)/investment/_components/product-list-skeleton";
 import {
   JsonBlock,
 } from "@/entities/content";
@@ -127,7 +128,7 @@ const DisclosureContent = async ({
 const DisclosurePage = (props: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductListSkeleton />}>
     <DisclosureContent {...props} />
   </Suspense>
 );

@@ -12,6 +12,7 @@ const SiteFooter = () => (
             {t.title}
           </AppLink>
         ))}
+        <AppLink href="/news">언론보도</AppLink>
       </div>
       <p className="site-footer-info">
         데일리펀딩 · 고객센터 02-562-9666 (평일 09:30~17:00) · 온투업 등록번호

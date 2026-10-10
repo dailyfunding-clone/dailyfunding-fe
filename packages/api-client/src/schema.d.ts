@@ -1219,7 +1219,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        // r3 local extension — BE added GET; remove this comment after schema regen (X3)
+        get: operations["api_notifications_settings_retrieve"];
         put?: never;
         /** @description POST /api/notifications/settings — 카테고리별 ON/OFF. */
         post: operations["api_notifications_settings_create"];
@@ -2236,6 +2237,22 @@ export interface components {
             remaining_amount: number;
             /** Format: date-time */
             recruit_open_at?: string | null;
+            // r3 local extension — BE returns my/tabs; pending schema regen (X3)
+            my?: {
+                deposit: number;
+                investable: number;
+                grade_remaining_limit: number | null;
+                same_borrower_remaining: number | null;
+            };
+            tabs?: {
+                overview?: {
+                    [key: string]: unknown;
+                };
+                detail?: {
+                    [key: string]: unknown;
+                };
+                notice?: string;
+            };
         };
         ProductList: {
             readonly id: number;
@@ -4471,6 +4488,26 @@ export interface operations {
             };
         };
     };
+    // r3 local extension — pending schema regen (X3)
+    api_notifications_settings_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": { enabled: boolean };
+                };
+            };
+        };
+    };
     api_notifications_settings_create: {
         parameters: {
             query?: never;
@@ -4563,6 +4600,8 @@ export interface operations {
         parameters: {
             query?: {
                 include_closed?: boolean;
+                // r3 local extension — BE supports ?ids=; pending schema regen (X3)
+                ids?: string;
                 max_amount?: number;
                 max_rate?: number;
                 max_term?: number;

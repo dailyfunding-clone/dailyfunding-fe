@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import ProductDetailSkeleton from "@/app/(site)/investment/_components/product-detail-skeleton";
 import { fetchJson } from "@/entities/content/index.server";
 import { fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
@@ -157,7 +158,7 @@ const LoanDetailContent = async ({ params }: { params: Promise<{ id: string }> }
 };
 
 const LoanDetailPage = (props: { params: Promise<{ id: string }> }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductDetailSkeleton />}>
     <LoanDetailContent {...props} />
   </Suspense>
 );

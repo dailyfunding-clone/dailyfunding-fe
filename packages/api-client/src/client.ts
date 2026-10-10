@@ -88,6 +88,17 @@ type RequestOptions<P extends PathKey, M extends Method> = (keyof PathParams<P, 
 
 const IDEMPOTENT_METHODS = new Set(["post", "put", "patch", "delete"]);
 
+const CSRF_COOKIE = "csrf";
+const CSRF_HEADER = "X-CSRF-Token";
+
+export const readCsrfToken = () =>
+  typeof document === "undefined"
+    ? undefined
+    : document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(`${CSRF_COOKIE}=`))
+        ?.slice(CSRF_COOKIE.length + 1);
+
 export const createClient = (options: ApiClientOptions = {}) => {
   const { baseUrl = "", accessToken, reauthToken, beforeRequest, onUnauthorized } = options;
 
@@ -126,6 +137,10 @@ export const createClient = (options: ApiClientOptions = {}) => {
     if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
     if (reauth) headers["X-Reauth-Token"] = reauth;
     if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+    if (method !== "get") {
+      const csrf = readCsrfToken();
+      if (csrf) headers[CSRF_HEADER] = csrf;
+    }
     const opts: Options = {
       method: method.toUpperCase(),
       headers,

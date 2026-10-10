@@ -6,7 +6,7 @@ import { useActionState, useState } from "react";
 
 import { AuthGate } from "@/features/auth";
 import { ReauthProvider, useReauth } from "@/features/auth";
-import { api, apiFetch, fmtMan } from "@/shared/api";
+import { api, apiFetch, fmtMan, idempotencyKey } from "@/shared/api";
 import { gradeRequestSchema, parseForm, type FormState } from "@/shared/lib";
 import { useDocumentTitle } from "@/shared/lib";
 import { useMe } from "@/shared/session";
@@ -209,6 +209,7 @@ const GradeRequestForm = () => {
   const reauth = useReauth();
   const queryClient = useQueryClient();
   const [done, setDone] = useState(false);
+  const [submitKey, setSubmitKey] = useState(idempotencyKey);
 
   const [state, formAction, pending] = useActionState<FormState, FormData>(
     async (_prev, formData) => {
@@ -224,9 +225,11 @@ const GradeRequestForm = () => {
           method: "POST",
           headers: { "X-Reauth-Token": token },
           body: formData,
+          idempotencyKey: submitKey,
         });
         if (res.ok) {
           setDone(true);
+          setSubmitKey(idempotencyKey());
           queryClient.invalidateQueries({ queryKey: ["me-grade-history"] });
           queryClient.invalidateQueries({ queryKey: ["me-grade"] });
           queryClient.invalidateQueries({ queryKey: ["me"] });
@@ -264,7 +267,7 @@ const GradeRequestForm = () => {
           <span className="field-label">자격 서류 (선택)</span>
           <input type="file" name="document" className="input" />
         </label>
-        {state?.error && <p className="form-error">{state.error}</p>}
+        {state?.error && <p className="form-error" role="alert">{state.error}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "신청 중…" : "등급 변경 신청"}
         </Button>
@@ -279,6 +282,7 @@ const GradeRequestForm = () => {
 const LimitAssessment = ({ verified }: { verified: boolean }) => {
   const queryClient = useQueryClient();
   const [done, setDone] = useState<string | null>(null);
+  const [submitKey, setSubmitKey] = useState(idempotencyKey);
 
   const [state, formAction, pending] = useActionState<FormState, FormData>(
     async (_prev, formData) => {
@@ -289,6 +293,7 @@ const LimitAssessment = ({ verified }: { verified: boolean }) => {
         const res = await apiFetch("/api/me/limit-assessment", {
           method: "POST",
           body: formData,
+          idempotencyKey: submitKey,
         });
         const body = (await res.json().catch(() => null)) as {
           status?: string;
@@ -298,6 +303,7 @@ const LimitAssessment = ({ verified }: { verified: boolean }) => {
           return { error: body?.message ?? "심사 신청에 실패했어요" };
         }
         setDone(body?.status ?? "submitted");
+        setSubmitKey(idempotencyKey());
         queryClient.invalidateQueries({ queryKey: ["me-grade-history"] });
         return null;
       } catch (err) {
@@ -329,7 +335,7 @@ const LimitAssessment = ({ verified }: { verified: boolean }) => {
           <span className="field-label">소득 서류 (선택)</span>
           <input type="file" name="document" className="input" />
         </label>
-        {state?.error && <p className="form-error">{state.error}</p>}
+        {state?.error && <p className="form-error" role="alert">{state.error}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "접수 중…" : "한도심사 신청"}
         </Button>

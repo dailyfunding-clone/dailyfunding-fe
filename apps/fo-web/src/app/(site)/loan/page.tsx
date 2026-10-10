@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import ProductListSkeleton from "@/app/(site)/investment/_components/product-list-skeleton";
 import {
   firstParam,
 } from "@/entities/content";
@@ -93,7 +94,7 @@ const LoanListContent = async ({ searchParams }: { searchParams: SearchParams })
 };
 
 const LoanListPage = (props: { searchParams: SearchParams }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductListSkeleton />}>
     <LoanListContent {...props} />
   </Suspense>
 );

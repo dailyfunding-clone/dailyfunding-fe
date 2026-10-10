@@ -186,7 +186,7 @@ const Points = () => {
             required
           />
           {convertState?.error && (
-            <p className="form-error">{convertState.error}</p>
+            <p className="form-error" role="alert">{convertState.error}</p>
           )}
           <Button type="submit" variant="outline" disabled={converting}>
             {converting ? "전환 중…" : "예치금으로 전환"}

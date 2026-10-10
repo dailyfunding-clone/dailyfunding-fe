@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import ProductDetailSkeleton from "@/app/(site)/investment/_components/product-detail-skeleton";
 import {
   fmtDate,
 } from "@/entities/content";
@@ -135,7 +136,7 @@ const EventDetailContent = async ({
 };
 
 const EventDetailPage = (props: { params: Promise<{ id: string }> }) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductDetailSkeleton />}>
     <EventDetailContent {...props} />
   </Suspense>
 );
