@@ -1,0 +1,54 @@
+{
+  "recorded_at": "2026-10-10T08:53:08.922938+00:00",
+  "revision": "f73ab82",
+  "environment": "Local production next start :3100; live Django :8000; desktop Chrome 153; five warm reloads; no CPU/network throttling",
+  "method": "PerformanceNavigationTiming and buffered PerformanceObserver after route snapshot; LCP is an observed candidate, not finalized web-vitals; not native cold/warm timing",
+  "samples": [
+    {
+      "ttfb": 5.399999999906868,
+      "fcp": 44,
+      "lcp": 44,
+      "dcl": 59.300000000046566,
+      "path": "/investment",
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36"
+    },
+    {
+      "ttfb": 6.399999999906868,
+      "fcp": 44,
+      "lcp": 44,
+      "dcl": 51.199999999953434,
+      "path": "/investment",
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36"
+    },
+    {
+      "ttfb": 5.7000000001862645,
+      "fcp": 40,
+      "lcp": 40,
+      "dcl": 58.700000000186265,
+      "path": "/investment",
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36"
+    },
+    {
+      "ttfb": 6.399999999906868,
+      "fcp": 40,
+      "lcp": 40,
+      "dcl": 53.299999999813735,
+      "path": "/investment",
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36"
+    },
+    {
+      "ttfb": 4.099999999860302,
+      "fcp": 28,
+      "lcp": 28,
+      "dcl": 53.699999999953434,
+      "path": "/investment",
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36"
+    }
+  ],
+  "median_ms": {
+    "ttfb": 5.7000000001862645,
+    "fcp": 40,
+    "lcp": 40,
+    "dcl": 53.699999999953434
+  }
+}
