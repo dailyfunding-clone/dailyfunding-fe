@@ -12,7 +12,7 @@ import "../mypage.scss";
 const ProfilePage = () => {
   useDocumentTitle("회원정보");
   return (
-  <AuthGate>
+  <AuthGate title="회원정보">
     <Profile />
   </AuthGate>
 );

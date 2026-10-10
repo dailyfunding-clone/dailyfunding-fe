@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+const MAX_AMOUNT = 100_000_000_000;
+const MAX_MAN = 10_000_000;
+const MAX_AMOUNT_MSG = "금액이 너무 커요";
+
 export const emailSchema = z.email("이메일 형식이 아니에요");
 
 export const passwordSchema = z
@@ -73,14 +77,16 @@ export const depositChargeSchema = z.object({
   amount: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("1원 이상 입력해 주세요"),
+    .positive("1원 이상 입력해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG),
 });
 
 export const withdrawAmountSchema = z.object({
   amount: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("1원 이상 입력해 주세요"),
+    .positive("1원 이상 입력해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG),
 });
 
 export const linkedAccountSchema = z.object({
@@ -99,14 +105,16 @@ export const pointConvertSchema = z.object({
   amount: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("1포인트 이상 입력해 주세요"),
+    .positive("1포인트 이상 입력해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG),
 });
 
 export const schedulePreviewSchema = z.object({
   man: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("투자금액을 입력해 주세요"),
+    .positive("투자금액을 입력해 주세요")
+    .max(MAX_MAN, MAX_AMOUNT_MSG),
 });
 
 export const limitCheckSchema = z.discriminatedUnion("type", [
@@ -142,7 +150,8 @@ export const loanApplyFundsSchema = z.object({
   amount: z.coerce
     .number()
     .int("금액을 확인해 주세요")
-    .positive("필요 자금을 입력해 주세요"),
+    .positive("필요 자금을 입력해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG),
   term_months: z.coerce
     .number()
     .int("기간을 확인해 주세요")
@@ -156,10 +165,12 @@ export const orderSchema = z.object({
   man: z.coerce
     .number()
     .int("투자 금액을 입력해 주세요")
-    .positive("투자 금액을 입력해 주세요"),
+    .positive("투자 금액을 입력해 주세요")
+    .max(MAX_MAN, MAX_AMOUNT_MSG),
   points: z.coerce
     .number()
     .nonnegative("포인트를 확인해 주세요")
+    .max(MAX_AMOUNT, MAX_AMOUNT_MSG)
     .default(0),
   confirm: z.literal("네", {
     message: "유의사항을 확인하고 '네'를 입력해 주세요",

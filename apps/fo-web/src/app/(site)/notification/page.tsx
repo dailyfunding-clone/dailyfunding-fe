@@ -20,7 +20,7 @@ type Notification = {
 };
 
 const NotificationPage = () => (
-  <AuthGate>
+  <AuthGate title="알림">
     <NotificationList />
   </AuthGate>
 );

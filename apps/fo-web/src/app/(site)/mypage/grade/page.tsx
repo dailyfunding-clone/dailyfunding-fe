@@ -44,7 +44,7 @@ const fmtLimit = (n: number | null) => (n === null ? "무제한" : fmtMan(n));
 const GradePage = () => {
   useDocumentTitle("등급정보");
   return (
-    <AuthGate>
+    <AuthGate title="등급정보">
       <Grade />
     </AuthGate>
   );

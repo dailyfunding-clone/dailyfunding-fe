@@ -37,7 +37,7 @@ type EventDetail = {
   end_at: string | null;
   prev_id: number | null;
   next_id: number | null;
-  ongoing: { id: number; title: string; thumbnail_url: string }[];
+  ongoing?: { id: number; title: string; thumbnail_url: string }[];
 };
 
 const EventDetailContent = async ({
@@ -106,11 +106,11 @@ const EventDetailContent = async ({
         )}
       </nav>
 
-      {event.ongoing.length > 0 && (
+      {(event.ongoing?.length ?? 0) > 0 && (
         <section className="event-section">
           <h3>진행 중인 다른 이벤트</h3>
           <div className="event-ongoing">
-            {event.ongoing.map((e) => (
+            {(event.ongoing ?? []).map((e) => (
               <AppLink key={e.id} href={`/event/${e.id}`}>
                 <div className="event-thumb">
                   {e.thumbnail_url ? (

@@ -42,11 +42,13 @@ export const refreshSession = async () => {
   return ok;
 };
 
-subscribeNativeSession((state) => {
-  if (state.status === "signedOut") {
-    markSession(false);
-  }
-});
+if (typeof window !== "undefined") {
+  subscribeNativeSession((state) => {
+    if (state.status === "signedOut") {
+      markSession(false);
+    }
+  });
+}
 
 const http = ky.create({
   credentials: "include",
@@ -77,6 +79,8 @@ export const API_URL = `${process.env.API_INTERNAL_URL ?? "http://localhost:8000
 export const idempotencyKey = () => crypto.randomUUID();
 
 export const fmtWon = (n: number) => `${n.toLocaleString("ko-KR")}원`;
+
+export const fmtPoint = (n: number) => `${n.toLocaleString("ko-KR")}P`;
 
 export const fmtMan = (n: number) =>
   n >= 100_000_000

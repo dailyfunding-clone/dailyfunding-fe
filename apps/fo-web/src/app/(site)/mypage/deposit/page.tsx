@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
 import { AuthGate, ReauthProvider } from "@/features/auth";
 import { useDocumentTitle } from "@/shared/lib";
@@ -22,23 +23,31 @@ const TABS = [
 
 type TabKey = (typeof TABS)[number]["key"];
 
-const initialTab = (): TabKey => {
-  if (typeof window === "undefined") return "history";
-  const t = new URLSearchParams(window.location.search).get("tab");
+const tabFrom = (sp: URLSearchParams | ReturnType<typeof useSearchParams>): TabKey => {
+  const t = sp.get("tab");
   return TABS.some((tab) => tab.key === t) ? (t as TabKey) : "history";
 };
 
 const DepositPage = () => {
   useDocumentTitle("예치금");
   return (
-  <AuthGate>
-    <Deposit />
+  <AuthGate title="예치금">
+    <Suspense fallback={null}>
+      <Deposit />
+    </Suspense>
   </AuthGate>
 );
 };
 
 const Deposit = () => {
-  const [tab, setTab] = useState<TabKey>(initialTab);
+  const sp = useSearchParams();
+  const [tab, setTab] = useState<TabKey>(() => tabFrom(sp));
+
+  const [prevSp, setPrevSp] = useState(sp);
+  if (prevSp !== sp) {
+    setPrevSp(sp);
+    setTab(tabFrom(sp));
+  }
 
   return (
     <div className="container">

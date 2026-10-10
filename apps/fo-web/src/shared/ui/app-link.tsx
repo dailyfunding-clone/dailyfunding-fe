@@ -15,6 +15,7 @@ const AppLink = ({ href, linkTitle, onClick, ...rest }: AppLinkProps) => (
     {...rest}
     href={href}
     onClick={(e) => {
+      onClick?.(e);
       if (
         !e.defaultPrevented &&
         !e.metaKey &&
@@ -27,9 +28,7 @@ const AppLink = ({ href, linkTitle, onClick, ...rest }: AppLinkProps) => (
       ) {
         e.preventDefault();
         bridge.push(href, linkTitle);
-        return;
       }
-      onClick?.(e);
     }}
   />
 );

@@ -11,10 +11,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["10.0.2.2"],
   transpilePackages: ["@dailyfunding/bridge", "@dailyfunding/design-system"],
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "**" },
-      { protocol: "http", hostname: "**" },
-    ],
+    unoptimized: true,
   },
   cacheLife: {
     content: {

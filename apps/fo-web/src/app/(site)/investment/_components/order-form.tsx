@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
 import { useReauth } from "@/features/auth";
-import { api, fmtWon } from "@/shared/api";
+import { api, fmtPoint, fmtWon } from "@/shared/api";
 import { orderSchema, parseForm } from "@/shared/lib";
 import { useAppNavigate } from "@/shared/lib";
 import { useMe } from "@/shared/session";
@@ -124,7 +124,7 @@ const OrderForm = ({ product }: Props) => {
           {result.points_used > 0 && (
             <div className="order-line">
               <span>사용 포인트</span>
-              <strong>{fmtWon(result.points_used)}</strong>
+              <strong>{fmtPoint(result.points_used)}</strong>
             </div>
           )}
           <div className="order-line">
@@ -189,7 +189,7 @@ const OrderForm = ({ product }: Props) => {
         {pointAmt !== undefined && (
           <div className="order-line">
             <span>보유 포인트</span>
-            <strong>{pointAmt.toLocaleString("ko-KR")}P</strong>
+            <strong>{fmtPoint(pointAmt)}</strong>
           </div>
         )}
       </div>
@@ -224,7 +224,7 @@ const OrderForm = ({ product }: Props) => {
               />
               <em>P</em>
             </span>
-            <span className="field-hint">보유 {pointAmt.toLocaleString("ko-KR")}P</span>
+            <span className="field-hint">보유 {fmtPoint(pointAmt)}</span>
           </label>
         )}
         <label className="field">

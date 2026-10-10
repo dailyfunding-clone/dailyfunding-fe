@@ -7,6 +7,8 @@ import { api } from "@/shared/api";
 
 const FLUSH_MS = 16;
 const POLL_MS = 3_000;
+const RETRY_BASE_MS = 1_000;
+const RETRY_MAX_MS = 30_000;
 
 export type ProductProgressData = {
   raised_amount: number;
@@ -40,6 +42,8 @@ export const useProductStream = (ids: number[]) => {
     let es: EventSource | null = null;
     let poll: ReturnType<typeof setInterval> | null = null;
     let flushTimer: ReturnType<typeof setTimeout> | null = null;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    let retries = 0;
     const buffer = new Map<number, Partial<ProductProgressData>>();
 
     const flush = () => {
@@ -83,6 +87,16 @@ export const useProductStream = (ids: number[]) => {
       }
     };
 
+    const scheduleRefetch = () => {
+      if (retryTimer) return;
+      const delay = Math.min(RETRY_MAX_MS, RETRY_BASE_MS * 2 ** retries);
+      retries += 1;
+      retryTimer = setTimeout(() => {
+        retryTimer = null;
+        void refetch();
+      }, delay);
+    };
+
     const stop = () => {
       es?.close();
       es = null;
@@ -90,6 +104,11 @@ export const useProductStream = (ids: number[]) => {
         clearInterval(poll);
         poll = null;
       }
+      if (retryTimer) {
+        clearTimeout(retryTimer);
+        retryTimer = null;
+      }
+      retries = 0;
     };
 
     const start = () => {
@@ -105,7 +124,10 @@ export const useProductStream = (ids: number[]) => {
           /* malformed event frame */
         }
       });
-      source.onerror = () => void refetch();
+      source.onopen = () => {
+        retries = 0;
+      };
+      source.onerror = scheduleRefetch;
       es = source;
     };
 

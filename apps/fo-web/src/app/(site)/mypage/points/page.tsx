@@ -9,7 +9,7 @@ import {
   ApiRequestError,
   api,
   apiFetch,
-  fmtWon,
+  fmtPoint,
   idempotencyKey,
 } from "@/shared/api";
 import {
@@ -57,7 +57,7 @@ const RANGE_CHIPS = [
 const PointsPage = () => {
   useDocumentTitle("포인트");
   return (
-  <AuthGate>
+  <AuthGate title="포인트">
     <Points />
   </AuthGate>
 );
@@ -158,10 +158,10 @@ const Points = () => {
 
       <div className="card point-balance-card mb-16">
         <p className="muted">보유 포인트</p>
-        <p className="amount-lg">{fmtWon(balance.data?.balance ?? 0)}</p>
+        <p className="amount-lg">{fmtPoint(balance.data?.balance ?? 0)}</p>
         {(balance.data?.expiring_this_month ?? 0) > 0 && (
           <p className="muted">
-            이번 달 {fmtWon(balance.data?.expiring_this_month ?? 0)}이
+            이번 달 {fmtPoint(balance.data?.expiring_this_month ?? 0)}이
             사라져요
           </p>
         )}
@@ -170,7 +170,7 @@ const Points = () => {
       <div className="card mb-16">
         {convertDone !== null && (
           <p className="ok-msg">
-            {fmtWon(convertDone)}을 예치금으로 전환했어요.
+            {fmtPoint(convertDone)}을 예치금으로 전환했어요.
           </p>
         )}
         <form className="auth-form" action={convertAction}>
@@ -275,7 +275,7 @@ const Points = () => {
                     className={`hist-amount${e.amount > 0 ? " is-plus" : ""}`}
                   >
                     {e.amount > 0 ? "+" : ""}
-                    {fmtWon(e.amount)}
+                    {fmtPoint(e.amount)}
                   </div>
                 </li>
               ))}

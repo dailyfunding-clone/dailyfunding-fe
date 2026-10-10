@@ -73,11 +73,15 @@ const ProductTabs = ({ tabs }: Props) => {
       : null;
   return (
     <>
-      <div className="tabs">
+      <div className="tabs" role="tablist" aria-label="상품 정보">
         {TABS.map((t) => (
           <button
             key={t.key}
             type="button"
+            role="tab"
+            id={`product-tab-${t.key}`}
+            aria-selected={active === t.key}
+            aria-controls={`product-panel-${t.key}`}
             className={active === t.key ? "is-active" : undefined}
             onClick={() => setActive(t.key)}
           >
@@ -85,7 +89,12 @@ const ProductTabs = ({ tabs }: Props) => {
           </button>
         ))}
       </div>
-      <div className="tab-panel">
+      <div
+        className="tab-panel"
+        role="tabpanel"
+        id={`product-panel-${active}`}
+        aria-labelledby={`product-tab-${active}`}
+      >
         {active === "overview" && <DictView data={tabs?.overview ?? {}} />}
         {active === "detail" && <DictView data={tabs?.detail ?? {}} />}
         {active === "notice" &&

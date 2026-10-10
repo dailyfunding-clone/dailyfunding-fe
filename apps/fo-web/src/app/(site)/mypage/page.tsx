@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { AuthGate } from "@/features/auth";
-import { api, fmtMan, fmtWon } from "@/shared/api";
+import { api, fmtMan, fmtPoint, fmtWon } from "@/shared/api";
 import { useDocumentTitle } from "@/shared/lib";
 import { AppLink } from "@/shared/ui";
 
@@ -56,7 +56,7 @@ const MENU = [
 const MyPage = () => {
   useDocumentTitle("마이페이지");
   return (
-  <AuthGate>
+  <AuthGate title="마이페이지">
     <Dashboard />
   </AuthGate>
 );
@@ -165,7 +165,7 @@ const Dashboard = () => {
 
         <div className="card">
           <p className="muted">포인트</p>
-          <p className="amount-lg">{fmtWon(data.points)}</p>
+          <p className="amount-lg">{fmtPoint(data.points)}</p>
           <div className="card-links">
             <AppLink href="/mypage/points" className="btn btn-outline">
               포인트 내역

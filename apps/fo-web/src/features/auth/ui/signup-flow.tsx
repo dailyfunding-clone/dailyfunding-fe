@@ -13,7 +13,7 @@ import {
   type FormState,
 } from "@/shared/lib";
 
-import SignupTerms from "./signup-terms";
+import SignupTerms, { termIds } from "./signup-terms";
 
 const STEP_LABELS = ["계정 정보", "본인인증"];
 
@@ -56,9 +56,10 @@ const SignupFlow = ({ memberType, role = "investor" }: Props) => {
       if (!required.every((t) => checked.has(t))) {
         return { error: "필수 약관에 모두 동의해 주세요" };
       }
-      const agreements = formData
-        .getAll("term")
-        .map((t) => ({ term: String(t), agreed: true }));
+      const agreements = termIds(role === "borrower").map((term) => ({
+        term,
+        agreed: checked.has(term),
+      }));
       setAccount({
         email: parsed.data.email,
         password: parsed.data.password,

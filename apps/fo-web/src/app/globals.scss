@@ -125,7 +125,8 @@ input {
 }
 
 .input:focus {
-  outline: none;
+  outline: 2px solid var(--semantic-color-accent-primary);
+  outline-offset: -1px;
   border-color: var(--semantic-color-accent-primary);
 }
 
@@ -821,46 +822,4 @@ input {
   }
 }
 
-/* --- pin --- */
 
-.pin-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pin-dots {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  padding: 12px 0;
-}
-
-.pin-dots i {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 1.5px solid var(--semantic-color-stroke-default);
-}
-
-.pin-dots i.is-filled {
-  background: var(--semantic-color-fg-primary);
-  border-color: var(--semantic-color-fg-primary);
-}
-
-.pin-pad {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-}
-
-.pin-pad button {
-  height: 56px;
-  border-radius: var(--scale-radius-sm);
-  font-size: 22px;
-  font-weight: 500;
-}
-
-.pin-pad button:active {
-  background: var(--semantic-color-bg-subtle, #f2f4f6);
-}

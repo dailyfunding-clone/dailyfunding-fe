@@ -34,7 +34,7 @@ const DOW = ["일", "월", "화", "수", "목", "금", "토"];
 const CalendarPage = () => {
   useDocumentTitle("상환달력");
   return (
-  <AuthGate>
+  <AuthGate title="상환달력">
     <RepayCalendar />
   </AuthGate>
 );

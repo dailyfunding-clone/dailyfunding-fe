@@ -72,7 +72,7 @@ const TYPE_CHIPS = [
 const InvestmentsPage = () => {
   useDocumentTitle("투자내역");
   return (
-  <AuthGate>
+  <AuthGate title="투자내역">
     <Investments />
   </AuthGate>
 );
