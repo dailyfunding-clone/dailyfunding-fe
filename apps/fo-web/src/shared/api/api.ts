@@ -1,6 +1,12 @@
 import { createClient } from "@dailyfunding/api-client";
 import ky from "ky";
 
+import {
+  invalidateNativeSession,
+  restoreNativeSession,
+  subscribeNativeSession,
+} from "./native-session";
+
 export { ApiRequestError } from "@dailyfunding/api-client";
 export type { ApiError } from "@dailyfunding/api-client";
 
@@ -21,16 +27,35 @@ export const markSession = (on: boolean) => {
 };
 
 export const refreshSession = async () => {
-  const res = await ky.post("/api/auth/refresh", { credentials: "include" });
-  if (res.ok) {
+  const res = await ky
+    .post("/api/auth/refresh", { credentials: "include" })
+    .catch(() => null);
+  if (res?.ok) {
+    markSession(true);
+    return true;
+  }
+  invalidateNativeSession();
+  const ok = await restoreNativeSession();
+  if (ok) {
     markSession(true);
   }
-  return res.ok;
+  return ok;
 };
+
+subscribeNativeSession((state) => {
+  if (state.status === "signedOut") {
+    markSession(false);
+  }
+});
 
 const http = ky.create({
   credentials: "include",
   hooks: {
+    beforeRequest: [
+      async () => {
+        await restoreNativeSession();
+      },
+    ],
     afterResponse: [
       async ({ response, retryCount }) => {
         if (response.status === 401 && retryCount === 0 && (await refreshSession())) {

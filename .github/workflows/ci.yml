@@ -30,18 +30,11 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Download BE OpenAPI schema
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          github_token: ${{ secrets.BE_ARTIFACT_TOKEN || secrets.GITHUB_TOKEN }}
-          repo: dailyfunding-be
-          workflow: ci.yml
-          name: openapi-schema
-          path: packages/api-client
-      - name: Regenerate schema.d.ts
+      - name: Fetch BE OpenAPI schema
         run: |
-          cd packages/api-client
-          [ -f schema.yaml ] || mv schema.json schema.yaml
-          pnpm typegen
+          curl -fsSL https://raw.githubusercontent.com/dailyfunding-clone/dailyfunding-be/schema/schema.yaml \
+            -o packages/api-client/schema.yaml
+      - name: Regenerate schema.d.ts
+        run: pnpm --filter @dailyfunding/api-client typegen
       - name: Fail if generated types drifted
         run: git diff --exit-code packages/api-client/src/schema.d.ts
