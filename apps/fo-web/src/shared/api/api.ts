@@ -4,12 +4,6 @@ import ky from "ky";
 export { ApiRequestError } from "@dailyfunding/api-client";
 export type { ApiError } from "@dailyfunding/api-client";
 
-declare global {
-  interface Window {
-    __restoreSession?: Promise<void>;
-  }
-}
-
 const AUTH_FLAG = "df_auth";
 
 export const hasSessionHint = () =>
@@ -37,13 +31,6 @@ export const refreshSession = async () => {
 const http = ky.create({
   credentials: "include",
   hooks: {
-    beforeRequest: [
-      async () => {
-        if (typeof window !== "undefined" && window.__restoreSession) {
-          await window.__restoreSession;
-        }
-      },
-    ],
     afterResponse: [
       async ({ response, retryCount }) => {
         if (response.status === 401 && retryCount === 0 && (await refreshSession())) {
@@ -54,21 +41,13 @@ const http = ky.create({
   },
 });
 
-const waitSessionRestore = async () => {
-  if (typeof window !== "undefined" && window.__restoreSession) {
-    await window.__restoreSession;
-  }
-};
-
 export const api = createClient({
-  beforeRequest: waitSessionRestore,
   onUnauthorized: refreshSession,
 });
 
 export const apiFetch = (path: string, init?: RequestInit) => http(path, init);
 
-export const API_URL =
-  process.env.API_INTERNAL_URL ?? "http://localhost:8000/api";
+export const API_URL = process.env.API_INTERNAL_URL ?? "http://localhost:8000/api";
 
 export const idempotencyKey = () => crypto.randomUUID();
 

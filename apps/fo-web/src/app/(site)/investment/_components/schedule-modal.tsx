@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 
 import { api, fmtWon } from "@/shared/api";
 import { parseForm, schedulePreviewSchema, type FormState } from "@/shared/lib";
@@ -24,17 +24,14 @@ const ScheduleModal = ({ productId, open, onClose }: Props) => {
   const [man, setMan] = useState("100");
   const [amount, setAmount] = useState(0);
 
-  const [state, formAction] = useActionState<FormState, FormData>(
-    (_prev, formData) => {
-      const parsed = parseForm(schedulePreviewSchema, {
-        man: String(formData.get("man") ?? "").replace(/,/g, ""),
-      });
-      if ("error" in parsed) return { error: parsed.error };
-      setAmount(parsed.data.man * 10_000);
-      return null;
-    },
-    null,
-  );
+  const [state, formAction] = useActionState<FormState, FormData>((_prev, formData) => {
+    const parsed = parseForm(schedulePreviewSchema, {
+      man: String(formData.get("man") ?? "").replace(/,/g, ""),
+    });
+    if ("error" in parsed) return { error: parsed.error };
+    setAmount(parsed.data.man * 10_000);
+    return null;
+  }, null);
 
   const preview = useQuery<SchedulePreview>({
     queryKey: ["schedule-preview", productId, amount],
@@ -45,6 +42,24 @@ const ScheduleModal = ({ productId, open, onClose }: Props) => {
       ),
     enabled: open && amount > 0,
   });
+
+  const dialog = useRef<HTMLDivElement>(null);
+  const prevFocus = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    prevFocus.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    dialog.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      prevFocus.current?.focus();
+    };
+  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -57,15 +72,18 @@ const ScheduleModal = ({ productId, open, onClose }: Props) => {
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="schedule-modal-title"
+        tabIndex={-1}
+        ref={dialog}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-head">
-          <h2>예상 수익 계산</h2>
-          <button
-            type="button"
-            className="modal-close"
-            onClick={onClose}
-            aria-label="닫기"
-          >
+          <h2 id="schedule-modal-title">예상 수익 계산</h2>
+          <button type="button" className="modal-close" onClick={onClose} aria-label="닫기">
             ✕
           </button>
         </div>
@@ -86,12 +104,7 @@ const ScheduleModal = ({ productId, open, onClose }: Props) => {
           </label>
           <div className="quick-amounts">
             {QUICK_AMOUNTS.map((q) => (
-              <button
-                key={q.value}
-                type="button"
-                className="chip"
-                onClick={() => quick(q.value)}
-              >
+              <button key={q.value} type="button" className="chip" onClick={() => quick(q.value)}>
                 {q.label}
               </button>
             ))}
@@ -103,9 +116,7 @@ const ScheduleModal = ({ productId, open, onClose }: Props) => {
         </form>
 
         {preview.isFetching && <p className="field-hint">계산 중이에요…</p>}
-        {preview.isError && (
-          <p className="form-error">예상 수익을 불러오지 못했어요</p>
-        )}
+        {preview.isError && <p className="form-error">예상 수익을 불러오지 못했어요</p>}
         {preview.data && (
           <>
             <div className="preview-summary" style={{ marginTop: 20 }}>

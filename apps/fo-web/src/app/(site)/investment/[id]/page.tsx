@@ -9,6 +9,7 @@ import { ProductActions } from "../_components";
 import { ProductTabs } from "../_components";
 import { RefreshButton } from "../_components";
 import {
+  ProductDetailSkeleton,
   REPAY_LABEL,
   STATUS_LABEL,
   TYPE_LABEL,
@@ -28,7 +29,6 @@ export const generateMetadata = async ({
   const p = await fetchProduct(id);
   return { title: p?.name ?? "상품 상세" };
 };
-
 
 const fetchProduct = async (id: string): Promise<ProductDetail | null> => {
   const store = await cookies();
@@ -61,9 +61,7 @@ const ProductDetailContent = async ({ params }: Props) => {
       <div className="inv-detail-head">
         <div className="product-card-badges">
           <span className="badge">{TYPE_LABEL[p.type] ?? p.type}</span>
-          <span
-            className={`badge ${p.status === "recruiting" ? "badge-accent" : ""}`.trim()}
-          >
+          <span className={`badge ${p.status === "recruiting" ? "badge-accent" : ""}`.trim()}>
             {STATUS_LABEL[p.status] ?? p.status}
           </span>
         </div>
@@ -148,7 +146,7 @@ const ProductDetailContent = async ({ params }: Props) => {
 };
 
 const ProductDetailPage = (props: Props) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<ProductDetailSkeleton />}>
     <ProductDetailContent {...props} />
   </Suspense>
 );

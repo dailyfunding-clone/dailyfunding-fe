@@ -1,6 +1,10 @@
 import { API_URL, fmtMan } from "@/shared/api";
 import { AppLink } from "@/shared/ui";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "데일리펀딩" };
+
 type Product = {
   id: number;
   product_no: string;
@@ -32,9 +36,7 @@ const fetchJson = async <T,>(path: string): Promise<T | null> => {
 const HomePage = async () => {
   const [products, notices] = await Promise.all([
     fetchJson<{ results: Product[] }>("/products?status=recruiting&sort=latest"),
-    fetchJson<{ results: { id: number; title: string }[] }>(
-      "/notices?page_size=4",
-    ),
+    fetchJson<{ results: { id: number; title: string }[] }>("/notices?page_size=4"),
   ]);
   return (
     <main className="container home">

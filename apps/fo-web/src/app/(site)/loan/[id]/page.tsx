@@ -22,7 +22,6 @@ export const generateMetadata = async ({
   return { title: loan?.name ?? "대출 상세" };
 };
 
-
 const DEFAULT_STEPS = ["신청", "서류 심사", "전자계약", "모집·실행"];
 
 const DEFAULT_NOTICES = [
@@ -32,23 +31,17 @@ const DEFAULT_NOTICES = [
   "금리와 한도는 심사 결과에 따라 달라져요.",
 ];
 
-const LoanDetailContent = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+const LoanDetailContent = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const loan = await fetchJson<LoanDetail>(`/loans/${id}`);
   if (!loan) notFound();
   const steps = loan.steps?.length ? loan.steps.map(textOf) : DEFAULT_STEPS;
   const features = (loan.features ?? []).map(textOf).filter(Boolean);
-  const faqs = (loan.faqs ?? []).map(faqOf).filter(Boolean);
+  const faqs = (loan.faqs ?? []).map(faqOf).filter((f): f is NonNullable<typeof f> => f !== null);
   return (
     <main className="container">
       <section className="loan-hero">
-        <span className="badge badge-accent">
-          {CATEGORY_LABEL[loan.category] ?? loan.category}
-        </span>
+        <span className="badge badge-accent">{CATEGORY_LABEL[loan.category] ?? loan.category}</span>
         <h1>{loan.name}</h1>
         <p>{loan.summary || loan.target}</p>
         <div className="loan-hero-rate">
@@ -61,10 +54,7 @@ const LoanDetailContent = async ({
           <AppLink href={`/loan/${loan.id}/apply`} className="btn btn-primary">
             대출 신청하기
           </AppLink>
-          <AppLink
-            href={`/loan/limit-check?loan=${loan.id}`}
-            className="btn btn-outline"
-          >
+          <AppLink href={`/loan/limit-check?loan=${loan.id}`} className="btn btn-outline">
             한도 먼저 조회
           </AppLink>
         </div>
@@ -135,8 +125,8 @@ const LoanDetailContent = async ({
           <div className="accordion">
             {faqs.map((f, i) => (
               <details className="accordion-item" key={i}>
-                <summary>{f!.q}</summary>
-                <div className="accordion-body">{f!.a}</div>
+                <summary>{f.q}</summary>
+                <div className="accordion-body">{f.a}</div>
               </details>
             ))}
           </div>
