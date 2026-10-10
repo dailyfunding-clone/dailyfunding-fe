@@ -4,4912 +4,5000 @@
  */
 
 export interface paths {
-  "/api/admin/batch/expire-points": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_admin_batch_expire_points_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/batch/reconcile": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_admin_batch_reconcile_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/batch/repay": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/admin/batch/repay?date= — 상환 배치 수동 트리거 (F-ADM-03/04). */
-    post: operations["api_admin_batch_repay_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/deposit/holds": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_deposit_holds_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/deposit/holds/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_deposit_holds_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/disclosures": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_disclosures_retrieve"];
-    put?: never;
-    post: operations["api_admin_disclosures_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/disclosures/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations["api_admin_disclosures_destroy"];
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_disclosures_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/events": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_events_retrieve"];
-    put?: never;
-    post: operations["api_admin_events_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/events/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations["api_admin_events_destroy"];
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_events_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/faqs": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_faqs_retrieve"];
-    put?: never;
-    post: operations["api_admin_faqs_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/faqs/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations["api_admin_faqs_destroy"];
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_faqs_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/grade-requests": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_grade_requests_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/grade-requests/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_grade_requests_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/loan-applications": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_loan_applications_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/loan-applications/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** @description 심사 → 승인 시 투자 상품 전환 (F-ADM). */
-    patch: operations["api_admin_loan_applications_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/news": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_news_retrieve"];
-    put?: never;
-    post: operations["api_admin_news_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/news/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations["api_admin_news_destroy"];
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_news_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/notices": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_notices_retrieve"];
-    put?: never;
-    post: operations["api_admin_notices_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/notices/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations["api_admin_notices_destroy"];
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_notices_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/products": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_admin_products_retrieve"];
-    put?: never;
-    post: operations["api_admin_products_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/products/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_products_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/products/{id}/execute": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_admin_products_execute_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/products/{id}/status": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations["api_admin_products_status_partial_update"];
-    trace?: never;
-  };
-  "/api/admin/seed/products": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * @description POST /api/admin/seed/products — 가상 상품 대량 생성기 (F-ADM-04).
-     *
-     *     실제 데이터를 긁어오지 않고 파라미터 범위에서 난수로 생성한다.
-     */
-    post: operations["api_admin_seed_products_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/time/advance": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * @description POST /api/admin/time/advance {date} — 데모 시간 진행 유틸.
-     *
-     *     해당 날짜 기준으로 상환 배치·포인트 소멸·대사를 순차 실행한다.
-     */
-    post: operations["api_admin_time_advance_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/app-code": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description 앱(로그인 상태)이 발급하는 일회용 코드. */
-    post: operations["api_auth_app_code_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/app-code/exchange": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_app_code_exchange_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/business-number/verify": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description 사업자등록번호 인증 모의 (F-AUTH-01). */
-    post: operations["api_auth_business_number_verify_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/find-id": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description 아이디 찾기 (F-AUTH-03). 모의 SMS 본인확인. */
-    post: operations["api_auth_find_id_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/identity/verify": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description 모의 본인인증 (F-AUTH-04). 서버가 CI를 발급한다. */
-    post: operations["api_auth_identity_verify_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/login": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_login_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/login/pin": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_login_pin_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/logout": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_logout_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/password/reset": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_password_reset_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/password/reset-request": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description 비밀번호 재설정 링크 발송 모의 (F-AUTH-03). 이메일 존재 여부를 숨긴다. */
-    post: operations["api_auth_password_reset_request_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/pin": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_pin_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/reauth": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_reauth_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/refresh": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_refresh_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/signup": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_signup_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/signup/borrower": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["api_auth_signup_borrower_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/cart": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET/POST /api/cart (F-INV-06). */
-    get: operations["api_cart_retrieve"];
-    put?: never;
-    /** @description GET/POST /api/cart (F-INV-06). */
-    post: operations["api_cart_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/cart/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations["api_cart_destroy"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/deposit/account": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/deposit/account — 가상계좌 + 잔액 (F-DEP-01). */
-    get: operations["api_deposit_account_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/deposit/auto-charge": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** @description PUT /api/deposit/auto-charge — 간편충전 ON/OFF (F-DEP-05). */
-    put: operations["api_deposit_auto_charge_update"];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/deposit/history": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/deposit/history — 예치금 내역 (F-DEP-04, F-MY-04). */
-    get: operations["api_deposit_history_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/deposit/linked-account": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET/PUT /api/deposit/linked-account — 연결계좌 조회·등록 (F-DEP-05). */
-    get: operations["api_deposit_linked_account_retrieve"];
-    /** @description GET/PUT /api/deposit/linked-account — 연결계좌 조회·등록 (F-DEP-05). */
-    put: operations["api_deposit_linked_account_update"];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/deposit/notify-intent": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/deposit/notify-intent — 입금 알리기 (F-DEP-02). */
-    post: operations["api_deposit_notify_intent_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/deposit/withdraw": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/deposit/withdraw — 출금 요청 (F-DEP-03). */
-    post: operations["api_deposit_withdraw_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/devices": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/devices — 푸시 토큰 등록. */
-    post: operations["api_devices_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/disclosures": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_disclosures_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/events": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_events_list"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/events/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_events_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/events/{id}/enter": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description 이벤트 참여 → 포인트 적립 규칙 연동 (F-CON-03). */
-    post: operations["api_events_enter_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/faqs": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_faqs_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/faqs/keywords": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_faqs_keywords_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/investments": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/investments — 내 투자 내역 / POST — 투자 주문 (F-INV-04). */
-    get: operations["api_investments_list"];
-    put?: never;
-    /** @description GET /api/investments — 내 투자 내역 / POST — 투자 주문 (F-INV-04). */
-    post: operations["api_investments_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/investments/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/investments/{id} — 건별 상세 (회차별 상환 현황). */
-    get: operations["api_investments_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/loans": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/loans?category= (F-LOAN-01). */
-    get: operations["api_loans_list"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/loans/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_loans_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/loans/applications": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/loans/applications — 대출 신청 (F-LOAN-04). */
-    post: operations["api_loans_applications_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/loans/limit-check": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/loans/limit-check — 간편 한도 조회 모의 (F-LOAN-03). */
-    post: operations["api_loans_limit_check_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/me": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_me_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/me/calendar": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/me/calendar?year=&month= (F-MY-02). */
-    get: operations["api_me_calendar_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/me/dashboard": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/me/dashboard (F-MY-01). */
-    get: operations["api_me_dashboard_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/me/grade": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/me/grade (F-MY-05). */
-    get: operations["api_me_grade_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/me/grade-request": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/me/grade-request — 등급 변경 신청 (서류 multipart). */
-    post: operations["api_me_grade_request_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/me/grade/history": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_me_grade_history_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/me/investments": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/me/investments — 투자내역 필터 (F-MY-03). */
-    get: operations["api_me_investments_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/me/limit-assessment": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/me/limit-assessment — 원스톱 한도심사 (모의). */
-    post: operations["api_me_limit_assessment_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/news": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_news_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/notices": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_notices_list"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/notices/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_notices_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/notifications": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_notifications_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/notifications/settings": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    // r3 local extension — BE added GET; remove this comment after schema regen (X3)
-    get: operations["api_notifications_settings_retrieve"];
-    put?: never;
-    /** @description POST /api/notifications/settings — 카테고리별 ON/OFF. */
-    post: operations["api_notifications_settings_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/points": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/points (F-PNT-01). */
-    get: operations["api_points_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/points/convert": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/points/convert — 포인트→예치금 전환 (F-PNT-01). */
-    post: operations["api_points_convert_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/points/history": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/points/history (F-PNT-02). CSV export 지원. */
-    get: operations["api_points_history_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/products": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/products — 투자 상품 목록 (F-INV-01). */
-    get: operations["api_products_list"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/products/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/products/{id} — 상세 (F-INV-02). */
-    get: operations["api_products_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/products/{id}/schedule-preview": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/products/{id}/schedule-preview?amount= — 예상수익 (F-INV-03). */
-    get: operations["api_products_schedule_preview_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/reservations": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_reservations_list"];
-    put?: never;
-    post: operations["api_reservations_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/reservations/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations["api_reservations_destroy"];
-    options?: never;
-    head?: never;
-    patch: operations["api_reservations_partial_update"];
-    trace?: never;
-  };
-  "/api/reservations/eligible": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET /api/reservations/eligible — 만기 임박 + 재모집 대상 투자. */
-    get: operations["api_reservations_eligible_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/suitability-test": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description GET 문항 조회 / POST 제출·채점 (F-INV-05). */
-    get: operations["api_suitability_test_retrieve"];
-    put?: never;
-    /** @description GET 문항 조회 / POST 제출·채점 (F-INV-05). */
-    post: operations["api_suitability_test_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/terms/{key}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["api_terms_retrieve"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/webhooks/bank/deposit": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/webhooks/bank/deposit — 입금 완료 통지. */
-    post: operations["api_webhooks_bank_deposit_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/webhooks/bank/transfer": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description POST /api/webhooks/bank/transfer — 출금 이체 결과. */
-    post: operations["api_webhooks_bank_transfer_create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
+    "/api/admin/batch/expire-points": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_admin_batch_expire_points_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/batch/reconcile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_admin_batch_reconcile_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/batch/repay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/admin/batch/repay?date= — 상환 배치 수동 트리거 (F-ADM-03/04). */
+        post: operations["api_admin_batch_repay_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/deposit/holds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_deposit_holds_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/deposit/holds/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_deposit_holds_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/disclosures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_disclosures_retrieve"];
+        put?: never;
+        post: operations["api_admin_disclosures_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/disclosures/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["api_admin_disclosures_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_disclosures_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_events_retrieve"];
+        put?: never;
+        post: operations["api_admin_events_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/events/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["api_admin_events_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_events_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/faqs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_faqs_retrieve"];
+        put?: never;
+        post: operations["api_admin_faqs_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/faqs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["api_admin_faqs_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_faqs_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/grade-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_grade_requests_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/grade-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_grade_requests_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/loan-applications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_loan_applications_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/loan-applications/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description 심사 → 승인 시 투자 상품 전환 (F-ADM). */
+        patch: operations["api_admin_loan_applications_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/news": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_news_retrieve"];
+        put?: never;
+        post: operations["api_admin_news_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/news/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["api_admin_news_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_news_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_notices_retrieve"];
+        put?: never;
+        post: operations["api_admin_notices_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/notices/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["api_admin_notices_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_notices_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_admin_products_retrieve"];
+        put?: never;
+        post: operations["api_admin_products_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_products_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/products/{id}/execute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_admin_products_execute_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/products/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["api_admin_products_status_partial_update"];
+        trace?: never;
+    };
+    "/api/admin/seed/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * @description POST /api/admin/seed/products — 가상 상품 대량 생성기 (F-ADM-04).
+         *
+         *     실제 데이터를 긁어오지 않고 파라미터 범위에서 난수로 생성한다.
+         */
+        post: operations["api_admin_seed_products_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/time/advance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * @description POST /api/admin/time/advance {date} — 데모 시간 진행 유틸.
+         *
+         *     해당 날짜 기준으로 상환 배치·포인트 소멸·대사를 순차 실행한다.
+         */
+        post: operations["api_admin_time_advance_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/app-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 앱(로그인 상태)이 발급하는 일회용 코드. */
+        post: operations["api_auth_app_code_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/app-code/exchange": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_app_code_exchange_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/business-number/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 사업자등록번호 인증 모의 (F-AUTH-01). */
+        post: operations["api_auth_business_number_verify_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/find-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 아이디 찾기 (F-AUTH-03). 모의 SMS 본인확인. */
+        post: operations["api_auth_find_id_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/identity/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 모의 본인인증 (F-AUTH-04). 서버가 CI를 발급한다. */
+        post: operations["api_auth_identity_verify_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_login_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/login/pin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 저장된 세션(로그인 상태) 사용자의 간편비밀번호 잠금 해제. */
+        post: operations["api_auth_login_pin_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_logout_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/password/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_password_reset_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/password/reset-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 비밀번호 재설정 링크 발송 모의 (F-AUTH-03). 이메일 존재 여부를 숨긴다. */
+        post: operations["api_auth_password_reset_request_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/pin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_pin_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/reauth": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_reauth_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_refresh_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_signup_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/signup/borrower": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_auth_signup_borrower_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/cart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET/POST /api/cart (F-INV-06). */
+        get: operations["api_cart_retrieve"];
+        put?: never;
+        /** @description GET/POST /api/cart (F-INV-06). */
+        post: operations["api_cart_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/cart/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["api_cart_destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/deposit/account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/deposit/account — 가상계좌 + 잔액 (F-DEP-01). */
+        get: operations["api_deposit_account_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/deposit/auto-charge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** @description PUT /api/deposit/auto-charge — 간편충전 ON/OFF (F-DEP-05). */
+        put: operations["api_deposit_auto_charge_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/deposit/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/deposit/history — 예치금 내역 (F-DEP-04, F-MY-04). */
+        get: operations["api_deposit_history_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/deposit/linked-account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET/PUT /api/deposit/linked-account — 연결계좌 조회·등록 (F-DEP-05). */
+        get: operations["api_deposit_linked_account_retrieve"];
+        /** @description GET/PUT /api/deposit/linked-account — 연결계좌 조회·등록 (F-DEP-05). */
+        put: operations["api_deposit_linked_account_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/deposit/notify-intent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/deposit/notify-intent — 입금 알리기 (F-DEP-02). */
+        post: operations["api_deposit_notify_intent_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/deposit/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/deposit/withdraw — 출금 요청 (F-DEP-03). */
+        post: operations["api_deposit_withdraw_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/devices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/devices — 푸시 토큰 등록. */
+        post: operations["api_devices_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/disclosures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_disclosures_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_events_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/events/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_events_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/events/{id}/enter": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 이벤트 참여 → 포인트 적립 규칙 연동 (F-CON-03). */
+        post: operations["api_events_enter_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/faqs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_faqs_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/faqs/keywords": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_faqs_keywords_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/investments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/investments — 내 투자 내역 / POST — 투자 주문 (F-INV-04). */
+        get: operations["api_investments_list"];
+        put?: never;
+        /** @description GET /api/investments — 내 투자 내역 / POST — 투자 주문 (F-INV-04). */
+        post: operations["api_investments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/investments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/investments/{id} — 건별 상세 (회차별 상환 현황). */
+        get: operations["api_investments_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/loans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/loans?category= (F-LOAN-01). */
+        get: operations["api_loans_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/loans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_loans_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/loans/applications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/loans/applications — 대출 신청 (F-LOAN-04). */
+        post: operations["api_loans_applications_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/loans/limit-check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/loans/limit-check — 간편 한도 조회 모의 (F-LOAN-03). */
+        post: operations["api_loans_limit_check_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_me_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/me/calendar?year=&month= (F-MY-02). */
+        get: operations["api_me_calendar_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/me/dashboard (F-MY-01). */
+        get: operations["api_me_dashboard_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/grade": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/me/grade (F-MY-05). */
+        get: operations["api_me_grade_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/grade-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/me/grade-request — 등급 변경 신청 (서류 multipart). */
+        post: operations["api_me_grade_request_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/grade/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_me_grade_history_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/investments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/me/investments — 투자내역 필터 (F-MY-03). */
+        get: operations["api_me_investments_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/limit-assessment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/me/limit-assessment — 원스톱 한도심사 (모의). */
+        post: operations["api_me_limit_assessment_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/metrics/vitals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["api_metrics_vitals_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/news": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_news_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_notices_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notices/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_notices_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_notifications_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET/POST /api/notifications/settings — 알림 설정 조회·변경. */
+        get: operations["api_notifications_settings_retrieve"];
+        put?: never;
+        /** @description GET/POST /api/notifications/settings — 알림 설정 조회·변경. */
+        post: operations["api_notifications_settings_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/points": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/points (F-PNT-01). */
+        get: operations["api_points_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/points/convert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/points/convert — 포인트→예치금 전환 (F-PNT-01). */
+        post: operations["api_points_convert_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/points/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/points/history (F-PNT-02). CSV export 지원. */
+        get: operations["api_points_history_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/products — 투자 상품 목록 (F-INV-01). */
+        get: operations["api_products_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/products/{id} — 상세 (F-INV-02). */
+        get: operations["api_products_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/{id}/schedule-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/products/{id}/schedule-preview?amount= — 예상수익 (F-INV-03). */
+        get: operations["api_products_schedule_preview_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_products_stream_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reservations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_reservations_list"];
+        put?: never;
+        post: operations["api_reservations_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reservations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["api_reservations_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_reservations_partial_update"];
+        trace?: never;
+    };
+    "/api/reservations/eligible": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/reservations/eligible — 만기 임박 + 재모집 대상 투자. */
+        get: operations["api_reservations_eligible_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/suitability-test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET 문항 조회 / POST 제출·채점 (F-INV-05). */
+        get: operations["api_suitability_test_retrieve"];
+        put?: never;
+        /** @description GET 문항 조회 / POST 제출·채점 (F-INV-05). */
+        post: operations["api_suitability_test_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/terms/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_terms_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/bank/deposit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/webhooks/bank/deposit — 입금 완료 통지. */
+        post: operations["api_webhooks_bank_deposit_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/bank/transfer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description POST /api/webhooks/bank/transfer — 출금 이체 결과. */
+        post: operations["api_webhooks_bank_transfer_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    /**
-     * @description * `approve` - approve
-     *     * `reject` - reject
-     * @enum {string}
-     */
-    ActionEnum: "approve" | "reject";
-    AdminDisclosureCreated: {
-      id: number;
-    };
-    AdminDisclosureDetail: {
-      id: number;
-    };
-    AdminDisclosureListResponse: {
-      results: unknown[];
-    };
-    AdminDisclosureUpsert: {
-      year?: unknown;
-      month?: unknown;
-      kpi?: unknown;
-      management?: unknown;
-      operations?: unknown;
-      internal?: unknown;
-    };
-    AdminEventCreated: {
-      id: number;
-    };
-    AdminEventDetail: {
-      id: number;
-    };
-    AdminEventListResponse: {
-      results: unknown[];
-    };
-    AdminEventUpsert: {
-      title?: unknown;
-      summary?: unknown;
-      body?: unknown;
-      status?: unknown;
-      thumbnail_url?: unknown;
-      reward_points?: unknown;
-      start_at?: unknown;
-      end_at?: unknown;
-    };
-    AdminFaqCreated: {
-      id: number;
-    };
-    AdminFaqDetail: {
-      id: number;
-    };
-    AdminFaqListResponse: {
-      results: unknown[];
-    };
-    AdminFaqUpsert: {
-      category?: unknown;
-      question?: unknown;
-      answer?: unknown;
-    };
-    AdminGradeRequestItem: {
-      id: number;
-      user_id: number;
-      /** Format: email */
-      email: string;
-      to_grade: string;
-      status: string;
-      /** Format: date-time */
-      created_at: string;
-    };
-    AdminGradeRequestList: {
-      results: components["schemas"]["AdminGradeRequestItem"][];
-    };
-    AdminLoanApplicationItem: {
-      id: number;
-      name: string;
-      company: string;
-      amount: number;
-      term_months: number;
-      status: string;
-      /** Format: date-time */
-      created_at: string;
-    };
-    AdminLoanApplicationList: {
-      results: components["schemas"]["AdminLoanApplicationItem"][];
-    };
-    AdminNewsCreated: {
-      id: number;
-    };
-    AdminNewsDetail: {
-      id: number;
-    };
-    AdminNewsListResponse: {
-      results: unknown[];
-    };
-    AdminNewsUpsert: {
-      title?: unknown;
-      source?: unknown;
-      url?: unknown;
-      thumbnail_url?: unknown;
-      published_at?: unknown;
-    };
-    AdminNoticeCreated: {
-      id: number;
-    };
-    AdminNoticeDetail: {
-      id: number;
-    };
-    AdminNoticeListResponse: {
-      results: unknown[];
-    };
-    AdminNoticeUpsert: {
-      category?: unknown;
-      title?: unknown;
-      body?: unknown;
-      attachments?: unknown;
-    };
-    AdminProduct: {
-      id: number;
-      product_no: string;
-      name: string;
-      type: string;
-      annual_rate: string;
-      term_months: number;
-      target_amount: number;
-      raised_amount: number;
-      status: string;
-    };
-    AdminProductCreateResponse: {
-      id: number;
-      product_no: string;
-      status: string;
-    };
-    AdminProductListResponse: {
-      results: components["schemas"]["AdminProduct"][];
-    };
-    AgreementItem: {
-      term: string;
-      agreed: boolean;
-    };
-    AppCodeExchange: {
-      code: string;
-    };
-    AppCodeIssueResponse: {
-      code: string;
-      expires_in: number;
-    };
-    AutoCharge: {
-      enabled: boolean;
-    };
-    BankWebhookAck: {
-      received: boolean;
-      deduplicated?: boolean;
-    };
-    BankWebhookPayload: {
-      event_id: string;
-      type: string;
-    };
-    BusinessNumberVerify: {
-      business_number: string;
-    };
-    BusinessNumberVerifyResponse: {
-      verified: boolean;
-      reason?: string;
-    };
-    CalendarDay: {
-      /** Format: date */
-      date: string;
-      principal: number;
-      interest_net: number;
-      status: string;
-    };
-    CalendarMonthly: {
-      principal_done: number;
-      principal_scheduled: number;
-      interest_done_net: number;
-      interest_scheduled_net: number;
-    };
-    CalendarResponse: {
-      days: components["schemas"]["CalendarDay"][];
-      monthly: components["schemas"]["CalendarMonthly"];
-    };
-    CartAdd: {
-      product_id: number;
-    };
-    CartAddResponse: {
-      id: number;
-    };
-    CartItem: {
-      id: number;
-      product_id: number;
-      product_no: string;
-      name: string;
-      annual_rate: string;
-      term_months: number;
-      target_amount: number;
-      remaining_amount: number;
-      status: string;
-      closed: boolean;
-    };
-    CartListResponse: {
-      results: components["schemas"]["CartItem"][];
-      count: number;
-    };
-    DashboardResponse: {
-      profile: components["schemas"]["_Profile"];
-      virtual_account: components["schemas"]["_VirtualAccount"] | null;
-      deposit: number;
-      points: number;
-      limits: components["schemas"]["_Limits"];
-      active: components["schemas"]["_Active"];
-      past: components["schemas"]["_Past"];
-    };
-    DepositAccount: {
-      bank: string;
-      account_no: string;
-      holder: string;
-      deposit: number;
-      held: number;
-      withdrawable: number;
-    };
-    DepositHistory: {
-      results: components["schemas"]["LedgerEntry"][];
-      next_cursor: string | null;
-    };
-    DepositHoldItem: {
-      id: string;
-      user_id: number;
-      /** Format: email */
-      email: string;
-      amount: number;
-      sender_name: string;
-      held_reason: string;
-      /** Format: date-time */
-      created_at: string;
-    };
-    DepositHoldList: {
-      results: components["schemas"]["DepositHoldItem"][];
-    };
-    DepositIntentResponse: {
-      intent_id: string;
-      status: string;
-    };
-    Device: {
-      expo_push_token: string;
-      platform: components["schemas"]["PlatformEnum"];
-    };
-    DeviceResponse: {
-      registered: boolean;
-    };
-    Disclosure: {
-      id: number;
-      year: number;
-      month: number;
-      kpi: {
-        [key: string]: unknown;
-      };
-      tabs: {
-        [key: string]: unknown;
-      };
-      /** Format: date-time */
-      published_at: string;
-    };
-    DisclosureListResponse: {
-      results: components["schemas"]["Disclosure"][];
-    };
-    EnabledResponse: {
-      enabled: boolean;
-    };
-    EventDetail: {
-      id: number;
-      title: string;
-      summary: string;
-      body: string;
-      status: string;
-      thumbnail_url: string;
-      reward_points: number;
-      /** Format: date-time */
-      start_at: string | null;
-      /** Format: date-time */
-      end_at: string | null;
-      prev_id: number | null;
-      next_id: number | null;
-      ongoing: components["schemas"]["OngoingEvent"][];
-    };
-    EventEnterResponse: {
-      entered: boolean;
-      reward_points: number;
-    };
-    EventListItem: {
-      id: number;
-      title: string;
-      summary: string;
-      status: string;
-      thumbnail_url: string;
-      /** Format: date-time */
-      start_at: string | null;
-      /** Format: date-time */
-      end_at: string | null;
-    };
-    EventListResponse: {
-      results: components["schemas"]["EventListItem"][];
-      total: number;
-      page: number;
-    };
-    ExpireSummary: {
-      expired_lots: number;
-    };
-    FaqItem: {
-      id: number;
-      category: string;
-      question: string;
-      answer: string;
-    };
-    FaqKeywords: {
-      keywords: string[];
-    };
-    FaqListResponse: {
-      results: components["schemas"]["FaqItem"][];
-      total: number;
-      page: number;
-    };
-    FindId: {
-      name: string;
-      birth_date: string;
-      phone: string;
-    };
-    FindIdResponse: {
-      email: string;
-    };
-    /**
-     * @description * `general` - 일반투자자
-     *     * `income_eligible` - 소득적격투자자
-     *     * `professional` - 전문투자자
-     * @enum {string}
-     */
-    GradeEnum: "general" | "income_eligible" | "professional";
-    GradeHistoryItem: {
-      id: number;
-      to_grade: string;
-      status: string;
-      /** Format: date-time */
-      created_at: string;
-      /** Format: date-time */
-      decided_at: string | null;
-    };
-    GradeHistoryResponse: {
-      results: components["schemas"]["GradeHistoryItem"][];
-    };
-    GradeLimits: {
-      total: number | null;
-      real_estate: number | null;
-      same_borrower: number | null;
-      /** Format: double */
-      per_product_pct: number | null;
-    };
-    GradeRequest: {
-      to_grade: components["schemas"]["ToGradeEnum"];
-    };
-    GradeRequestResponse: {
-      id: number;
-      status: string;
-    };
-    GradeResponse: {
-      grade: string;
-      limits: components["schemas"]["GradeLimits"];
-      used: components["schemas"]["GradeUsed"];
-    };
-    GradeUsed: {
-      total: number;
-      real_estate: number;
-    };
-    IdStatus: {
-      id: number;
-      status: string;
-    };
-    IdentityVerify: {
-      carrier: string;
-      name: string;
-      birth: string;
-      phone: string;
-    };
-    IdentityVerifyResponse: {
-      ci: string;
-      verified: boolean;
-    };
-    InvestOrder: {
-      product_id: number;
-      amount: number;
-      /** @default 0 */
-      use_points: number;
-      confirm?: string;
-    };
-    InvestmentDetailProduct: {
-      id: number;
-      product_no: string;
-      name: string;
-      type: string;
-      annual_rate: string;
-      status: string;
-    };
-    InvestmentDetailResponse: {
-      investment_id: number;
-      amount: number;
-      points_used: number;
-      expected_net_return: number;
-      status: string;
-      schedule: components["schemas"]["ScheduleRow"][];
-      product: components["schemas"]["InvestmentDetailProduct"];
-      paid_net: number;
-    };
-    InvestmentListItem: {
-      id: number;
-      product_id: number;
-      product_no: string;
-      product_name: string;
-      type: string;
-      amount: number;
-      points_used: number;
-      expected_net_return: number;
-      status: string;
-      /** Format: date-time */
-      created_at: string;
-    };
-    InvestmentListResponse: {
-      results: components["schemas"]["InvestmentListItem"][];
-      total: number;
-      page: number;
-    };
-    InvestmentResponse: {
-      investment_id: number;
-      amount: number;
-      points_used: number;
-      expected_net_return: number;
-      status: string;
-      schedule: components["schemas"]["ScheduleRow"][];
-    };
-    LedgerEntry: {
-      id: number;
-      kind: string;
-      amount: number;
-      ref_type: string;
-      ref_id: string;
-      /** Format: date-time */
-      created_at: string;
-    };
-    LimitAssessmentResponse: {
-      id: number;
-      status: string;
-      eligible_grades: string[];
-      simulation: boolean;
-    };
-    LimitCheck: {
-      type: string;
-      complex?: string;
-      /** Format: double */
-      area?: number;
-      dong?: string;
-      ho?: string;
-      biz_no?: string;
-    };
-    LimitCheckResponse: {
-      limit: number;
-      rate_range: string[];
-    };
-    LinkedAccount: {
-      bank_name: string;
-      account_no: string;
-      holder: string;
-    };
-    LinkedAccountResponse: {
-      linked: boolean;
-      bank_name?: string;
-      account_no?: string;
-      holder?: string;
-      auto_charge?: boolean;
-    };
-    LoanApplication: {
-      name: string;
-      phone: string;
-      /** Format: email */
-      email: string;
-      company?: string;
-      biz_type?: string;
-      biz_no?: string;
-      amount: number;
-      term_months: number;
-      purpose?: string;
-      memo?: string;
-      agree_privacy: boolean;
-      /** @default false */
-      agree_marketing: boolean;
-    };
-    LoanApplicationResponse: {
-      application_id: number;
-      status: string;
-    };
-    LoanDecisionResponse: {
-      id: number;
-      status: string;
-      product_id: number | null;
-    };
-    LoanProduct: {
-      id: number;
-      category: string;
-      name: string;
-      summary: string;
-      target: string;
-      max_limit: number;
-      rate_range: string[];
-      term_desc: string;
-      repay_method: string;
-    };
-    LoanProductDetail: {
-      id: number;
-      category: string;
-      name: string;
-      summary: string;
-      target: string;
-      max_limit: number;
-      rate_range: string[];
-      term_desc: string;
-      repay_method: string;
-      features: unknown[];
-      steps: unknown[];
-      info: {
-        [key: string]: unknown;
-      };
-      faqs: unknown[];
-      notices: string;
-    };
-    LoanProductListResponse: {
-      results: components["schemas"]["LoanProduct"][];
-    };
-    Login: {
-      /** Format: email */
-      email: string;
-      password: string;
-      /** @default true */
-      keep_login: boolean;
-    };
-    LoginResponse: {
-      user_id: number;
-      name: string;
-      grade: string;
-      pin_registered: boolean;
-    };
-    NewsItem: {
-      id: number;
-      title: string;
-      source: string;
-      url: string;
-      thumbnail_url: string;
-      /** Format: date */
-      published_at: string;
-    };
-    NewsListResponse: {
-      results: components["schemas"]["NewsItem"][];
-      next_cursor: string | null;
-    };
-    NoticeDetail: {
-      id: number;
-      category: string;
-      title: string;
-      body: string;
-      attachments: string[];
-      /** Format: date-time */
-      created_at: string;
-    };
-    NoticeListItem: {
-      id: number;
-      category: string;
-      title: string;
-      /** Format: date-time */
-      created_at: string;
-    };
-    NoticeListResponse: {
-      results: components["schemas"]["NoticeListItem"][];
-      total: number;
-      page: number;
-    };
-    NotifSetting: {
-      new_product?: boolean;
-      recruit_closed?: boolean;
-      repayment?: boolean;
-    };
-    NotifSettingResponse: {
-      new_product: boolean;
-      recruit_closed: boolean;
-      repayment: boolean;
-    };
-    NotificationItem: {
-      id: number;
-      kind: string;
-      title: string;
-      body: string;
-      /** Format: date-time */
-      created_at: string;
-    };
-    NotificationListResponse: {
-      results: components["schemas"]["NotificationItem"][];
-    };
-    NotifyIntent: {
-      sender_name: string;
-      amount: number;
-    };
-    OkResponse: {
-      ok: boolean;
-    };
-    OngoingEvent: {
-      id: number;
-      title: string;
-      thumbnail_url: string;
-    };
-    PaginatedProductListList: {
-      /** @example 123 */
-      count: number;
-      /**
-       * Format: uri
-       * @example http://api.example.org/accounts/?page=4
-       */
-      next?: string | null;
-      /**
-       * Format: uri
-       * @example http://api.example.org/accounts/?page=2
-       */
-      previous?: string | null;
-      results: components["schemas"]["ProductList"][];
-    };
-    PasswordReset: {
-      token: string;
-      new_password: string;
-    };
-    PasswordResetRequest: {
-      /** Format: email */
-      email: string;
-    };
-    PasswordResetRequestResponse: {
-      sent: boolean;
-      dev_token: string | null;
-    };
-    PasswordResetResponse: {
-      reset: boolean;
-    };
-    PatchedAdminDisclosurePatch: {
-      year?: unknown;
-      month?: unknown;
-      kpi?: unknown;
-      management?: unknown;
-      operations?: unknown;
-      internal?: unknown;
-    };
-    PatchedAdminEventPatch: {
-      title?: unknown;
-      summary?: unknown;
-      body?: unknown;
-      status?: unknown;
-      thumbnail_url?: unknown;
-      reward_points?: unknown;
-      start_at?: unknown;
-      end_at?: unknown;
-    };
-    PatchedAdminFaqPatch: {
-      category?: unknown;
-      question?: unknown;
-      answer?: unknown;
-    };
-    PatchedAdminNewsPatch: {
-      title?: unknown;
-      source?: unknown;
-      url?: unknown;
-      thumbnail_url?: unknown;
-      published_at?: unknown;
-    };
-    PatchedAdminNoticePatch: {
-      category?: unknown;
-      title?: unknown;
-      body?: unknown;
-      attachments?: unknown;
-    };
-    PatchedGradeDecision: {
-      action?: components["schemas"]["ActionEnum"];
-      reason?: string;
-    };
-    PatchedLoanDecision: {
-      action?: components["schemas"]["ActionEnum"];
-      name?: string;
-      type?: components["schemas"]["TypeEnum"];
-      annual_rate?: string;
-      repay_type?: components["schemas"]["RepayTypeEnum"];
-      platform_fee_rate?: string;
-      borrower_id?: string;
-    };
-    PatchedProductStatusRequest: {
-      status?: components["schemas"]["StatusEnum"];
-    };
-    PatchedProductUpsert: {
-      product_no?: string;
-      name?: string;
-      type?: components["schemas"]["TypeEnum"];
-      /** Format: decimal */
-      annual_rate?: string;
-      term_months?: number;
-      target_amount?: number;
-      repay_type?: components["schemas"]["RepayTypeEnum"];
-      /** Format: decimal */
-      platform_fee_rate?: string;
-      repay_day?: number;
-      borrower_id?: string;
-      borrower_name?: string;
-      tags?: string[];
-      overview?: {
-        [key: string]: unknown;
-      };
-      detail?: {
-        [key: string]: unknown;
-      };
-      notice?: string;
-      refinance_of?: number | null;
-    };
-    PatchedReservationPatch: {
-      amount?: number;
-    };
-    PinLogin: {
-      pin: string;
-      /** Format: email */
-      email?: string;
-    };
-    PinRegister: {
-      pin: string;
-    };
-    PinRegisterResponse: {
-      pin_registered: boolean;
-    };
-    /**
-     * @description * `ios` - ios
-     *     * `android` - android
-     *     * `web` - web
-     * @enum {string}
-     */
-    PlatformEnum: "ios" | "android" | "web";
-    PointBalance: {
-      balance: number;
-      expiring_this_month: number;
-    };
-    PointConvert: {
-      amount: number;
-    };
-    PointConvertResponse: {
-      converted: number;
-      points: number;
-      deposit: number;
-    };
-    PointEntry: {
-      id: number;
-      kind: string;
-      amount: number;
-      memo: string;
-      /** Format: date-time */
-      created_at: string;
-    };
-    PointHistory: {
-      results: components["schemas"]["PointEntry"][];
-    };
-    ProductDetail: {
-      readonly id: number;
-      product_no: string;
-      name: string;
-      type: components["schemas"]["TypeEnum"];
-      /** Format: decimal */
-      annual_rate: string;
-      term_months: number;
-      /** Format: int64 */
-      target_amount: number;
-      /** Format: int64 */
-      raised_amount?: number;
-      progress_pct: string;
-      status?: components["schemas"]["StatusEnum"];
-      tags?: unknown;
-      /** Format: date-time */
-      readonly registered_at: string;
-      repay_type: components["schemas"]["RepayTypeEnum"];
-      /** Format: decimal */
-      platform_fee_rate?: string;
-      repay_day?: number;
-      remaining_amount: number;
-      /** Format: date-time */
-      recruit_open_at?: string | null;
-      // r3 local extension — BE returns my/tabs; pending schema regen (X3)
-      my?: {
-        deposit: number;
-        investable: number;
-        grade_remaining_limit: number | null;
-        same_borrower_remaining: number | null;
-      };
-      tabs?: {
-        overview?: {
-          [key: string]: unknown;
+    schemas: {
+        /**
+         * @description * `approve` - approve
+         *     * `reject` - reject
+         * @enum {string}
+         */
+        ActionEnum: "approve" | "reject";
+        AdminDisclosureCreated: {
+            id: number;
         };
-        detail?: {
-          [key: string]: unknown;
+        AdminDisclosureDetail: {
+            id: number;
         };
-        notice?: string;
-      };
+        AdminDisclosureListResponse: {
+            results: unknown[];
+        };
+        AdminDisclosureUpsert: {
+            year?: unknown;
+            month?: unknown;
+            kpi?: unknown;
+            management?: unknown;
+            operations?: unknown;
+            internal?: unknown;
+        };
+        AdminEventCreated: {
+            id: number;
+        };
+        AdminEventDetail: {
+            id: number;
+        };
+        AdminEventListResponse: {
+            results: unknown[];
+        };
+        AdminEventUpsert: {
+            title?: unknown;
+            summary?: unknown;
+            body?: unknown;
+            status?: unknown;
+            thumbnail_url?: unknown;
+            reward_points?: unknown;
+            start_at?: unknown;
+            end_at?: unknown;
+        };
+        AdminFaqCreated: {
+            id: number;
+        };
+        AdminFaqDetail: {
+            id: number;
+        };
+        AdminFaqListResponse: {
+            results: unknown[];
+        };
+        AdminFaqUpsert: {
+            category?: unknown;
+            question?: unknown;
+            answer?: unknown;
+        };
+        AdminGradeRequestItem: {
+            id: number;
+            user_id: number;
+            /** Format: email */
+            email: string;
+            to_grade: string;
+            status: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        AdminGradeRequestList: {
+            results: components["schemas"]["AdminGradeRequestItem"][];
+        };
+        AdminLoanApplicationItem: {
+            id: number;
+            name: string;
+            company: string;
+            amount: number;
+            term_months: number;
+            status: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        AdminLoanApplicationList: {
+            results: components["schemas"]["AdminLoanApplicationItem"][];
+        };
+        AdminNewsCreated: {
+            id: number;
+        };
+        AdminNewsDetail: {
+            id: number;
+        };
+        AdminNewsListResponse: {
+            results: unknown[];
+        };
+        AdminNewsUpsert: {
+            title?: unknown;
+            source?: unknown;
+            url?: unknown;
+            thumbnail_url?: unknown;
+            published_at?: unknown;
+        };
+        AdminNoticeCreated: {
+            id: number;
+        };
+        AdminNoticeDetail: {
+            id: number;
+        };
+        AdminNoticeListResponse: {
+            results: unknown[];
+        };
+        AdminNoticeUpsert: {
+            category?: unknown;
+            title?: unknown;
+            body?: unknown;
+            attachments?: unknown;
+        };
+        AdminProduct: {
+            id: number;
+            product_no: string;
+            name: string;
+            type: string;
+            annual_rate: string;
+            term_months: number;
+            target_amount: number;
+            raised_amount: number;
+            status: string;
+        };
+        AdminProductCreateResponse: {
+            id: number;
+            product_no: string;
+            status: string;
+        };
+        AdminProductListResponse: {
+            results: components["schemas"]["AdminProduct"][];
+        };
+        AgreementItem: {
+            term: string;
+            agreed: boolean;
+        };
+        AppCodeExchange: {
+            code: string;
+        };
+        AppCodeIssueResponse: {
+            code: string;
+            expires_in: number;
+        };
+        AutoCharge: {
+            enabled: boolean;
+        };
+        BankWebhookAck: {
+            received: boolean;
+            deduplicated?: boolean;
+        };
+        BankWebhookPayload: {
+            event_id: string;
+            type: string;
+        };
+        BusinessNumberVerify: {
+            business_number: string;
+        };
+        BusinessNumberVerifyResponse: {
+            verified: boolean;
+            reason?: string;
+        };
+        CalendarDay: {
+            /** Format: date */
+            date: string;
+            principal: number;
+            interest_net: number;
+            status: string;
+        };
+        CalendarMonthly: {
+            principal_done: number;
+            principal_scheduled: number;
+            interest_done_net: number;
+            interest_scheduled_net: number;
+        };
+        CalendarResponse: {
+            days: components["schemas"]["CalendarDay"][];
+            monthly: components["schemas"]["CalendarMonthly"];
+        };
+        CartAdd: {
+            product_id: number;
+        };
+        CartAddResponse: {
+            id: number;
+        };
+        CartItem: {
+            id: number;
+            product_id: number;
+            product_no: string;
+            name: string;
+            annual_rate: string;
+            term_months: number;
+            target_amount: number;
+            remaining_amount: number;
+            status: string;
+            closed: boolean;
+        };
+        CartListResponse: {
+            results: components["schemas"]["CartItem"][];
+            count: number;
+        };
+        DashboardResponse: {
+            profile: components["schemas"]["_Profile"];
+            virtual_account: components["schemas"]["_VirtualAccount"] | null;
+            deposit: number;
+            points: number;
+            limits: components["schemas"]["_Limits"];
+            active: components["schemas"]["_Active"];
+            past: components["schemas"]["_Past"];
+        };
+        DepositAccount: {
+            bank: string;
+            account_no: string;
+            holder: string;
+            deposit: number;
+            held: number;
+            withdrawable: number;
+        };
+        DepositHistory: {
+            results: components["schemas"]["LedgerEntry"][];
+            next_cursor: string | null;
+        };
+        DepositHoldItem: {
+            id: string;
+            user_id: number;
+            /** Format: email */
+            email: string;
+            amount: number;
+            sender_name: string;
+            held_reason: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        DepositHoldList: {
+            results: components["schemas"]["DepositHoldItem"][];
+        };
+        DepositIntentResponse: {
+            intent_id: string;
+            status: string;
+        };
+        Device: {
+            expo_push_token: string;
+            platform: components["schemas"]["PlatformEnum"];
+        };
+        DeviceResponse: {
+            registered: boolean;
+        };
+        Disclosure: {
+            id: number;
+            year: number;
+            month: number;
+            kpi: {
+                [key: string]: unknown;
+            };
+            tabs: {
+                [key: string]: unknown;
+            };
+            /** Format: date-time */
+            published_at: string;
+        };
+        DisclosureListResponse: {
+            results: components["schemas"]["Disclosure"][];
+        };
+        EnabledResponse: {
+            enabled: boolean;
+        };
+        EventDetail: {
+            id: number;
+            title: string;
+            summary: string;
+            body: string;
+            status: string;
+            thumbnail_url: string;
+            reward_points: number;
+            /** Format: date-time */
+            start_at: string | null;
+            /** Format: date-time */
+            end_at: string | null;
+            prev_id: number | null;
+            next_id: number | null;
+            ongoing: components["schemas"]["OngoingEvent"][];
+        };
+        EventEnterResponse: {
+            entered: boolean;
+            reward_points: number;
+        };
+        EventListItem: {
+            id: number;
+            title: string;
+            summary: string;
+            status: string;
+            thumbnail_url: string;
+            /** Format: date-time */
+            start_at: string | null;
+            /** Format: date-time */
+            end_at: string | null;
+        };
+        EventListResponse: {
+            results: components["schemas"]["EventListItem"][];
+            total: number;
+            page: number;
+        };
+        ExpireSummary: {
+            expired_lots: number;
+        };
+        FaqItem: {
+            id: number;
+            category: string;
+            question: string;
+            answer: string;
+        };
+        FaqKeywords: {
+            keywords: string[];
+        };
+        FaqListResponse: {
+            results: components["schemas"]["FaqItem"][];
+            total: number;
+            page: number;
+        };
+        FindId: {
+            name: string;
+            birth_date: string;
+            phone: string;
+        };
+        FindIdResponse: {
+            email: string;
+        };
+        /**
+         * @description * `general` - 일반투자자
+         *     * `income_eligible` - 소득적격투자자
+         *     * `professional` - 전문투자자
+         * @enum {string}
+         */
+        GradeEnum: "general" | "income_eligible" | "professional";
+        GradeHistoryItem: {
+            id: number;
+            to_grade: string;
+            status: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            decided_at: string | null;
+        };
+        GradeHistoryResponse: {
+            results: components["schemas"]["GradeHistoryItem"][];
+        };
+        GradeLimits: {
+            total: number | null;
+            real_estate: number | null;
+            same_borrower: number | null;
+            /** Format: double */
+            per_product_pct: number | null;
+        };
+        GradeRequest: {
+            to_grade: components["schemas"]["ToGradeEnum"];
+        };
+        GradeRequestResponse: {
+            id: number;
+            status: string;
+        };
+        GradeResponse: {
+            grade: string;
+            limits: components["schemas"]["GradeLimits"];
+            used: components["schemas"]["GradeUsed"];
+        };
+        GradeUsed: {
+            total: number;
+            real_estate: number;
+        };
+        IdStatus: {
+            id: number;
+            status: string;
+        };
+        IdentityVerify: {
+            carrier: string;
+            name: string;
+            birth: string;
+            phone: string;
+        };
+        IdentityVerifyResponse: {
+            ci: string;
+            verified: boolean;
+        };
+        InvestOrder: {
+            product_id: number;
+            amount: number;
+            /** @default 0 */
+            use_points: number;
+            confirm?: string;
+        };
+        InvestmentDetailProduct: {
+            id: number;
+            product_no: string;
+            name: string;
+            type: string;
+            annual_rate: string;
+            status: string;
+        };
+        InvestmentDetailResponse: {
+            investment_id: number;
+            amount: number;
+            points_used: number;
+            expected_net_return: number;
+            status: string;
+            schedule: components["schemas"]["ScheduleRow"][];
+            product: components["schemas"]["InvestmentDetailProduct"];
+            paid_net: number;
+        };
+        InvestmentListItem: {
+            id: number;
+            product_id: number;
+            product_no: string;
+            product_name: string;
+            type: string;
+            amount: number;
+            points_used: number;
+            expected_net_return: number;
+            status: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        InvestmentListResponse: {
+            results: components["schemas"]["InvestmentListItem"][];
+            total: number;
+            page: number;
+        };
+        InvestmentResponse: {
+            investment_id: number;
+            amount: number;
+            points_used: number;
+            expected_net_return: number;
+            status: string;
+            schedule: components["schemas"]["ScheduleRow"][];
+        };
+        LedgerEntry: {
+            id: number;
+            kind: string;
+            amount: number;
+            ref_type: string;
+            ref_id: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        LimitAssessmentResponse: {
+            id: number;
+            status: string;
+            eligible_grades: string[];
+            simulation: boolean;
+        };
+        LimitCheck: {
+            type: string;
+            complex?: string;
+            /** Format: double */
+            area?: number;
+            dong?: string;
+            ho?: string;
+            biz_no?: string;
+        };
+        LimitCheckResponse: {
+            limit: number;
+            rate_range: string[];
+        };
+        LinkedAccount: {
+            bank_name: string;
+            account_no: string;
+            holder: string;
+        };
+        LinkedAccountResponse: {
+            linked: boolean;
+            bank_name?: string;
+            account_no?: string;
+            holder?: string;
+            auto_charge?: boolean;
+        };
+        LoanApplication: {
+            name: string;
+            phone: string;
+            /** Format: email */
+            email: string;
+            company?: string;
+            biz_type?: string;
+            biz_no?: string;
+            amount: number;
+            term_months: number;
+            purpose?: string;
+            memo?: string;
+            agree_privacy: boolean;
+            /** @default false */
+            agree_marketing: boolean;
+        };
+        LoanApplicationResponse: {
+            application_id: number;
+            status: string;
+        };
+        LoanDecisionResponse: {
+            id: number;
+            status: string;
+            product_id: number | null;
+        };
+        LoanProduct: {
+            id: number;
+            category: string;
+            name: string;
+            summary: string;
+            target: string;
+            max_limit: number;
+            rate_range: string[];
+            term_desc: string;
+            repay_method: string;
+        };
+        LoanProductDetail: {
+            id: number;
+            category: string;
+            name: string;
+            summary: string;
+            target: string;
+            max_limit: number;
+            rate_range: string[];
+            term_desc: string;
+            repay_method: string;
+            features: unknown[];
+            steps: unknown[];
+            info: {
+                [key: string]: unknown;
+            };
+            faqs: unknown[];
+            notices: string;
+        };
+        LoanProductListResponse: {
+            results: components["schemas"]["LoanProduct"][];
+        };
+        Login: {
+            /** Format: email */
+            email: string;
+            password: string;
+            /** @default true */
+            keep_login: boolean;
+        };
+        LoginResponse: {
+            user_id: number;
+            name: string;
+            grade: string;
+            pin_registered: boolean;
+        };
+        NewsItem: {
+            id: number;
+            title: string;
+            source: string;
+            url: string;
+            thumbnail_url: string;
+            /** Format: date */
+            published_at: string;
+        };
+        NewsListResponse: {
+            results: components["schemas"]["NewsItem"][];
+            next_cursor: string | null;
+        };
+        NoticeDetail: {
+            id: number;
+            category: string;
+            title: string;
+            body: string;
+            attachments: string[];
+            /** Format: date-time */
+            created_at: string;
+        };
+        NoticeListItem: {
+            id: number;
+            category: string;
+            title: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        NoticeListResponse: {
+            results: components["schemas"]["NoticeListItem"][];
+            total: number;
+            page: number;
+        };
+        NotifSetting: {
+            new_product?: boolean;
+            recruit_closed?: boolean;
+            repayment?: boolean;
+        };
+        NotifSettingResponse: {
+            new_product: boolean;
+            recruit_closed: boolean;
+            repayment: boolean;
+        };
+        NotificationItem: {
+            id: number;
+            kind: string;
+            title: string;
+            body: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        NotificationListResponse: {
+            results: components["schemas"]["NotificationItem"][];
+        };
+        NotificationSettingsGet: {
+            enabled: boolean;
+        };
+        NotifyIntent: {
+            sender_name: string;
+            amount: number;
+        };
+        OkResponse: {
+            ok: boolean;
+        };
+        OngoingEvent: {
+            id: number;
+            title: string;
+            thumbnail_url: string;
+        };
+        PaginatedProductListList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous?: string | null;
+            results: components["schemas"]["ProductList"][];
+        };
+        PasswordReset: {
+            token: string;
+            new_password: string;
+        };
+        PasswordResetRequest: {
+            /** Format: email */
+            email: string;
+        };
+        PasswordResetRequestResponse: {
+            sent: boolean;
+            dev_token: string | null;
+        };
+        PasswordResetResponse: {
+            reset: boolean;
+        };
+        PatchedAdminDisclosurePatch: {
+            year?: unknown;
+            month?: unknown;
+            kpi?: unknown;
+            management?: unknown;
+            operations?: unknown;
+            internal?: unknown;
+        };
+        PatchedAdminEventPatch: {
+            title?: unknown;
+            summary?: unknown;
+            body?: unknown;
+            status?: unknown;
+            thumbnail_url?: unknown;
+            reward_points?: unknown;
+            start_at?: unknown;
+            end_at?: unknown;
+        };
+        PatchedAdminFaqPatch: {
+            category?: unknown;
+            question?: unknown;
+            answer?: unknown;
+        };
+        PatchedAdminNewsPatch: {
+            title?: unknown;
+            source?: unknown;
+            url?: unknown;
+            thumbnail_url?: unknown;
+            published_at?: unknown;
+        };
+        PatchedAdminNoticePatch: {
+            category?: unknown;
+            title?: unknown;
+            body?: unknown;
+            attachments?: unknown;
+        };
+        PatchedGradeDecision: {
+            action?: components["schemas"]["ActionEnum"];
+            reason?: string;
+        };
+        PatchedLoanDecision: {
+            action?: components["schemas"]["ActionEnum"];
+            name?: string;
+            type?: components["schemas"]["TypeEnum"];
+            annual_rate?: string;
+            repay_type?: components["schemas"]["RepayTypeEnum"];
+            platform_fee_rate?: string;
+            borrower_id?: string;
+        };
+        PatchedProductStatusRequest: {
+            status?: components["schemas"]["StatusEnum"];
+        };
+        PatchedProductUpsert: {
+            product_no?: string;
+            name?: string;
+            type?: components["schemas"]["TypeEnum"];
+            /** Format: decimal */
+            annual_rate?: string;
+            term_months?: number;
+            target_amount?: number;
+            repay_type?: components["schemas"]["RepayTypeEnum"];
+            /** Format: decimal */
+            platform_fee_rate?: string;
+            repay_day?: number;
+            borrower_id?: string;
+            borrower_name?: string;
+            tags?: string[];
+            overview?: {
+                [key: string]: unknown;
+            };
+            detail?: {
+                [key: string]: unknown;
+            };
+            notice?: string;
+            refinance_of?: number | null;
+        };
+        PatchedReservationPatch: {
+            amount?: number;
+        };
+        PinLogin: {
+            pin: string;
+        };
+        PinRegister: {
+            pin: string;
+        };
+        PinRegisterResponse: {
+            pin_registered: boolean;
+        };
+        /**
+         * @description * `ios` - ios
+         *     * `android` - android
+         *     * `web` - web
+         * @enum {string}
+         */
+        PlatformEnum: "ios" | "android" | "web";
+        PointBalance: {
+            balance: number;
+            expiring_this_month: number;
+        };
+        PointConvert: {
+            amount: number;
+        };
+        PointConvertResponse: {
+            converted: number;
+            points: number;
+            deposit: number;
+        };
+        PointEntry: {
+            id: number;
+            kind: string;
+            amount: number;
+            memo: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        PointHistory: {
+            results: components["schemas"]["PointEntry"][];
+        };
+        ProductDetail: {
+            readonly id: number;
+            product_no: string;
+            name: string;
+            type: components["schemas"]["TypeEnum"];
+            /** Format: decimal */
+            annual_rate: string;
+            term_months: number;
+            /** Format: int64 */
+            target_amount: number;
+            /** Format: int64 */
+            raised_amount?: number;
+            progress_pct: string;
+            status?: components["schemas"]["StatusEnum"];
+            tags?: unknown;
+            /** Format: date-time */
+            readonly registered_at: string;
+            repay_type: components["schemas"]["RepayTypeEnum"];
+            /** Format: decimal */
+            platform_fee_rate?: string;
+            repay_day?: number;
+            remaining_amount: number;
+            /** Format: date-time */
+            recruit_open_at?: string | null;
+            readonly tabs: components["schemas"]["ProductTabs"];
+            readonly my: components["schemas"]["ProductMy"] | null;
+        };
+        ProductList: {
+            readonly id: number;
+            product_no: string;
+            name: string;
+            type: components["schemas"]["TypeEnum"];
+            /** Format: decimal */
+            annual_rate: string;
+            term_months: number;
+            /** Format: int64 */
+            target_amount: number;
+            /** Format: int64 */
+            raised_amount?: number;
+            progress_pct: string;
+            status?: components["schemas"]["StatusEnum"];
+            tags?: unknown;
+            /** Format: date-time */
+            readonly registered_at: string;
+        };
+        ProductMy: {
+            deposit: number;
+            investable: number;
+            grade_remaining_limit: number | null;
+            same_borrower_remaining: number | null;
+        };
+        ProductProgress: {
+            id: number;
+            raised_amount: number;
+            remaining: number;
+            status: components["schemas"]["StatusEnum"];
+        };
+        ProductTabs: {
+            overview: {
+                [key: string]: unknown;
+            };
+            detail: {
+                [key: string]: unknown;
+            };
+            notice: string;
+        };
+        ProductUpsert: {
+            product_no?: string;
+            name?: string;
+            type?: components["schemas"]["TypeEnum"];
+            /** Format: decimal */
+            annual_rate?: string;
+            term_months?: number;
+            target_amount?: number;
+            repay_type?: components["schemas"]["RepayTypeEnum"];
+            /** Format: decimal */
+            platform_fee_rate?: string;
+            repay_day?: number;
+            borrower_id?: string;
+            borrower_name?: string;
+            tags?: string[];
+            overview?: {
+                [key: string]: unknown;
+            };
+            detail?: {
+                [key: string]: unknown;
+            };
+            notice?: string;
+            refinance_of?: number | null;
+        };
+        Reauth: {
+            password?: string;
+            pin?: string;
+        };
+        ReauthResponse: {
+            reauth_token: string;
+            expires_in: number;
+        };
+        ReconcileSummary: {
+            ok: boolean;
+            diffs: {
+                [key: string]: unknown;
+            }[];
+            report_id: number;
+        };
+        RepaySummary: {
+            date: string;
+            paid: number;
+            overdue: number;
+        };
+        /**
+         * @description * `equal_installment` - 원리금균등
+         *     * `equal_principal` - 원금균등
+         *     * `bullet` - 만기일시
+         * @enum {string}
+         */
+        RepayTypeEnum: "equal_installment" | "equal_principal" | "bullet";
+        ReservationCreate: {
+            investment_id: number;
+            amount: number;
+        };
+        ReservationEligibleItem: {
+            investment_id: number;
+            product_id: number;
+            product_name: string;
+            amount: number;
+            /** Format: date */
+            maturity_date: string;
+            refinance_open: boolean;
+        };
+        ReservationEligibleResponse: {
+            results: components["schemas"]["ReservationEligibleItem"][];
+        };
+        ReservationResponse: {
+            id: number;
+            status: string;
+            amount: number;
+            investment_id?: number;
+            product_name?: string;
+            /** Format: date-time */
+            created_at?: string;
+        };
+        /**
+         * @description * `investor` - 투자자
+         *     * `borrower` - 대출자
+         * @enum {string}
+         */
+        RoleEnum: "investor" | "borrower";
+        SchedulePreview: {
+            gross_rate: string;
+            net_rate: string;
+            gross_return: number;
+            net_return: number;
+            schedule: components["schemas"]["SchedulePreviewRow"][];
+        };
+        SchedulePreviewRow: {
+            seq: number;
+            /** Format: date */
+            pay_date: string;
+            principal: number;
+            repay_principal: number;
+            interest_gross: number;
+            tax: number;
+            platform_fee: number;
+            interest_net: number;
+        };
+        ScheduleRow: {
+            seq: number;
+            /** Format: date */
+            pay_date: string;
+            principal: number;
+            repay_principal: number;
+            interest_gross: number;
+            tax: number;
+            platform_fee: number;
+            interest_net: number;
+        };
+        SeedProductsRequest: {
+            /** @default 10 */
+            count: number;
+            status?: components["schemas"]["StatusEnum"];
+            /** Format: double */
+            rate_min?: number;
+            /** Format: double */
+            rate_max?: number;
+            amount_min?: number;
+            amount_max?: number;
+            term_min?: number;
+            term_max?: number;
+            seed?: number | null;
+        };
+        SeedProductsResponse: {
+            created: number;
+            ids: number[];
+        };
+        Signup: {
+            /** Format: email */
+            email: string;
+            password: string;
+            /** @default  */
+            name: string;
+            /** @default personal */
+            member_type: components["schemas"]["SignupMemberTypeEnum"];
+            /** @default  */
+            business_number: string;
+            referrer_email?: string;
+            agreements: components["schemas"]["AgreementItem"][];
+        };
+        /**
+         * @description * `personal` - personal
+         *     * `corporate` - corporate
+         * @enum {string}
+         */
+        SignupMemberTypeEnum: "personal" | "corporate";
+        SignupResponse: {
+            user_id: number;
+            /** Format: email */
+            email: string;
+            next_step: string;
+        };
+        /**
+         * @description * `draft` - Draft
+         *     * `scheduled` - Scheduled
+         *     * `recruiting` - Recruiting
+         *     * `recruited` - Recruited
+         *     * `executed` - Executed
+         *     * `repaying` - Repaying
+         *     * `repaid` - Repaid
+         *     * `overdue` - Overdue
+         *     * `loss` - Loss
+         * @enum {string}
+         */
+        StatusEnum: "draft" | "scheduled" | "recruiting" | "recruited" | "executed" | "repaying" | "repaid" | "overdue" | "loss";
+        SuitabilityAnswer: {
+            seq: number;
+            choice: string;
+        };
+        SuitabilityQuestion: {
+            seq: number;
+            text: string;
+            answer_options: string[];
+        };
+        SuitabilityQuestionsResponse: {
+            questions: components["schemas"]["SuitabilityQuestion"][];
+            /** Format: date-time */
+            valid_until: string | null;
+        };
+        SuitabilityResult: {
+            passed: boolean;
+            /** Format: date-time */
+            expires_at: string | null;
+        };
+        SuitabilitySubmit: {
+            answers: components["schemas"]["SuitabilityAnswer"][];
+        };
+        Term: {
+            key: string;
+            title: string;
+            body: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        TimeAdvanceRequest: {
+            /** Format: date */
+            date?: string;
+        };
+        TimeAdvanceResponse: {
+            date: string;
+            repay: components["schemas"]["RepaySummary"];
+            expire: components["schemas"]["ExpireSummary"];
+            reconcile: components["schemas"]["ReconcileSummary"];
+        };
+        /**
+         * @description * `income_eligible` - income_eligible
+         *     * `professional` - professional
+         * @enum {string}
+         */
+        ToGradeEnum: "income_eligible" | "professional";
+        /**
+         * @description * `scf` - 매출채권
+         *     * `stock_loan` - 주식담보
+         *     * `mortgage` - 부동산담보
+         *     * `personal_credit` - 개인신용
+         * @enum {string}
+         */
+        TypeEnum: "scf" | "stock_loan" | "mortgage" | "personal_credit";
+        User: {
+            readonly id: number;
+            /** Format: email */
+            email: string;
+            name?: string;
+            role?: components["schemas"]["RoleEnum"];
+            grade?: components["schemas"]["GradeEnum"];
+            is_staff?: boolean;
+            member_type?: components["schemas"]["UserMemberTypeEnum"];
+            readonly pin_registered: boolean;
+            readonly identity_verified: boolean;
+        };
+        /**
+         * @description * `personal` - 개인
+         *     * `corporate` - 법인
+         * @enum {string}
+         */
+        UserMemberTypeEnum: "personal" | "corporate";
+        Vital: {
+            name: string;
+            /** Format: double */
+            value: number;
+            path: string;
+            /** Format: double */
+            ts: number;
+        };
+        Withdraw: {
+            amount?: number;
+            /** @default false */
+            all: boolean;
+        };
+        WithdrawResponse: {
+            withdrawal_id: number;
+            fee: number;
+            status: string;
+        };
+        _Active: {
+            invested: number;
+            principal_remaining: number;
+            interest_received_net: number;
+            interest_expected_net: number;
+        };
+        _Limits: {
+            total_remaining: number | null;
+            mortgage_remaining: number | null;
+        };
+        _Past: {
+            count: number;
+            interest_received_net: number;
+        };
+        _Profile: {
+            name: string;
+            /** Format: email */
+            email: string;
+            grade: string;
+            identity_verified: boolean;
+        };
+        _VirtualAccount: {
+            bank: string;
+            account_no: string;
+            holder: string;
+        };
     };
-    ProductList: {
-      readonly id: number;
-      product_no: string;
-      name: string;
-      type: components["schemas"]["TypeEnum"];
-      /** Format: decimal */
-      annual_rate: string;
-      term_months: number;
-      /** Format: int64 */
-      target_amount: number;
-      /** Format: int64 */
-      raised_amount?: number;
-      progress_pct: string;
-      status?: components["schemas"]["StatusEnum"];
-      tags?: unknown;
-      /** Format: date-time */
-      readonly registered_at: string;
-    };
-    ProductUpsert: {
-      product_no?: string;
-      name?: string;
-      type?: components["schemas"]["TypeEnum"];
-      /** Format: decimal */
-      annual_rate?: string;
-      term_months?: number;
-      target_amount?: number;
-      repay_type?: components["schemas"]["RepayTypeEnum"];
-      /** Format: decimal */
-      platform_fee_rate?: string;
-      repay_day?: number;
-      borrower_id?: string;
-      borrower_name?: string;
-      tags?: string[];
-      overview?: {
-        [key: string]: unknown;
-      };
-      detail?: {
-        [key: string]: unknown;
-      };
-      notice?: string;
-      refinance_of?: number | null;
-    };
-    Reauth: {
-      password: string;
-    };
-    ReauthResponse: {
-      reauth_token: string;
-      expires_in: number;
-    };
-    ReconcileSummary: {
-      ok: boolean;
-      diffs: {
-        [key: string]: unknown;
-      }[];
-      report_id: number;
-    };
-    RepaySummary: {
-      date: string;
-      paid: number;
-      overdue: number;
-    };
-    /**
-     * @description * `equal_installment` - 원리금균등
-     *     * `equal_principal` - 원금균등
-     *     * `bullet` - 만기일시
-     * @enum {string}
-     */
-    RepayTypeEnum: "equal_installment" | "equal_principal" | "bullet";
-    ReservationCreate: {
-      investment_id: number;
-      amount: number;
-    };
-    ReservationEligibleItem: {
-      investment_id: number;
-      product_id: number;
-      product_name: string;
-      amount: number;
-      /** Format: date */
-      maturity_date: string;
-      refinance_open: boolean;
-    };
-    ReservationEligibleResponse: {
-      results: components["schemas"]["ReservationEligibleItem"][];
-    };
-    ReservationResponse: {
-      id: number;
-      status: string;
-      amount: number;
-      investment_id?: number;
-      product_name?: string;
-      /** Format: date-time */
-      created_at?: string;
-    };
-    /**
-     * @description * `investor` - 투자자
-     *     * `borrower` - 대출자
-     * @enum {string}
-     */
-    RoleEnum: "investor" | "borrower";
-    SchedulePreview: {
-      gross_rate: string;
-      net_rate: string;
-      gross_return: number;
-      net_return: number;
-      schedule: components["schemas"]["SchedulePreviewRow"][];
-    };
-    SchedulePreviewRow: {
-      seq: number;
-      /** Format: date */
-      pay_date: string;
-      principal: number;
-      repay_principal: number;
-      interest_gross: number;
-      tax: number;
-      platform_fee: number;
-      interest_net: number;
-    };
-    ScheduleRow: {
-      seq: number;
-      /** Format: date */
-      pay_date: string;
-      principal: number;
-      repay_principal: number;
-      interest_gross: number;
-      tax: number;
-      platform_fee: number;
-      interest_net: number;
-    };
-    SeedProductsRequest: {
-      /** @default 10 */
-      count: number;
-      status?: components["schemas"]["StatusEnum"];
-      /** Format: double */
-      rate_min?: number;
-      /** Format: double */
-      rate_max?: number;
-      amount_min?: number;
-      amount_max?: number;
-      term_min?: number;
-      term_max?: number;
-      seed?: number | null;
-    };
-    SeedProductsResponse: {
-      created: number;
-      ids: number[];
-    };
-    Signup: {
-      /** Format: email */
-      email: string;
-      password: string;
-      /** @default  */
-      name: string;
-      /** @default personal */
-      member_type: components["schemas"]["SignupMemberTypeEnum"];
-      /** @default  */
-      business_number: string;
-      referrer_email?: string;
-      agreements: components["schemas"]["AgreementItem"][];
-    };
-    /**
-     * @description * `personal` - personal
-     *     * `corporate` - corporate
-     * @enum {string}
-     */
-    SignupMemberTypeEnum: "personal" | "corporate";
-    SignupResponse: {
-      user_id: number;
-      /** Format: email */
-      email: string;
-      next_step: string;
-    };
-    /**
-     * @description * `draft` - Draft
-     *     * `scheduled` - Scheduled
-     *     * `recruiting` - Recruiting
-     *     * `recruited` - Recruited
-     *     * `executed` - Executed
-     *     * `repaying` - Repaying
-     *     * `repaid` - Repaid
-     *     * `overdue` - Overdue
-     *     * `loss` - Loss
-     * @enum {string}
-     */
-    StatusEnum:
-      | "draft"
-      | "scheduled"
-      | "recruiting"
-      | "recruited"
-      | "executed"
-      | "repaying"
-      | "repaid"
-      | "overdue"
-      | "loss";
-    SuitabilityAnswer: {
-      seq: number;
-      choice: string;
-    };
-    SuitabilityQuestion: {
-      seq: number;
-      text: string;
-      answer_options: string[];
-    };
-    SuitabilityQuestionsResponse: {
-      questions: components["schemas"]["SuitabilityQuestion"][];
-      /** Format: date-time */
-      valid_until: string | null;
-    };
-    SuitabilityResult: {
-      passed: boolean;
-      /** Format: date-time */
-      expires_at: string | null;
-    };
-    SuitabilitySubmit: {
-      answers: components["schemas"]["SuitabilityAnswer"][];
-    };
-    Term: {
-      key: string;
-      title: string;
-      body: string;
-      /** Format: date-time */
-      updated_at: string;
-    };
-    TimeAdvanceRequest: {
-      /** Format: date */
-      date?: string;
-    };
-    TimeAdvanceResponse: {
-      date: string;
-      repay: components["schemas"]["RepaySummary"];
-      expire: components["schemas"]["ExpireSummary"];
-      reconcile: components["schemas"]["ReconcileSummary"];
-    };
-    /**
-     * @description * `income_eligible` - income_eligible
-     *     * `professional` - professional
-     * @enum {string}
-     */
-    ToGradeEnum: "income_eligible" | "professional";
-    /**
-     * @description * `scf` - 매출채권
-     *     * `stock_loan` - 주식담보
-     *     * `mortgage` - 부동산담보
-     *     * `personal_credit` - 개인신용
-     * @enum {string}
-     */
-    TypeEnum: "scf" | "stock_loan" | "mortgage" | "personal_credit";
-    User: {
-      readonly id: number;
-      /** Format: email */
-      email: string;
-      name?: string;
-      role?: components["schemas"]["RoleEnum"];
-      grade?: components["schemas"]["GradeEnum"];
-      is_staff?: boolean;
-      member_type?: components["schemas"]["UserMemberTypeEnum"];
-      readonly pin_registered: boolean;
-      readonly identity_verified: boolean;
-    };
-    /**
-     * @description * `personal` - 개인
-     *     * `corporate` - 법인
-     * @enum {string}
-     */
-    UserMemberTypeEnum: "personal" | "corporate";
-    Withdraw: {
-      amount?: number;
-      /** @default false */
-      all: boolean;
-    };
-    WithdrawResponse: {
-      withdrawal_id: number;
-      fee: number;
-      status: string;
-    };
-    _Active: {
-      invested: number;
-      principal_remaining: number;
-      interest_received_net: number;
-      interest_expected_net: number;
-    };
-    _Limits: {
-      total_remaining: number | null;
-      mortgage_remaining: number | null;
-    };
-    _Past: {
-      count: number;
-      interest_received_net: number;
-    };
-    _Profile: {
-      name: string;
-      /** Format: email */
-      email: string;
-      grade: string;
-      identity_verified: boolean;
-    };
-    _VirtualAccount: {
-      bank: string;
-      account_no: string;
-      holder: string;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  api_admin_batch_expire_points_create: {
-    parameters: {
-      query?: {
-        date?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ExpireSummary"];
-        };
-      };
-    };
-  };
-  api_admin_batch_reconcile_create: {
-    parameters: {
-      query?: {
-        date?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ReconcileSummary"];
-        };
-      };
-    };
-  };
-  api_admin_batch_repay_create: {
-    parameters: {
-      query?: {
-        date?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["RepaySummary"];
-        };
-      };
-    };
-  };
-  api_admin_deposit_holds_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DepositHoldList"];
-        };
-      };
-    };
-  };
-  api_admin_deposit_holds_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["IdStatus"];
-        };
-      };
-    };
-  };
-  api_admin_disclosures_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminDisclosureListResponse"];
-        };
-      };
-    };
-  };
-  api_admin_disclosures_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["AdminDisclosureUpsert"];
-        "application/x-www-form-urlencoded": components["schemas"]["AdminDisclosureUpsert"];
-        "multipart/form-data": components["schemas"]["AdminDisclosureUpsert"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminDisclosureCreated"];
-        };
-      };
-    };
-  };
-  api_admin_disclosures_destroy: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description No response body */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  api_admin_disclosures_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedAdminDisclosurePatch"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminDisclosurePatch"];
-        "multipart/form-data": components["schemas"]["PatchedAdminDisclosurePatch"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminDisclosureDetail"];
-        };
-      };
-    };
-  };
-  api_admin_events_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminEventListResponse"];
-        };
-      };
-    };
-  };
-  api_admin_events_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["AdminEventUpsert"];
-        "application/x-www-form-urlencoded": components["schemas"]["AdminEventUpsert"];
-        "multipart/form-data": components["schemas"]["AdminEventUpsert"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminEventCreated"];
-        };
-      };
-    };
-  };
-  api_admin_events_destroy: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description No response body */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  api_admin_events_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedAdminEventPatch"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminEventPatch"];
-        "multipart/form-data": components["schemas"]["PatchedAdminEventPatch"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminEventDetail"];
-        };
-      };
-    };
-  };
-  api_admin_faqs_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminFaqListResponse"];
-        };
-      };
-    };
-  };
-  api_admin_faqs_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["AdminFaqUpsert"];
-        "application/x-www-form-urlencoded": components["schemas"]["AdminFaqUpsert"];
-        "multipart/form-data": components["schemas"]["AdminFaqUpsert"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminFaqCreated"];
-        };
-      };
-    };
-  };
-  api_admin_faqs_destroy: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description No response body */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  api_admin_faqs_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedAdminFaqPatch"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminFaqPatch"];
-        "multipart/form-data": components["schemas"]["PatchedAdminFaqPatch"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminFaqDetail"];
-        };
-      };
-    };
-  };
-  api_admin_grade_requests_retrieve: {
-    parameters: {
-      query?: {
-        status?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminGradeRequestList"];
-        };
-      };
-    };
-  };
-  api_admin_grade_requests_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedGradeDecision"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedGradeDecision"];
-        "multipart/form-data": components["schemas"]["PatchedGradeDecision"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["IdStatus"];
-        };
-      };
-    };
-  };
-  api_admin_loan_applications_retrieve: {
-    parameters: {
-      query?: {
-        status?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminLoanApplicationList"];
-        };
-      };
-    };
-  };
-  api_admin_loan_applications_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedLoanDecision"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedLoanDecision"];
-        "multipart/form-data": components["schemas"]["PatchedLoanDecision"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LoanDecisionResponse"];
-        };
-      };
-    };
-  };
-  api_admin_news_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminNewsListResponse"];
-        };
-      };
-    };
-  };
-  api_admin_news_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["AdminNewsUpsert"];
-        "application/x-www-form-urlencoded": components["schemas"]["AdminNewsUpsert"];
-        "multipart/form-data": components["schemas"]["AdminNewsUpsert"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminNewsCreated"];
-        };
-      };
-    };
-  };
-  api_admin_news_destroy: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description No response body */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  api_admin_news_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedAdminNewsPatch"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminNewsPatch"];
-        "multipart/form-data": components["schemas"]["PatchedAdminNewsPatch"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminNewsDetail"];
-        };
-      };
-    };
-  };
-  api_admin_notices_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminNoticeListResponse"];
-        };
-      };
-    };
-  };
-  api_admin_notices_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["AdminNoticeUpsert"];
-        "application/x-www-form-urlencoded": components["schemas"]["AdminNoticeUpsert"];
-        "multipart/form-data": components["schemas"]["AdminNoticeUpsert"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminNoticeCreated"];
-        };
-      };
-    };
-  };
-  api_admin_notices_destroy: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description No response body */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  api_admin_notices_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedAdminNoticePatch"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminNoticePatch"];
-        "multipart/form-data": components["schemas"]["PatchedAdminNoticePatch"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminNoticeDetail"];
-        };
-      };
-    };
-  };
-  api_admin_products_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminProductListResponse"];
-        };
-      };
-    };
-  };
-  api_admin_products_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["ProductUpsert"];
-        "application/x-www-form-urlencoded": components["schemas"]["ProductUpsert"];
-        "multipart/form-data": components["schemas"]["ProductUpsert"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminProductCreateResponse"];
-        };
-      };
-    };
-  };
-  api_admin_products_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedProductUpsert"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedProductUpsert"];
-        "multipart/form-data": components["schemas"]["PatchedProductUpsert"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["IdStatus"];
-        };
-      };
-    };
-  };
-  api_admin_products_execute_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["IdStatus"];
-        };
-      };
-    };
-  };
-  api_admin_products_status_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedProductStatusRequest"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedProductStatusRequest"];
-        "multipart/form-data": components["schemas"]["PatchedProductStatusRequest"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["IdStatus"];
-        };
-      };
-    };
-  };
-  api_admin_seed_products_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["SeedProductsRequest"];
-        "application/x-www-form-urlencoded": components["schemas"]["SeedProductsRequest"];
-        "multipart/form-data": components["schemas"]["SeedProductsRequest"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["SeedProductsResponse"];
-        };
-      };
-    };
-  };
-  api_admin_time_advance_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["TimeAdvanceRequest"];
-        "application/x-www-form-urlencoded": components["schemas"]["TimeAdvanceRequest"];
-        "multipart/form-data": components["schemas"]["TimeAdvanceRequest"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TimeAdvanceResponse"];
-        };
-      };
-    };
-  };
-  api_auth_app_code_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AppCodeIssueResponse"];
-        };
-      };
-    };
-  };
-  api_auth_app_code_exchange_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AppCodeExchange"];
-        "application/x-www-form-urlencoded": components["schemas"]["AppCodeExchange"];
-        "multipart/form-data": components["schemas"]["AppCodeExchange"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LoginResponse"];
-        };
-      };
-    };
-  };
-  api_auth_business_number_verify_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["BusinessNumberVerify"];
-        "application/x-www-form-urlencoded": components["schemas"]["BusinessNumberVerify"];
-        "multipart/form-data": components["schemas"]["BusinessNumberVerify"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BusinessNumberVerifyResponse"];
-        };
-      };
-    };
-  };
-  api_auth_find_id_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["FindId"];
-        "application/x-www-form-urlencoded": components["schemas"]["FindId"];
-        "multipart/form-data": components["schemas"]["FindId"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["FindIdResponse"];
-        };
-      };
-    };
-  };
-  api_auth_identity_verify_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["IdentityVerify"];
-        "application/x-www-form-urlencoded": components["schemas"]["IdentityVerify"];
-        "multipart/form-data": components["schemas"]["IdentityVerify"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["IdentityVerifyResponse"];
-        };
-      };
-    };
-  };
-  api_auth_login_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["Login"];
-        "application/x-www-form-urlencoded": components["schemas"]["Login"];
-        "multipart/form-data": components["schemas"]["Login"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LoginResponse"];
-        };
-      };
-    };
-  };
-  api_auth_login_pin_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["PinLogin"];
-        "application/x-www-form-urlencoded": components["schemas"]["PinLogin"];
-        "multipart/form-data": components["schemas"]["PinLogin"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LoginResponse"];
-        };
-      };
-    };
-  };
-  api_auth_logout_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["OkResponse"];
-        };
-      };
-    };
-  };
-  api_auth_password_reset_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["PasswordReset"];
-        "application/x-www-form-urlencoded": components["schemas"]["PasswordReset"];
-        "multipart/form-data": components["schemas"]["PasswordReset"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PasswordResetResponse"];
-        };
-      };
-    };
-  };
-  api_auth_password_reset_request_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["PasswordResetRequest"];
-        "application/x-www-form-urlencoded": components["schemas"]["PasswordResetRequest"];
-        "multipart/form-data": components["schemas"]["PasswordResetRequest"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PasswordResetRequestResponse"];
-        };
-      };
-    };
-  };
-  api_auth_pin_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["PinRegister"];
-        "application/x-www-form-urlencoded": components["schemas"]["PinRegister"];
-        "multipart/form-data": components["schemas"]["PinRegister"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PinRegisterResponse"];
-        };
-      };
-    };
-  };
-  api_auth_reauth_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["Reauth"];
-        "application/x-www-form-urlencoded": components["schemas"]["Reauth"];
-        "multipart/form-data": components["schemas"]["Reauth"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ReauthResponse"];
-        };
-      };
-    };
-  };
-  api_auth_refresh_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LoginResponse"];
-        };
-      };
-    };
-  };
-  api_auth_signup_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["Signup"];
-        "application/x-www-form-urlencoded": components["schemas"]["Signup"];
-        "multipart/form-data": components["schemas"]["Signup"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["SignupResponse"];
-        };
-      };
-    };
-  };
-  api_auth_signup_borrower_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["Signup"];
-        "application/x-www-form-urlencoded": components["schemas"]["Signup"];
-        "multipart/form-data": components["schemas"]["Signup"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["SignupResponse"];
-        };
-      };
-    };
-  };
-  api_cart_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CartListResponse"];
-        };
-      };
-    };
-  };
-  api_cart_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CartAdd"];
-        "application/x-www-form-urlencoded": components["schemas"]["CartAdd"];
-        "multipart/form-data": components["schemas"]["CartAdd"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CartAddResponse"];
-        };
-      };
-    };
-  };
-  api_cart_destroy: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description No response body */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  api_deposit_account_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DepositAccount"];
-        };
-      };
-    };
-  };
-  api_deposit_auto_charge_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AutoCharge"];
-        "application/x-www-form-urlencoded": components["schemas"]["AutoCharge"];
-        "multipart/form-data": components["schemas"]["AutoCharge"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["EnabledResponse"];
-        };
-      };
-    };
-  };
-  api_deposit_history_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DepositHistory"];
-        };
-      };
-    };
-  };
-  api_deposit_linked_account_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LinkedAccountResponse"];
-        };
-      };
-    };
-  };
-  api_deposit_linked_account_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LinkedAccount"];
-        "application/x-www-form-urlencoded": components["schemas"]["LinkedAccount"];
-        "multipart/form-data": components["schemas"]["LinkedAccount"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LinkedAccountResponse"];
-        };
-      };
-    };
-  };
-  api_deposit_notify_intent_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["NotifyIntent"];
-        "application/x-www-form-urlencoded": components["schemas"]["NotifyIntent"];
-        "multipart/form-data": components["schemas"]["NotifyIntent"];
-      };
-    };
-    responses: {
-      202: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DepositIntentResponse"];
-        };
-      };
-    };
-  };
-  api_deposit_withdraw_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["Withdraw"];
-        "application/x-www-form-urlencoded": components["schemas"]["Withdraw"];
-        "multipart/form-data": components["schemas"]["Withdraw"];
-      };
-    };
-    responses: {
-      202: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["WithdrawResponse"];
-        };
-      };
-    };
-  };
-  api_devices_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["Device"];
-        "application/x-www-form-urlencoded": components["schemas"]["Device"];
-        "multipart/form-data": components["schemas"]["Device"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DeviceResponse"];
-        };
-      };
-    };
-  };
-  api_disclosures_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DisclosureListResponse"];
-        };
-      };
-    };
-  };
-  api_events_list: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["EventListResponse"];
-        };
-      };
-    };
-  };
-  api_events_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["EventDetail"];
-        };
-      };
-    };
-  };
-  api_events_enter_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["EventEnterResponse"];
-        };
-      };
-    };
-  };
-  api_faqs_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["FaqListResponse"];
-        };
-      };
-    };
-  };
-  api_faqs_keywords_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["FaqKeywords"];
-        };
-      };
-    };
-  };
-  api_investments_list: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InvestmentListResponse"];
-        };
-      };
-    };
-  };
-  api_investments_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["InvestOrder"];
-        "application/x-www-form-urlencoded": components["schemas"]["InvestOrder"];
-        "multipart/form-data": components["schemas"]["InvestOrder"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InvestmentResponse"];
-        };
-      };
-    };
-  };
-  api_investments_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InvestmentDetailResponse"];
-        };
-      };
-    };
-  };
-  api_loans_list: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LoanProductListResponse"];
-        };
-      };
-    };
-  };
-  api_loans_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LoanProductDetail"];
-        };
-      };
-    };
-  };
-  api_loans_applications_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LoanApplication"];
-        "application/x-www-form-urlencoded": components["schemas"]["LoanApplication"];
-        "multipart/form-data": components["schemas"]["LoanApplication"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LoanApplicationResponse"];
-        };
-      };
-    };
-  };
-  api_loans_limit_check_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LimitCheck"];
-        "application/x-www-form-urlencoded": components["schemas"]["LimitCheck"];
-        "multipart/form-data": components["schemas"]["LimitCheck"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LimitCheckResponse"];
-        };
-      };
-    };
-  };
-  api_me_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["User"];
-        };
-      };
-    };
-  };
-  api_me_calendar_retrieve: {
-    parameters: {
-      query: {
-        month: number;
-        year: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CalendarResponse"];
-        };
-      };
-    };
-  };
-  api_me_dashboard_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DashboardResponse"];
-        };
-      };
-    };
-  };
-  api_me_grade_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["GradeResponse"];
-        };
-      };
-    };
-  };
-  api_me_grade_request_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["GradeRequest"];
-        "application/x-www-form-urlencoded": components["schemas"]["GradeRequest"];
-        "multipart/form-data": components["schemas"]["GradeRequest"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["GradeRequestResponse"];
-        };
-      };
-    };
-  };
-  api_me_grade_history_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["GradeHistoryResponse"];
-        };
-      };
-    };
-  };
-  api_me_investments_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InvestmentListResponse"];
-        };
-      };
-    };
-  };
-  api_me_limit_assessment_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LimitAssessmentResponse"];
-        };
-      };
-    };
-  };
-  api_news_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NewsListResponse"];
-        };
-      };
-    };
-  };
-  api_notices_list: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NoticeListResponse"];
-        };
-      };
-    };
-  };
-  api_notices_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NoticeDetail"];
-        };
-      };
-    };
-  };
-  api_notifications_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NotificationListResponse"];
-        };
-      };
-    };
-  };
-  // r3 local extension — pending schema regen (X3)
-  api_notifications_settings_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": { enabled: boolean };
-        };
-      };
-    };
-  };
-  api_notifications_settings_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["NotifSetting"];
-        "application/x-www-form-urlencoded": components["schemas"]["NotifSetting"];
-        "multipart/form-data": components["schemas"]["NotifSetting"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NotifSettingResponse"];
-        };
-      };
-    };
-  };
-  api_points_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PointBalance"];
-        };
-      };
-    };
-  };
-  api_points_convert_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["PointConvert"];
-        "application/x-www-form-urlencoded": components["schemas"]["PointConvert"];
-        "multipart/form-data": components["schemas"]["PointConvert"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PointConvertResponse"];
-        };
-      };
-    };
-  };
-  api_points_history_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PointHistory"];
-        };
-      };
-    };
-  };
-  api_products_list: {
-    parameters: {
-      query?: {
-        include_closed?: boolean;
-        // r3 local extension — BE supports ?ids=; pending schema regen (X3)
-        ids?: string;
-        max_amount?: number;
-        max_rate?: number;
-        max_term?: number;
-        min_amount?: number;
-        min_rate?: number;
-        min_term?: number;
-        /** @description 페이지네이션된 결과 집합 내의 페이지 번호. */
-        page?: number;
-        /** @description 페이지당 반환할 결과 수. */
-        page_size?: number;
-        sort?: string;
-        status?: string;
-        type?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PaginatedProductListList"];
-        };
-      };
-    };
-  };
-  api_products_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ProductDetail"];
-        };
-      };
-    };
-  };
-  api_products_schedule_preview_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["SchedulePreview"];
-        };
-      };
-    };
-  };
-  api_reservations_list: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ReservationResponse"][];
-        };
-      };
-    };
-  };
-  api_reservations_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ReservationCreate"];
-        "application/x-www-form-urlencoded": components["schemas"]["ReservationCreate"];
-        "multipart/form-data": components["schemas"]["ReservationCreate"];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ReservationResponse"];
-        };
-      };
-    };
-  };
-  api_reservations_destroy: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description No response body */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  api_reservations_partial_update: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: number;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["PatchedReservationPatch"];
-        "application/x-www-form-urlencoded": components["schemas"]["PatchedReservationPatch"];
-        "multipart/form-data": components["schemas"]["PatchedReservationPatch"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ReservationResponse"];
-        };
-      };
-    };
-  };
-  api_reservations_eligible_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ReservationEligibleResponse"];
-        };
-      };
-    };
-  };
-  api_suitability_test_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["SuitabilityQuestionsResponse"];
-        };
-      };
-    };
-  };
-  api_suitability_test_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["SuitabilitySubmit"];
-        "application/x-www-form-urlencoded": components["schemas"]["SuitabilitySubmit"];
-        "multipart/form-data": components["schemas"]["SuitabilitySubmit"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["SuitabilityResult"];
-        };
-      };
-    };
-  };
-  api_terms_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        key: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Term"];
-        };
-      };
-    };
-  };
-  api_webhooks_bank_deposit_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["BankWebhookPayload"];
-        "application/x-www-form-urlencoded": components["schemas"]["BankWebhookPayload"];
-        "multipart/form-data": components["schemas"]["BankWebhookPayload"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BankWebhookAck"];
-        };
-      };
-    };
-  };
-  api_webhooks_bank_transfer_create: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["BankWebhookPayload"];
-        "application/x-www-form-urlencoded": components["schemas"]["BankWebhookPayload"];
-        "multipart/form-data": components["schemas"]["BankWebhookPayload"];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BankWebhookAck"];
-        };
-      };
-    };
-  };
+    api_admin_batch_expire_points_create: {
+        parameters: {
+            query?: {
+                date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpireSummary"];
+                };
+            };
+        };
+    };
+    api_admin_batch_reconcile_create: {
+        parameters: {
+            query?: {
+                date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReconcileSummary"];
+                };
+            };
+        };
+    };
+    api_admin_batch_repay_create: {
+        parameters: {
+            query?: {
+                date?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RepaySummary"];
+                };
+            };
+        };
+    };
+    api_admin_deposit_holds_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DepositHoldList"];
+                };
+            };
+        };
+    };
+    api_admin_deposit_holds_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdStatus"];
+                };
+            };
+        };
+    };
+    api_admin_disclosures_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDisclosureListResponse"];
+                };
+            };
+        };
+    };
+    api_admin_disclosures_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AdminDisclosureUpsert"];
+                "application/x-www-form-urlencoded": components["schemas"]["AdminDisclosureUpsert"];
+                "multipart/form-data": components["schemas"]["AdminDisclosureUpsert"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDisclosureCreated"];
+                };
+            };
+        };
+    };
+    api_admin_disclosures_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_admin_disclosures_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedAdminDisclosurePatch"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminDisclosurePatch"];
+                "multipart/form-data": components["schemas"]["PatchedAdminDisclosurePatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDisclosureDetail"];
+                };
+            };
+        };
+    };
+    api_admin_events_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventListResponse"];
+                };
+            };
+        };
+    };
+    api_admin_events_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AdminEventUpsert"];
+                "application/x-www-form-urlencoded": components["schemas"]["AdminEventUpsert"];
+                "multipart/form-data": components["schemas"]["AdminEventUpsert"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventCreated"];
+                };
+            };
+        };
+    };
+    api_admin_events_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_admin_events_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedAdminEventPatch"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminEventPatch"];
+                "multipart/form-data": components["schemas"]["PatchedAdminEventPatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventDetail"];
+                };
+            };
+        };
+    };
+    api_admin_faqs_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminFaqListResponse"];
+                };
+            };
+        };
+    };
+    api_admin_faqs_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AdminFaqUpsert"];
+                "application/x-www-form-urlencoded": components["schemas"]["AdminFaqUpsert"];
+                "multipart/form-data": components["schemas"]["AdminFaqUpsert"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminFaqCreated"];
+                };
+            };
+        };
+    };
+    api_admin_faqs_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_admin_faqs_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedAdminFaqPatch"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminFaqPatch"];
+                "multipart/form-data": components["schemas"]["PatchedAdminFaqPatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminFaqDetail"];
+                };
+            };
+        };
+    };
+    api_admin_grade_requests_retrieve: {
+        parameters: {
+            query?: {
+                status?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGradeRequestList"];
+                };
+            };
+        };
+    };
+    api_admin_grade_requests_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedGradeDecision"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedGradeDecision"];
+                "multipart/form-data": components["schemas"]["PatchedGradeDecision"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdStatus"];
+                };
+            };
+        };
+    };
+    api_admin_loan_applications_retrieve: {
+        parameters: {
+            query?: {
+                status?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminLoanApplicationList"];
+                };
+            };
+        };
+    };
+    api_admin_loan_applications_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedLoanDecision"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedLoanDecision"];
+                "multipart/form-data": components["schemas"]["PatchedLoanDecision"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoanDecisionResponse"];
+                };
+            };
+        };
+    };
+    api_admin_news_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsListResponse"];
+                };
+            };
+        };
+    };
+    api_admin_news_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AdminNewsUpsert"];
+                "application/x-www-form-urlencoded": components["schemas"]["AdminNewsUpsert"];
+                "multipart/form-data": components["schemas"]["AdminNewsUpsert"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsCreated"];
+                };
+            };
+        };
+    };
+    api_admin_news_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_admin_news_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedAdminNewsPatch"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminNewsPatch"];
+                "multipart/form-data": components["schemas"]["PatchedAdminNewsPatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDetail"];
+                };
+            };
+        };
+    };
+    api_admin_notices_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNoticeListResponse"];
+                };
+            };
+        };
+    };
+    api_admin_notices_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AdminNoticeUpsert"];
+                "application/x-www-form-urlencoded": components["schemas"]["AdminNoticeUpsert"];
+                "multipart/form-data": components["schemas"]["AdminNoticeUpsert"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNoticeCreated"];
+                };
+            };
+        };
+    };
+    api_admin_notices_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_admin_notices_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedAdminNoticePatch"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedAdminNoticePatch"];
+                "multipart/form-data": components["schemas"]["PatchedAdminNoticePatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNoticeDetail"];
+                };
+            };
+        };
+    };
+    api_admin_products_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductListResponse"];
+                };
+            };
+        };
+    };
+    api_admin_products_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ProductUpsert"];
+                "application/x-www-form-urlencoded": components["schemas"]["ProductUpsert"];
+                "multipart/form-data": components["schemas"]["ProductUpsert"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminProductCreateResponse"];
+                };
+            };
+        };
+    };
+    api_admin_products_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedProductUpsert"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedProductUpsert"];
+                "multipart/form-data": components["schemas"]["PatchedProductUpsert"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdStatus"];
+                };
+            };
+        };
+    };
+    api_admin_products_execute_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdStatus"];
+                };
+            };
+        };
+    };
+    api_admin_products_status_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedProductStatusRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedProductStatusRequest"];
+                "multipart/form-data": components["schemas"]["PatchedProductStatusRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdStatus"];
+                };
+            };
+        };
+    };
+    api_admin_seed_products_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["SeedProductsRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["SeedProductsRequest"];
+                "multipart/form-data": components["schemas"]["SeedProductsRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeedProductsResponse"];
+                };
+            };
+        };
+    };
+    api_admin_time_advance_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["TimeAdvanceRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["TimeAdvanceRequest"];
+                "multipart/form-data": components["schemas"]["TimeAdvanceRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TimeAdvanceResponse"];
+                };
+            };
+        };
+    };
+    api_auth_app_code_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AppCodeIssueResponse"];
+                };
+            };
+        };
+    };
+    api_auth_app_code_exchange_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AppCodeExchange"];
+                "application/x-www-form-urlencoded": components["schemas"]["AppCodeExchange"];
+                "multipart/form-data": components["schemas"]["AppCodeExchange"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponse"];
+                };
+            };
+        };
+    };
+    api_auth_business_number_verify_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BusinessNumberVerify"];
+                "application/x-www-form-urlencoded": components["schemas"]["BusinessNumberVerify"];
+                "multipart/form-data": components["schemas"]["BusinessNumberVerify"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessNumberVerifyResponse"];
+                };
+            };
+        };
+    };
+    api_auth_find_id_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FindId"];
+                "application/x-www-form-urlencoded": components["schemas"]["FindId"];
+                "multipart/form-data": components["schemas"]["FindId"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FindIdResponse"];
+                };
+            };
+        };
+    };
+    api_auth_identity_verify_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IdentityVerify"];
+                "application/x-www-form-urlencoded": components["schemas"]["IdentityVerify"];
+                "multipart/form-data": components["schemas"]["IdentityVerify"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentityVerifyResponse"];
+                };
+            };
+        };
+    };
+    api_auth_login_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Login"];
+                "application/x-www-form-urlencoded": components["schemas"]["Login"];
+                "multipart/form-data": components["schemas"]["Login"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponse"];
+                };
+            };
+        };
+    };
+    api_auth_login_pin_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PinLogin"];
+                "application/x-www-form-urlencoded": components["schemas"]["PinLogin"];
+                "multipart/form-data": components["schemas"]["PinLogin"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponse"];
+                };
+            };
+        };
+    };
+    api_auth_logout_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkResponse"];
+                };
+            };
+        };
+    };
+    api_auth_password_reset_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordReset"];
+                "application/x-www-form-urlencoded": components["schemas"]["PasswordReset"];
+                "multipart/form-data": components["schemas"]["PasswordReset"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetResponse"];
+                };
+            };
+        };
+    };
+    api_auth_password_reset_request_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordResetRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PasswordResetRequest"];
+                "multipart/form-data": components["schemas"]["PasswordResetRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetRequestResponse"];
+                };
+            };
+        };
+    };
+    api_auth_pin_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PinRegister"];
+                "application/x-www-form-urlencoded": components["schemas"]["PinRegister"];
+                "multipart/form-data": components["schemas"]["PinRegister"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PinRegisterResponse"];
+                };
+            };
+        };
+    };
+    api_auth_reauth_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Reauth"];
+                "application/x-www-form-urlencoded": components["schemas"]["Reauth"];
+                "multipart/form-data": components["schemas"]["Reauth"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReauthResponse"];
+                };
+            };
+        };
+    };
+    api_auth_refresh_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponse"];
+                };
+            };
+        };
+    };
+    api_auth_signup_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Signup"];
+                "application/x-www-form-urlencoded": components["schemas"]["Signup"];
+                "multipart/form-data": components["schemas"]["Signup"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupResponse"];
+                };
+            };
+        };
+    };
+    api_auth_signup_borrower_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Signup"];
+                "application/x-www-form-urlencoded": components["schemas"]["Signup"];
+                "multipart/form-data": components["schemas"]["Signup"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupResponse"];
+                };
+            };
+        };
+    };
+    api_cart_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CartListResponse"];
+                };
+            };
+        };
+    };
+    api_cart_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CartAdd"];
+                "application/x-www-form-urlencoded": components["schemas"]["CartAdd"];
+                "multipart/form-data": components["schemas"]["CartAdd"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CartAddResponse"];
+                };
+            };
+        };
+    };
+    api_cart_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_deposit_account_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DepositAccount"];
+                };
+            };
+        };
+    };
+    api_deposit_auto_charge_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AutoCharge"];
+                "application/x-www-form-urlencoded": components["schemas"]["AutoCharge"];
+                "multipart/form-data": components["schemas"]["AutoCharge"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnabledResponse"];
+                };
+            };
+        };
+    };
+    api_deposit_history_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DepositHistory"];
+                };
+            };
+        };
+    };
+    api_deposit_linked_account_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinkedAccountResponse"];
+                };
+            };
+        };
+    };
+    api_deposit_linked_account_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkedAccount"];
+                "application/x-www-form-urlencoded": components["schemas"]["LinkedAccount"];
+                "multipart/form-data": components["schemas"]["LinkedAccount"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinkedAccountResponse"];
+                };
+            };
+        };
+    };
+    api_deposit_notify_intent_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotifyIntent"];
+                "application/x-www-form-urlencoded": components["schemas"]["NotifyIntent"];
+                "multipart/form-data": components["schemas"]["NotifyIntent"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DepositIntentResponse"];
+                };
+            };
+        };
+    };
+    api_deposit_withdraw_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Withdraw"];
+                "application/x-www-form-urlencoded": components["schemas"]["Withdraw"];
+                "multipart/form-data": components["schemas"]["Withdraw"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WithdrawResponse"];
+                };
+            };
+        };
+    };
+    api_devices_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Device"];
+                "application/x-www-form-urlencoded": components["schemas"]["Device"];
+                "multipart/form-data": components["schemas"]["Device"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeviceResponse"];
+                };
+            };
+        };
+    };
+    api_disclosures_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DisclosureListResponse"];
+                };
+            };
+        };
+    };
+    api_events_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventListResponse"];
+                };
+            };
+        };
+    };
+    api_events_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetail"];
+                };
+            };
+        };
+    };
+    api_events_enter_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventEnterResponse"];
+                };
+            };
+        };
+    };
+    api_faqs_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FaqListResponse"];
+                };
+            };
+        };
+    };
+    api_faqs_keywords_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FaqKeywords"];
+                };
+            };
+        };
+    };
+    api_investments_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvestmentListResponse"];
+                };
+            };
+        };
+    };
+    api_investments_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InvestOrder"];
+                "application/x-www-form-urlencoded": components["schemas"]["InvestOrder"];
+                "multipart/form-data": components["schemas"]["InvestOrder"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvestmentResponse"];
+                };
+            };
+        };
+    };
+    api_investments_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvestmentDetailResponse"];
+                };
+            };
+        };
+    };
+    api_loans_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoanProductListResponse"];
+                };
+            };
+        };
+    };
+    api_loans_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoanProductDetail"];
+                };
+            };
+        };
+    };
+    api_loans_applications_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoanApplication"];
+                "application/x-www-form-urlencoded": components["schemas"]["LoanApplication"];
+                "multipart/form-data": components["schemas"]["LoanApplication"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoanApplicationResponse"];
+                };
+            };
+        };
+    };
+    api_loans_limit_check_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LimitCheck"];
+                "application/x-www-form-urlencoded": components["schemas"]["LimitCheck"];
+                "multipart/form-data": components["schemas"]["LimitCheck"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LimitCheckResponse"];
+                };
+            };
+        };
+    };
+    api_me_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+        };
+    };
+    api_me_calendar_retrieve: {
+        parameters: {
+            query: {
+                month: number;
+                year: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarResponse"];
+                };
+            };
+        };
+    };
+    api_me_dashboard_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardResponse"];
+                };
+            };
+        };
+    };
+    api_me_grade_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GradeResponse"];
+                };
+            };
+        };
+    };
+    api_me_grade_request_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GradeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["GradeRequest"];
+                "multipart/form-data": components["schemas"]["GradeRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GradeRequestResponse"];
+                };
+            };
+        };
+    };
+    api_me_grade_history_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GradeHistoryResponse"];
+                };
+            };
+        };
+    };
+    api_me_investments_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvestmentListResponse"];
+                };
+            };
+        };
+    };
+    api_me_limit_assessment_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LimitAssessmentResponse"];
+                };
+            };
+        };
+    };
+    api_metrics_vitals_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Vital"];
+                "application/x-www-form-urlencoded": components["schemas"]["Vital"];
+                "multipart/form-data": components["schemas"]["Vital"];
+            };
+        };
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_news_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsListResponse"];
+                };
+            };
+        };
+    };
+    api_notices_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NoticeListResponse"];
+                };
+            };
+        };
+    };
+    api_notices_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NoticeDetail"];
+                };
+            };
+        };
+    };
+    api_notifications_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationListResponse"];
+                };
+            };
+        };
+    };
+    api_notifications_settings_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSettingsGet"];
+                };
+            };
+        };
+    };
+    api_notifications_settings_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["NotifSetting"];
+                "application/x-www-form-urlencoded": components["schemas"]["NotifSetting"];
+                "multipart/form-data": components["schemas"]["NotifSetting"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotifSettingResponse"];
+                };
+            };
+        };
+    };
+    api_points_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PointBalance"];
+                };
+            };
+        };
+    };
+    api_points_convert_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PointConvert"];
+                "application/x-www-form-urlencoded": components["schemas"]["PointConvert"];
+                "multipart/form-data": components["schemas"]["PointConvert"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PointConvertResponse"];
+                };
+            };
+        };
+    };
+    api_points_history_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PointHistory"];
+                };
+            };
+        };
+    };
+    api_products_list: {
+        parameters: {
+            query?: {
+                /** @description Comma-separated positive product IDs (up to 100). */
+                ids?: string;
+                include_closed?: boolean;
+                max_amount?: number;
+                max_rate?: number;
+                max_term?: number;
+                min_amount?: number;
+                min_rate?: number;
+                min_term?: number;
+                /** @description 페이지네이션된 결과 집합 내의 페이지 번호. */
+                page?: number;
+                /** @description 페이지당 반환할 결과 수. */
+                page_size?: number;
+                sort?: string;
+                status?: string;
+                type?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedProductListList"];
+                };
+            };
+        };
+    };
+    api_products_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductDetail"];
+                };
+            };
+        };
+    };
+    api_products_schedule_preview_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SchedulePreview"];
+                };
+            };
+        };
+    };
+    api_products_stream_retrieve: {
+        parameters: {
+            query?: {
+                /** @description Comma-separated positive product IDs (up to 100). Omit for all public products. */
+                ids?: string;
+            };
+            header?: {
+                "Last-Event-ID"?: number;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ProductProgress"];
+                };
+            };
+        };
+    };
+    api_reservations_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReservationResponse"][];
+                };
+            };
+        };
+    };
+    api_reservations_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReservationCreate"];
+                "application/x-www-form-urlencoded": components["schemas"]["ReservationCreate"];
+                "multipart/form-data": components["schemas"]["ReservationCreate"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReservationResponse"];
+                };
+            };
+        };
+    };
+    api_reservations_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_reservations_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedReservationPatch"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedReservationPatch"];
+                "multipart/form-data": components["schemas"]["PatchedReservationPatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReservationResponse"];
+                };
+            };
+        };
+    };
+    api_reservations_eligible_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReservationEligibleResponse"];
+                };
+            };
+        };
+    };
+    api_suitability_test_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuitabilityQuestionsResponse"];
+                };
+            };
+        };
+    };
+    api_suitability_test_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuitabilitySubmit"];
+                "application/x-www-form-urlencoded": components["schemas"]["SuitabilitySubmit"];
+                "multipart/form-data": components["schemas"]["SuitabilitySubmit"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuitabilityResult"];
+                };
+            };
+        };
+    };
+    api_terms_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Term"];
+                };
+            };
+        };
+    };
+    api_webhooks_bank_deposit_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BankWebhookPayload"];
+                "application/x-www-form-urlencoded": components["schemas"]["BankWebhookPayload"];
+                "multipart/form-data": components["schemas"]["BankWebhookPayload"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankWebhookAck"];
+                };
+            };
+        };
+    };
+    api_webhooks_bank_transfer_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BankWebhookPayload"];
+                "application/x-www-form-urlencoded": components["schemas"]["BankWebhookPayload"];
+                "multipart/form-data": components["schemas"]["BankWebhookPayload"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankWebhookAck"];
+                };
+            };
+        };
+    };
 }
