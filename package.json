@@ -8,7 +8,8 @@
     "typecheck": "turbo typecheck",
     "lint": "turbo lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "pnpm --filter @dailyfunding/fo-web test"
   },
   "devDependencies": {
     "@feature-sliced/steiger-plugin": "^0.8.0",
