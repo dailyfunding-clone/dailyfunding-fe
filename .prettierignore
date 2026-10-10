@@ -8,3 +8,6 @@ android
 next-env.d.ts
 pnpm-lock.yaml
 package-lock.json
+storybook-static
+schema.d.ts
+schema.yaml
