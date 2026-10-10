@@ -17,8 +17,10 @@ import {
   enableBiometric,
   pinGate,
   readBiometricPin,
+  refreshAccessToken,
+  sessionGeneration,
 } from "@/features/auth";
-import { WEB_BASE_URL } from "@/shared";
+import { STORAGE_KEYS, WEB_BASE_URL } from "@/shared";
 
 const MAX_ATTEMPTS = 5;
 const BLOCK_MS = 30_000;
@@ -35,6 +37,17 @@ const pinPost = async (path: string, pin: string, access: string | null) => {
   }
 };
 
+const pinPostWithRetry = async (path: string, pin: string) => {
+  let access = await SecureStore.getItemAsync(STORAGE_KEYS.accessToken);
+  if (!access) return { res: null, access: null };
+  let res = await pinPost(path, pin, access);
+  if (res?.status === 401) {
+    access = await refreshAccessToken();
+    if (access) res = await pinPost(path, pin, access);
+  }
+  return { res, access };
+};
+
 const PinScreen = () => {
   const router = useRouter();
   const navigation = useNavigation();
@@ -49,6 +62,7 @@ const PinScreen = () => {
   const unlocked = useRef(false);
   const bioTried = useRef(false);
   const bioLinkPending = useRef(false);
+  const submitting = useRef(false);
   const fails = useRef(0);
   const blockedUntil = useRef(0);
 
@@ -56,13 +70,13 @@ const PinScreen = () => {
     pinGate.setOpen(true);
     void (async () => {
       const resetPending =
-        (await SecureStore.getItemAsync("pin_reset_pending")) === "true";
+        (await SecureStore.getItemAsync(STORAGE_KEYS.pinResetPending)) === "true";
       if (resetPending) {
-        await SecureStore.deleteItemAsync("pin_reset_pending");
+        await SecureStore.deleteItemAsync(STORAGE_KEYS.pinResetPending);
         setRegistered(false);
         return;
       }
-      const v = await SecureStore.getItemAsync("pin_registered");
+      const v = await SecureStore.getItemAsync(STORAGE_KEYS.pinRegistered);
       setRegistered(v === "true");
       if (v === "true" && (await biometricSupported())) {
         setBioLabel(await biometricLabel());
@@ -101,26 +115,27 @@ const PinScreen = () => {
 
   const verify = useCallback(
     async (pin: string) => {
+      if (submitting.current) return;
       if (Date.now() < blockedUntil.current) {
         setError("잠시 후 다시 시도해 주세요");
         setValue("");
         return;
       }
+      submitting.current = true;
       try {
-        const access = await SecureStore.getItemAsync("access_token");
-        if (!access) {
+        const { res } = await pinPostWithRetry("/api/auth/reauth", pin);
+        if (res === null && !(await SecureStore.getItemAsync(STORAGE_KEYS.accessToken))) {
           setError("로그인 세션이 만료됐어요. 다시 로그인해 주세요");
           setValue("");
           return;
         }
-        const res = await pinPost("/api/auth/reauth", pin, access);
         if (res?.ok) {
           const data = (await res.json()) as {
             reauth_token?: string;
             expires_in?: number;
           };
           if (data.reauth_token) {
-            cacheReauth(data.reauth_token, data.expires_in ?? 300);
+            cacheReauth(data.reauth_token, data.expires_in ?? 300, sessionGeneration());
           }
           fails.current = 0;
           if (bioLinkPending.current) {
@@ -150,6 +165,8 @@ const PinScreen = () => {
       } catch {
         setError("잠시 후 다시 시도해 주세요");
         setValue("");
+      } finally {
+        submitting.current = false;
       }
     },
     [done, offerBiometric],
@@ -157,11 +174,12 @@ const PinScreen = () => {
 
   const register = useCallback(
     async (pin: string) => {
+      if (submitting.current) return;
+      submitting.current = true;
       try {
-        const access = await SecureStore.getItemAsync("access_token");
-        const res = await pinPost("/api/auth/pin", pin, access);
+        const { res, access } = await pinPostWithRetry("/api/auth/pin", pin);
         if (res?.ok) {
-          await SecureStore.setItemAsync("pin_registered", "true");
+          await SecureStore.setItemAsync(STORAGE_KEYS.pinRegistered, "true");
           const ra = await pinPost("/api/auth/reauth", pin, access);
           if (ra?.ok) {
             const data = (await ra.json()) as {
@@ -169,7 +187,7 @@ const PinScreen = () => {
               expires_in?: number;
             };
             if (data.reauth_token) {
-              cacheReauth(data.reauth_token, data.expires_in ?? 300);
+              cacheReauth(data.reauth_token, data.expires_in ?? 300, sessionGeneration());
             }
           }
           void offerBiometric(pin);
@@ -177,9 +195,7 @@ const PinScreen = () => {
           return;
         }
         setError(
-          res === null
-            ? "네트워크 상태를 확인해 주세요"
-            : "등록에 실패했어요. 다시 시도해 주세요",
+          res === null ? "네트워크 상태를 확인해 주세요" : "등록에 실패했어요. 다시 시도해 주세요",
         );
         setFirst("");
         setValue("");
@@ -187,6 +203,8 @@ const PinScreen = () => {
         setError("등록에 실패했어요. 다시 시도해 주세요");
         setFirst("");
         setValue("");
+      } finally {
+        submitting.current = false;
       }
     },
     [done, offerBiometric],
@@ -194,17 +212,11 @@ const PinScreen = () => {
 
   const tryBiometric = useCallback(async () => {
     if (await biometricEnabled()) {
-      const pin = await readBiometricPin(
-        "간편비밀번호 대신 생체인증으로 잠금해제해요",
-      );
+      const pin = await readBiometricPin("간편비밀번호 대신 생체인증으로 잠금해제해요");
       if (pin) void verify(pin);
       return;
     }
-    if (
-      await authenticateBiometric(
-        `${bioLabel || "생체인증"}으로 잠금해제해요`,
-      )
-    ) {
+    if (await authenticateBiometric(`${bioLabel || "생체인증"}으로 잠금해제해요`)) {
       bioLinkPending.current = true;
       setNotice("간편비밀번호를 한 번 입력하면 생체인증이 연결돼요");
     }
@@ -257,11 +269,7 @@ const PinScreen = () => {
         {!!notice && <Text style={styles.notice}>{notice}</Text>}
         <PinKeypad value={value} onChange={onChange} disabled={registered === null} />
         {registered === true && bioUsable && (
-          <Pressable
-            style={styles.forgot}
-            onPress={() => void tryBiometric()}
-            hitSlop={8}
-          >
+          <Pressable style={styles.forgot} onPress={() => void tryBiometric()} hitSlop={8}>
             <Text style={styles.forgotText}>{`${bioLabel}로 열기`}</Text>
           </Pressable>
         )}
@@ -278,10 +286,7 @@ const PinScreen = () => {
                     text: "확인",
                     onPress: () => {
                       void (async () => {
-                        await SecureStore.setItemAsync(
-                          "pin_reset_pending",
-                          "true",
-                        );
+                        await SecureStore.setItemAsync(STORAGE_KEYS.pinResetPending, "true");
                         await clearSession();
                         unlocked.current = true;
                         router.replace("/auth");

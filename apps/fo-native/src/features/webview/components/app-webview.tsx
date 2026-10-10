@@ -3,13 +3,13 @@ import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
-import { WEB_BASE_URL } from "@/shared";
+import { WEB_ORIGIN, resolveWebUrl } from "../url";
 
 import type { ComponentProps } from "react";
 import type { WebViewMessageEvent, WebViewNavigation } from "react-native-webview";
 
-const WEB_ORIGIN = new URL(WEB_BASE_URL).origin;
 const MAX_CRASH_RETRIES = 2;
+const EXTERNAL_PROTOCOLS = new Set(["http:", "https:", "tel:", "mailto:", "intent:"]);
 
 type Props = {
   path: string;
@@ -24,11 +24,12 @@ const AppWebView = forwardRef<WebView, Props>(
     const innerRef = useRef<WebView>(null);
     const crashRetries = useRef(0);
     const [crashed, setCrashed] = useState(false);
+    const [instance, setInstance] = useState(0);
     useImperativeHandle(ref, () => innerRef.current as WebView);
     const reload = () => {
       crashRetries.current = 0;
       setCrashed(false);
-      innerRef.current?.reload();
+      setInstance((i) => i + 1);
     };
 
     const handleCrash = () => {
@@ -37,6 +38,10 @@ const AppWebView = forwardRef<WebView, Props>(
         return;
       }
       crashRetries.current += 1;
+      if (Platform.OS === "android") {
+        setInstance((i) => i + 1);
+        return;
+      }
       innerRef.current?.reload();
     };
 
@@ -46,8 +51,8 @@ const AppWebView = forwardRef<WebView, Props>(
       try {
         const parsed = new URL(url);
         if (parsed.origin === WEB_ORIGIN) return true;
-        if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-          void Linking.openURL(url);
+        if (EXTERNAL_PROTOCOLS.has(parsed.protocol)) {
+          void Linking.openURL(url).catch(() => {});
         }
       } catch {
         return false;
@@ -55,7 +60,10 @@ const AppWebView = forwardRef<WebView, Props>(
       return false;
     };
 
-    const handleLoadEnd = () => onLoadEnd?.();
+    const handleLoadEnd = () => {
+      crashRetries.current = 0;
+      onLoadEnd?.();
+    };
 
     const renderErrorView = () => (
       <View style={styles.error}>
@@ -74,8 +82,9 @@ const AppWebView = forwardRef<WebView, Props>(
     return (
       <View style={styles.container}>
         <WebView
+          key={instance}
           ref={innerRef}
-          source={{ uri: `${WEB_BASE_URL}${path}` }}
+          source={{ uri: resolveWebUrl(path) }}
           style={styles.webview}
           originWhitelist={[WEB_ORIGIN, "about:*"]}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}

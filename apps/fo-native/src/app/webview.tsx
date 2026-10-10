@@ -1,3 +1,4 @@
+import { isLocalPath } from "@dailyfunding/bridge";
 import { tokens } from "@dailyfunding/design-system";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -26,6 +27,7 @@ const WebViewScreen = () => {
     path?: string;
     title?: string;
   }>();
+  const safePath = isLocalPath(path) ? path : "/";
   const navigation = useNavigation();
   const router = useRouter();
   const webViewRef = useRef<WebView>(null);
@@ -85,7 +87,7 @@ const WebViewScreen = () => {
     <View style={{ flex: 1, backgroundColor: tokens.semantic.color.bgDefault }}>
       <AppWebView
         ref={webViewRef}
-        path={path ?? "/"}
+        path={safePath}
         onMessage={handleMessage}
         onLoadEnd={() => setReady(true)}
         onNavigationStateChange={(navState) => {

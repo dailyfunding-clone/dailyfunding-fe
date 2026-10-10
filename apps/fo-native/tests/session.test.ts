@@ -2,6 +2,10 @@ import { expect, it, vi } from "vitest";
 
 const storage = vi.hoisted(() => new Map<string, string>());
 const gate = vi.hoisted(() => ({ current: null as Promise<void> | null }));
+const lanes = vi.hoisted(() => ({
+  get: [] as Promise<void>[],
+  set: [] as Promise<void>[],
+}));
 const refresh = vi.hoisted(() => ({
   calls: 0,
   response: Promise.resolve({
@@ -12,11 +16,11 @@ const refresh = vi.hoisted(() => ({
 vi.mock("expo-secure-store", () => ({
   getItemAsync: async (key: string) => {
     const value = storage.get(key) ?? null;
-    await gate.current;
+    await (lanes.get.shift() ?? gate.current);
     return value;
   },
   setItemAsync: async (key: string, value: string) => {
-    await gate.current;
+    await (lanes.set.shift() ?? gate.current);
     storage.set(key, value);
   },
   deleteItemAsync: async (key: string) => {
@@ -32,7 +36,20 @@ vi.mock("ky", () => ({
     get: () => refresh.response,
   },
 }));
-vi.mock("@/shared", () => ({ WEB_BASE_URL: "https://example.test" }));
+vi.mock("@/shared", () => ({
+  WEB_BASE_URL: "https://example.test",
+  unregisterPushToken: async () => {},
+  STORAGE_KEYS: {
+    accessToken: "access_token",
+    refreshToken: "refresh_token",
+    userEmail: "user_email",
+    pinRegistered: "pin_registered",
+    pinBiometric: "pin_biometric",
+    biometricEnabled: "biometric_enabled",
+    pinResetPending: "pin_reset_pending",
+    expoPushToken: "expo_push_token",
+  },
+}));
 
 it("broadcasts native state and prevents a pending refresh resurrecting logout", async () => {
   const session = await import("../src/features/auth/session");
@@ -123,4 +140,82 @@ it("reports an unreachable refresh as unknown, not a valid token", async () => {
   refresh.response = Promise.reject(new Error("network down"));
   const session = await import("../src/features/auth/session");
   expect(await session.validateStoredSession()).toEqual({ token: null });
+});
+
+it("keeps the session when refresh fails with a server error", async () => {
+  vi.resetModules();
+  storage.clear();
+  storage.set("refresh_token", "stored-refresh");
+  refresh.response = Promise.resolve({ ok: false, status: 500 });
+  const session = await import("../src/features/auth/session");
+  expect(await session.validateStoredSession()).toEqual({ token: null });
+  expect(storage.get("refresh_token")).toBe("stored-refresh");
+});
+
+it("clears the session when refresh is rejected with 401 or 403", async () => {
+  for (const status of [401, 403]) {
+    vi.resetModules();
+    storage.clear();
+    storage.set("refresh_token", "stored-refresh");
+    refresh.response = Promise.resolve({ ok: false, status });
+    const session = await import("../src/features/auth/session");
+    expect(await session.validateStoredSession()).toBeNull();
+    expect(storage.has("refresh_token")).toBe(false);
+  }
+});
+
+it("keeps newer tokens when a stale write rolls back", async () => {
+  vi.resetModules();
+  storage.clear();
+  lanes.get.length = 0;
+  lanes.set.length = 0;
+  const session = await import("../src/features/auth/session");
+  let releaseFirst!: () => void;
+  let releaseSecond!: () => void;
+  lanes.set.push(
+    new Promise<void>((done) => {
+      releaseFirst = done;
+    }),
+    new Promise<void>((done) => {
+      releaseSecond = done;
+    }),
+  );
+  const stale = session.storeSessionTokens({ access_token: "a", refresh_token: "r" });
+  await session.clearSession();
+  releaseFirst();
+  await vi.waitFor(() => expect(storage.get("refresh_token")).toBe("r"));
+  await session.storeSessionTokens({ access_token: "b", refresh_token: "r2" });
+  releaseSecond();
+  await stale;
+  expect(storage.get("refresh_token")).toBe("r2");
+  expect(storage.has("access_token")).toBe(false);
+});
+
+it("does not persist profile data captured before signout", async () => {
+  vi.resetModules();
+  storage.clear();
+  let release!: (value: unknown) => void;
+  refresh.response = new Promise((done) => {
+    release = done;
+  });
+  const session = await import("../src/features/auth/session");
+  const pending = session.storeUserProfile("access");
+  await session.clearSession();
+  release({
+    ok: true,
+    status: 200,
+    json: async () => ({ email: "user@example.test", pin_registered: true }),
+  });
+  await pending;
+  expect(storage.has("user_email")).toBe(false);
+  expect(storage.has("pin_registered")).toBe(false);
+});
+
+it("clears cached reauth tokens on signout", async () => {
+  vi.resetModules();
+  const session = await import("../src/features/auth/session");
+  const reauth = await import("../src/features/auth/reauth");
+  reauth.cacheReauth("cached-reauth", 300, session.sessionGeneration());
+  await session.clearSession();
+  expect(reauth.takeFreshReauth(session.sessionGeneration())).toBeNull();
 });

@@ -7,10 +7,9 @@ import ky from "ky";
 import { Platform } from "react-native";
 
 import { WEB_BASE_URL } from "./config";
+import { STORAGE_KEYS } from "./constants";
 
 const DEFAULT_CHANNEL_ID = "default";
-
-let registered: { token: string; accessToken: string } | null = null;
 
 export const configureNotifications = () => {
   try {
@@ -30,7 +29,7 @@ export const configureNotifications = () => {
 export const registerPushToken = async () => {
   try {
     if (!Device.isDevice) return;
-    const accessToken = await SecureStore.getItemAsync("access_token");
+    const accessToken = await SecureStore.getItemAsync(STORAGE_KEYS.accessToken);
     if (!accessToken) return;
     if (Platform.OS === "android") {
       await Notifications.setNotificationChannelAsync(DEFAULT_CHANNEL_ID, {
@@ -55,7 +54,9 @@ export const registerPushToken = async () => {
       },
       throwHttpErrors: false,
     });
-    if (res.ok) registered = { token, accessToken };
+    if (res.ok) {
+      await SecureStore.setItemAsync(STORAGE_KEYS.expoPushToken, token);
+    }
   } catch {
     return;
   }
@@ -63,12 +64,16 @@ export const registerPushToken = async () => {
 
 export const unregisterPushToken = async () => {
   try {
-    const current = registered;
-    registered = null;
-    if (!current) return;
+    const [token, accessToken] = await Promise.all([
+      SecureStore.getItemAsync(STORAGE_KEYS.expoPushToken),
+      SecureStore.getItemAsync(STORAGE_KEYS.accessToken),
+    ]);
+    if (!token) return;
+    await SecureStore.deleteItemAsync(STORAGE_KEYS.expoPushToken);
+    if (!accessToken) return;
     await ky.delete(`${WEB_BASE_URL}/api/devices`, {
-      headers: { Authorization: `Bearer ${current.accessToken}` },
-      json: { expo_push_token: current.token },
+      headers: { Authorization: `Bearer ${accessToken}` },
+      json: { expo_push_token: token },
       throwHttpErrors: false,
     });
   } catch {
