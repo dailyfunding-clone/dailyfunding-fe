@@ -1,51 +1,30 @@
 import { tokens } from "@dailyfunding/design-system";
 import { forwardRef, useImperativeHandle, useRef } from "react";
-import {
-  Linking,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
 import { WEB_BASE_URL } from "@/shared";
 
-import type {
-  WebViewMessageEvent,
-  WebViewNavigation,
-} from "react-native-webview";
-
+import type { ComponentProps } from "react";
+import type { WebViewMessageEvent, WebViewNavigation } from "react-native-webview";
 
 type Props = {
   path: string;
-  refreshToken?: string | null;
   onMessage?: (event: WebViewMessageEvent) => void;
   onNavigationStateChange?: (navState: WebViewNavigation) => void;
+  onScroll?: ComponentProps<typeof WebView>["onScroll"];
   onLoadEnd?: () => void;
 };
 
 const AppWebView = forwardRef<WebView, Props>(
-  (
-    { path, refreshToken, onMessage, onNavigationStateChange, onLoadEnd },
-    ref,
-  ) => {
+  ({ path, onMessage, onNavigationStateChange, onScroll, onLoadEnd }, ref) => {
     const innerRef = useRef<WebView>(null);
     useImperativeHandle(ref, () => innerRef.current as WebView);
     const reload = () => innerRef.current?.reload();
 
-    const restore = refreshToken
-      ? `window.__restoreSession=fetch('/api/auth/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh:${JSON.stringify(refreshToken)}})}).then(()=>{}).catch(()=>{});`
-      : "window.__restoreSession=Promise.resolve();";
-
     const onShouldStartLoadWithRequest = (req: { url: string }) => {
       const { url } = req;
-      if (
-        url.startsWith(WEB_BASE_URL) ||
-        url.startsWith("about:") ||
-        url.startsWith("data:")
-      ) {
+      if (url.startsWith(WEB_BASE_URL) || url.startsWith("about:") || url.startsWith("data:")) {
         return true;
       }
       void Linking.openURL(url);
@@ -72,9 +51,10 @@ const AppWebView = forwardRef<WebView, Props>(
           style={styles.webview}
           originWhitelist={[`${WEB_BASE_URL}*`, "about:*", "data:*"]}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          injectedJavaScriptBeforeContentLoaded={`document.documentElement.classList.add('in-app');${restore}true;`}
+          injectedJavaScriptBeforeContentLoaded="document.documentElement.classList.add('in-app');true;"
           onMessage={onMessage}
           onNavigationStateChange={onNavigationStateChange}
+          onScroll={onScroll}
           onLoadEnd={handleLoadEnd}
           onContentProcessDidTerminate={reload}
           onRenderProcessGone={reload}

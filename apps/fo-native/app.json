@@ -21,10 +21,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.cyjoon.dailyfundingmobile",
       "googleServicesFile": "./google-services.json",
-      "permissions": [
-        "android.permission.USE_BIOMETRIC",
-        "android.permission.USE_FINGERPRINT"
-      ]
+      "permissions": ["android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -42,7 +39,8 @@
       "expo-font"
     ],
     "experiments": {
-      "reactCompiler": true
+      "reactCompiler": true,
+      "typedRoutes": true
     },
     "extra": {
       "router": {},
