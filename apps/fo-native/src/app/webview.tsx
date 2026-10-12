@@ -53,7 +53,12 @@ const WebViewScreen = () => {
     navigation.setOptions({
       title: title ?? "",
       headerLeft: () => (
-        <Pressable onPress={goBack} hitSlop={12}>
+        <Pressable
+          onPress={goBack}
+          hitSlop={12}
+          accessibilityRole="button"
+          accessibilityLabel="뒤로 가기"
+        >
           <Text style={{ fontSize: 28, lineHeight: 32 }}>‹</Text>
         </Pressable>
       ),

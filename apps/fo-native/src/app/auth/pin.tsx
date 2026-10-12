@@ -3,7 +3,7 @@ import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import ky from "ky";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, InteractionManager, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
@@ -20,7 +20,10 @@ import {
   refreshAccessToken,
   sessionGeneration,
 } from "@/features/auth";
+import { takePendingPath } from "@/features/deeplink";
 import { STORAGE_KEYS, WEB_BASE_URL } from "@/shared";
+
+import type { Href } from "expo-router";
 
 const MAX_ATTEMPTS = 5;
 const BLOCK_MS = 30_000;
@@ -97,7 +100,11 @@ const PinScreen = () => {
   const done = useCallback(() => {
     unlocked.current = true;
     if (startup === "1") {
+      const pending = takePendingPath();
       router.replace("/(tabs)");
+      if (pending) {
+        InteractionManager.runAfterInteractions(() => router.push(pending as Href));
+      }
       return;
     }
     router.back();

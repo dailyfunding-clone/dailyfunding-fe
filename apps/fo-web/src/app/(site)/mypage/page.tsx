@@ -5,10 +5,10 @@ import { useState } from "react";
 
 import { AuthGate } from "@/features/auth";
 import { api, fmtMan, fmtPoint, fmtWon } from "@/shared/api";
-import { useDocumentTitle } from "@/shared/lib";
+import { copyText, useDocumentTitle } from "@/shared/lib";
 import { AppLink } from "@/shared/ui";
 
-import { GRADE_LABELS } from "./_components";
+import { AppUpdateCheck, GRADE_LABELS } from "./_components";
 
 import "./mypage.scss";
 
@@ -92,7 +92,7 @@ const Dashboard = () => {
   const copyAccount = async () => {
     if (!data.virtual_account) return;
     try {
-      await navigator.clipboard.writeText(data.virtual_account.account_no);
+      await copyText(data.virtual_account.account_no);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -218,6 +218,7 @@ const Dashboard = () => {
                 <AppLink href={m.href}>{m.label}</AppLink>
               </li>
             ))}
+            <AppUpdateCheck />
           </ul>
         </div>
       </div>

@@ -37,6 +37,7 @@ vi.mock("@/features/auth", () => ({
     auth.onValidate?.();
   },
 }));
+vi.mock("@/features/updates", () => ({ checkAppUpdate: async () => "latest" }));
 vi.mock("@/shared", () => ({ WEB_BASE_URL: "https://example.test" }));
 vi.mock("expo-secure-store", () => ({
   getItemAsync: async () => "true",
