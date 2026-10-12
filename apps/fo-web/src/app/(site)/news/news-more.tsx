@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { api } from "@/shared/api";
 
@@ -13,20 +13,51 @@ type NewsResponse = {
   next_cursor: string | null;
 };
 
+const fetchPage = (cursor: string) =>
+  api.request<NewsResponse>("get", `/api/news?cursor=${encodeURIComponent(cursor)}`);
+
 const NewsMore = ({ initialCursor }: { initialCursor: string | null }) => {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
+  const prefetched = useRef<{ cursor: string; data: NewsResponse } | null>(null);
+
+  useEffect(() => {
+    if (!cursor || prefetched.current?.cursor === cursor) return;
+    const hasIdle = typeof requestIdleCallback === "function";
+    const id = hasIdle
+      ? requestIdleCallback(() => {
+          void fetchPage(cursor)
+            .then((data) => {
+              prefetched.current = { cursor, data };
+            })
+            .catch(() => {
+              prefetched.current = null;
+            });
+        })
+      : window.setTimeout(() => {
+          void fetchPage(cursor)
+            .then((data) => {
+              prefetched.current = { cursor, data };
+            })
+            .catch(() => {
+              prefetched.current = null;
+            });
+        }, 500);
+    return () => {
+      if (hasIdle) cancelIdleCallback(id);
+      else clearTimeout(id);
+    };
+  }, [cursor]);
 
   const loadMore = async () => {
     if (!cursor) return;
     setLoading(true);
     try {
-      const data = await api.request<NewsResponse>(
-        "get",
-        `/api/news?cursor=${encodeURIComponent(cursor)}`,
-      );
+      const data =
+        prefetched.current?.cursor === cursor ? prefetched.current.data : await fetchPage(cursor);
+      prefetched.current = null;
       setItems((prev) => [...prev, ...data.results]);
       setCursor(data.next_cursor);
       setFailed(false);

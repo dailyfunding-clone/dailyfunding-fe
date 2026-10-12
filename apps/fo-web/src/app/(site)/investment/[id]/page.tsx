@@ -27,7 +27,12 @@ export const generateMetadata = async ({
 }): Promise<Metadata> => {
   const { id } = await params;
   const p = await fetchProduct(id);
-  return { title: p?.name ?? "상품 상세" };
+  if (!p) return { title: "상품 상세" };
+  return {
+    title: p.name,
+    description: `연 ${p.annual_rate}%, ${p.term_months}개월, 모집금액 ${fmtWon(p.target_amount)} — ${p.name}`,
+    openGraph: { title: p.name },
+  };
 };
 
 const fetchProduct = async (id: string): Promise<ProductDetail | null> => {

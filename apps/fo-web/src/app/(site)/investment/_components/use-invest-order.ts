@@ -3,7 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { ApiRequestError, api } from "@/shared/api";
+import { ApiRequestError, api, idempotencyKey } from "@/shared/api";
 
 import { mapError } from "./lib/map-error";
 import {
@@ -65,7 +65,7 @@ export const useInvestOrder = ({ accountId, productId, reauth }: Options) => {
   const queryClient = useQueryClient();
   const [state, setState] = useState<OrderState>({ status: "idle" });
   const busy = useRef(false);
-  const [tabId] = useState(() => crypto.randomUUID());
+  const [tabId] = useState(() => idempotencyKey());
   const storeKey = `${accountId}:${productId}`;
   const channel = useRef<BroadcastChannel | null>(null);
   const followCleanup = useRef<(() => void) | null>(null);
@@ -207,7 +207,7 @@ export const useInvestOrder = ({ accountId, productId, reauth }: Options) => {
     try {
       const claim = await claimAttempt(storeKey, {
         tabId,
-        idempotencyKey: crypto.randomUUID(),
+        idempotencyKey: idempotencyKey(),
         input: {
           product_id: productId,
           amount: input.amount,

@@ -5,10 +5,10 @@ export const scale = {
     gray050: "#F7F8FA",
     gray100: "#F0F2F5",
     gray300: "#D7DAE0",
-    gray500: "#8A8F98",
+    gray500: "#6E7178",
     gray700: "#4B4F57",
     gray900: "#1A1A1A",
-    red500: "#D63F3F",
+    red500: "#C02F2F",
   },
   radius: {
     sm: 8,
