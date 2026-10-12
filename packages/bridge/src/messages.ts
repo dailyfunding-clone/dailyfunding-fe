@@ -17,7 +17,10 @@ export type WebToNativeMessage =
   | { type: "auth.appCode" }
   | { type: "auth.exchange"; payload: { code: string; next?: string } }
   | { type: "auth.signOut" }
+  | { type: "app.checkUpdate" }
   | { type: "app.ready" };
+
+export type UpdateCheckStatus = "updated" | "latest" | "unavailable" | "error";
 
 export type NativeToWebMessage =
   | {
@@ -28,7 +31,11 @@ export type NativeToWebMessage =
   | { type: "auth.state"; payload: { requestSeq: number; authState: AuthState } }
   | { type: "auth.changed"; payload: AuthState }
   | { type: "auth.reauth.result"; payload: { requestSeq: number; token: string | null } }
-  | { type: "auth.appCode.result"; payload: { requestSeq: number; code: string | null } };
+  | { type: "auth.appCode.result"; payload: { requestSeq: number; code: string | null } }
+  | {
+      type: "app.update.result";
+      payload: { requestSeq: number; status: UpdateCheckStatus };
+    };
 
 export type BridgeEnvelope<T = WebToNativeMessage> = T & { v: 2; seq: number };
 export type NativeEnvelope = BridgeEnvelope<NativeToWebMessage> & { sessionId: string };
@@ -92,6 +99,7 @@ export const parseBridgeMessage = (raw: string): BridgeEnvelope | null => {
     case "auth.reauth":
     case "auth.appCode":
     case "auth.signOut":
+    case "app.checkUpdate":
     case "app.ready":
       valid = true;
       break;
@@ -126,6 +134,14 @@ export const parseNativeMessage = (raw: string): NativeEnvelope | null => {
       break;
     case "auth.appCode.result":
       valid = sequence(p.requestSeq) && (p.code === null || text(p.code));
+      break;
+    case "app.update.result":
+      valid =
+        sequence(p.requestSeq) &&
+        (p.status === "updated" ||
+          p.status === "latest" ||
+          p.status === "unavailable" ||
+          p.status === "error");
       break;
   }
   return valid ? (message as NativeEnvelope) : null;

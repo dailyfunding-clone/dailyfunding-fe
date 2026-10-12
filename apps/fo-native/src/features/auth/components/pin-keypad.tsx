@@ -35,14 +35,24 @@ const PinKeypad = ({
 
   return (
     <View style={[styles.wrap, disabled && styles.disabled]}>
-      <View style={styles.dots}>
+      <View
+        style={styles.dots}
+        accessibilityLabel={`간편비밀번호 ${value.length}자리 입력됨`}
+      >
         {Array.from({ length: 6 }, (_, i) => (
           <View key={i} style={[styles.dot, i < value.length && styles.dotOn]} />
         ))}
       </View>
       <View style={styles.grid}>
         {keys.slice(0, 9).map((key, i) => (
-          <Pressable key={i} style={styles.key} onPress={() => press(key)} hitSlop={8}>
+          <Pressable
+            key={i}
+            style={styles.key}
+            onPress={() => press(key)}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={key}
+          >
             <Text style={styles.keyText}>{key}</Text>
           </Pressable>
         ))}
@@ -50,13 +60,27 @@ const PinKeypad = ({
           style={styles.key}
           onPress={() => setKeys(shuffle(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]))}
           hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="숫자 배열 섞기"
         >
           <Text style={styles.keyText}>↺</Text>
         </Pressable>
-        <Pressable style={styles.key} onPress={() => press(keys[9])} hitSlop={8}>
+        <Pressable
+          style={styles.key}
+          onPress={() => press(keys[9])}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={keys[9]}
+        >
           <Text style={styles.keyText}>{keys[9]}</Text>
         </Pressable>
-        <Pressable style={styles.key} onPress={() => press("back")} hitSlop={8}>
+        <Pressable
+          style={styles.key}
+          onPress={() => press("back")}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="한 자리 지우기"
+        >
           <Text style={styles.keyText}>⌫</Text>
         </Pressable>
       </View>

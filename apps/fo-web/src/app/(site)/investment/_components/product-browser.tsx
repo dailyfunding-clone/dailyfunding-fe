@@ -235,6 +235,7 @@ const ProductBrowser = ({ products }: Props) => {
         <FilterRow label="수익률">
           <select
             className="inv-sort"
+            aria-label="정렬"
             value={f.sort}
             onChange={(e) => commit({ ...f, sort: e.target.value })}
           >
@@ -311,15 +312,20 @@ const ProductBrowser = ({ products }: Props) => {
         </FilterRow>
       </div>
 
-      {refetching && <p className="field-hint inv-loading">상품을 불러오는 중…</p>}
+      <p className="field-hint inv-loading" role="status" aria-live="polite">
+        {refetching ? "상품을 불러오는 중…" : ""}
+      </p>
       {open.length === 0 ? (
         <div className="empty">조건에 맞는 상품이 없어요</div>
       ) : (
-        <div className="card-grid" aria-busy={refetching}>
-          {open.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        <section className="inv-section">
+          <h2 className="inv-section-title">모집 중인 상품</h2>
+          <div className="card-grid" aria-busy={refetching}>
+            {open.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
       )}
 
       {closed.length > 0 && (

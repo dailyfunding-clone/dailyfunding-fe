@@ -17,6 +17,7 @@ import {
   takeFreshReauth,
   validateStoredSession,
 } from "@/features/auth";
+import { checkAppUpdate } from "@/features/updates";
 import { WEB_BASE_URL } from "@/shared";
 
 import { TAB_PATHS } from "./constants";
@@ -259,6 +260,14 @@ export function handleBridgeMessage(event: WebViewMessageEvent, deps: BridgeDeps
       break;
     case "auth.signOut":
       void signOut(deps.router);
+      break;
+    case "app.checkUpdate":
+      void checkAppUpdate().then((status) => {
+        deps.channel.send({
+          type: "app.update.result",
+          payload: { requestSeq: msg.seq, status },
+        });
+      });
       break;
     case "app.ready":
       deps.onReady();

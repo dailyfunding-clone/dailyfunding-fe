@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# updates code signing: commit public artifacts, keep private key local
+!certs/certificate.pem
+!keys/public-key.pem
+keys/private-key.pem

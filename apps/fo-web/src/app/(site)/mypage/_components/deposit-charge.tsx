@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActionState, useState } from "react";
 
 import { ApiRequestError, api, fmtWon, idempotencyKey } from "@/shared/api";
-import { depositChargeSchema, parseForm, type FormState } from "@/shared/lib";
+import { copyText, depositChargeSchema, parseForm, type FormState } from "@/shared/lib";
 
 import { apiErrorMessage } from "./constants";
 
@@ -35,7 +35,7 @@ const DepositCharge = () => {
   const copyAccount = async () => {
     if (!account.data) return;
     try {
-      await navigator.clipboard.writeText(account.data.account_no);
+      await copyText(account.data.account_no);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {

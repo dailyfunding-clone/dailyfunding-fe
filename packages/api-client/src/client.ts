@@ -118,6 +118,21 @@ const buildUrl = (
 
 const CSRF_COOKIE = "csrf";
 const CSRF_HEADER = "X-CSRF-Token";
+const REQUEST_TIMEOUT_MS = 15_000;
+
+export const randomId = () => {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+    const b = crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    const h = [...b].map((x) => x.toString(16).padStart(2, "0")).join("");
+    return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 14)}`;
+};
 
 export const readCsrfToken = () =>
   typeof document === "undefined"
@@ -133,6 +148,8 @@ export const createClient = (options: ApiClientOptions = {}) => {
   const http: KyInstance = ky.create({
     credentials: "include",
     throwHttpErrors: false,
+    timeout: REQUEST_TIMEOUT_MS,
+    retry: { limit: 1, methods: ["get"] },
     hooks: {
       beforeRequest: [
         async () => {
@@ -196,7 +213,7 @@ export const createClient = (options: ApiClientOptions = {}) => {
 
   const request = (method: Method, path: PathKey, body: unknown, opts?: SendOpts) => {
     const idempotencyKey = IDEMPOTENT_METHODS.has(method)
-      ? (opts?.idempotencyKey ?? crypto.randomUUID())
+      ? (opts?.idempotencyKey ?? randomId())
       : undefined;
     const url = buildUrl(baseUrl, path as string, opts);
     return send(method, url, body, idempotencyKey, opts?.reauthToken ?? reauthToken ?? undefined);
@@ -214,7 +231,7 @@ export const createClient = (options: ApiClientOptions = {}) => {
     },
   ): Promise<T> => {
     const idempotencyKey = IDEMPOTENT_METHODS.has(method)
-      ? (opts?.idempotencyKey ?? crypto.randomUUID())
+      ? (opts?.idempotencyKey ?? randomId())
       : undefined;
     return send(
       method,

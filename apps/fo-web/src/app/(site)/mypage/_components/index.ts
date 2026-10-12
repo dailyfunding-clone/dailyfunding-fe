@@ -1,3 +1,4 @@
+export { default as AppUpdateCheck } from "./app-update-check";
 export { default as DepositCharge, useDepositAccount } from "./deposit-charge";
 export type { DepositAccount } from "./deposit-charge";
 export { default as DepositHistory } from "./deposit-history";

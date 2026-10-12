@@ -705,6 +705,35 @@ input {
   color: var(--semantic-color-fg-tertiary);
 }
 
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 16px;
+  z-index: 100;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--semantic-color-accent-primary);
+  color: var(--semantic-color-bg-default);
+  font-weight: 700;
+  transform: translateY(-120%);
+  transition: transform 0.15s;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(8px);
+}
+
+.card-grid > .card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 260px;
+}
+
+.inv-loading:empty {
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
 @media (max-width: 640px) {
   .site-nav {
     gap: 14px;

@@ -67,9 +67,22 @@ type Props = {
 const ProductTabs = ({ tabs }: Props) => {
   const [active, setActive] = useState<(typeof TABS)[number]["key"]>("overview");
   const notice = typeof tabs?.notice === "string" && tabs.notice.trim() ? tabs.notice : null;
+  const move = (e: React.KeyboardEvent) => {
+    const idx = TABS.findIndex((t) => t.key === active);
+    let nextIdx: number | null = null;
+    if (e.key === "ArrowRight") nextIdx = (idx + 1) % TABS.length;
+    else if (e.key === "ArrowLeft") nextIdx = (idx - 1 + TABS.length) % TABS.length;
+    else if (e.key === "Home") nextIdx = 0;
+    else if (e.key === "End") nextIdx = TABS.length - 1;
+    if (nextIdx === null) return;
+    e.preventDefault();
+    const key = TABS[nextIdx].key;
+    setActive(key);
+    document.getElementById(`product-tab-${key}`)?.focus();
+  };
   return (
     <>
-      <div className="tabs" role="tablist" aria-label="상품 정보">
+      <div className="tabs" role="tablist" aria-label="상품 정보" onKeyDown={move}>
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -78,6 +91,7 @@ const ProductTabs = ({ tabs }: Props) => {
             id={`product-tab-${t.key}`}
             aria-selected={active === t.key}
             aria-controls={`product-panel-${t.key}`}
+            tabIndex={active === t.key ? 0 : -1}
             className={active === t.key ? "is-active" : undefined}
             onClick={() => setActive(t.key)}
           >

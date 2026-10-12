@@ -38,7 +38,15 @@ const ProductProgress = memo(({ product }: Props) => {
       : Math.min(100, Number(product.progress_pct) || 0);
   return (
     <>
-      <div className="progress">
+      <div
+        className="progress"
+        role="progressbar"
+        aria-label={`${product.name} 모집 진행률`}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(pct * 10) / 10}
+        aria-valuetext={`모집 달성률 ${pct.toFixed(1)}%`}
+      >
         <i style={{ width: `${pct}%` }} />
       </div>
       <div className="product-card-meta">
