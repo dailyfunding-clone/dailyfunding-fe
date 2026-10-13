@@ -1,5 +1,10 @@
 import { BRIDGE_VERSION, parseNativeMessage } from "./messages";
-import type { AuthState, BridgeEnvelope, WebToNativeMessage } from "./messages";
+import type {
+  AuthState,
+  BridgeEnvelope,
+  UpdateCheckStatus,
+  WebToNativeMessage,
+} from "./messages";
 
 type AuthListener = (state: AuthState) => void | Promise<void>;
 const REQUEST_TIMEOUT_MS = 15_000;
@@ -20,6 +25,7 @@ export const createWebBridge = (
   let retry: ReturnType<typeof setInterval> | undefined;
   let reauth: Promise<string | null> | null = null;
   let appCode: Promise<string | null> | null = null;
+  let updateCheck: Promise<UpdateCheckStatus> | null = null;
   let receiving = Promise.resolve();
   const queued: BridgeEnvelope[] = [];
   const received = new Set<number>();
@@ -88,6 +94,8 @@ export const createWebBridge = (
             requests.get(message.payload.requestSeq)?.resolve(message.payload.token);
           if (message.type === "auth.appCode.result")
             requests.get(message.payload.requestSeq)?.resolve(message.payload.code);
+          if (message.type === "app.update.result")
+            requests.get(message.payload.requestSeq)?.resolve(message.payload.status);
           received.add(message.seq);
           if (received.size > MAX_RECEIVED) {
             for (const stale of received) {
@@ -125,8 +133,10 @@ export const createWebBridge = (
     }
     return envelope.seq;
   };
-  const request = (type: "auth.getState" | "auth.reauth" | "auth.appCode") =>
-    new Promise<AuthState | string | null>((resolve, reject) => {
+  const request = (
+    type: "auth.getState" | "auth.reauth" | "auth.appCode" | "app.checkUpdate",
+  ) =>
+    new Promise<AuthState | UpdateCheckStatus | string | null>((resolve, reject) => {
       const number = seq + 1;
       const finish = () => {
         clearTimeout(timeout);
@@ -181,6 +191,14 @@ export const createWebBridge = (
         });
       return appCode;
     },
+    checkUpdate: () => {
+      updateCheck ??= (request("app.checkUpdate") as Promise<UpdateCheckStatus>)
+        .catch(() => "error" as UpdateCheckStatus)
+        .finally(() => {
+          updateCheck = null;
+        });
+      return updateCheck;
+    },
     replay: () => {
       if (sessionId) post({ type: "replay", payload: { after: 0, sessionId } });
     },
@@ -226,6 +244,8 @@ export const postToNative = (message: WebToNativeMessage): void => {
 };
 export const requestReauth = (): Promise<string | null> =>
   getClient()?.requestReauth() ?? Promise.resolve(null);
+export const checkAppUpdate = (): Promise<UpdateCheckStatus> =>
+  getClient()?.checkUpdate() ?? Promise.resolve("unavailable");
 export const getAuthState = (): Promise<AuthState> =>
   getClient()?.getAuthState() ?? Promise.resolve({ status: "signedOut", accessToken: null });
 export const subscribeAuthState = (listener: AuthListener) =>

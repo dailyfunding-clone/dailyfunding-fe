@@ -1,5 +1,6 @@
 import { tokens } from "@dailyfunding/design-system";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { useNetworkState } from "expo-network";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
@@ -25,12 +26,23 @@ const AppWebView = forwardRef<WebView, Props>(
     const crashRetries = useRef(0);
     const [crashed, setCrashed] = useState(false);
     const [instance, setInstance] = useState(0);
+    const [loadFailed, setLoadFailed] = useState(false);
+    const network = useNetworkState();
+    const wasOffline = useRef(false);
     useImperativeHandle(ref, () => innerRef.current as WebView);
     const reload = () => {
       crashRetries.current = 0;
       setCrashed(false);
+      setLoadFailed(false);
       setInstance((i) => i + 1);
     };
+
+    const online =
+      network.isConnected !== false && network.isInternetReachable !== false;
+    useEffect(() => {
+      if (online && wasOffline.current && loadFailed) reload();
+      wasOffline.current = !online;
+    }, [online, loadFailed]);
 
     const handleCrash = () => {
       if (crashRetries.current >= MAX_CRASH_RETRIES) {
@@ -62,6 +74,7 @@ const AppWebView = forwardRef<WebView, Props>(
 
     const handleLoadEnd = () => {
       crashRetries.current = 0;
+      setLoadFailed(false);
       onLoadEnd?.();
     };
 
@@ -69,7 +82,13 @@ const AppWebView = forwardRef<WebView, Props>(
       <View style={styles.error}>
         <Text style={styles.errorTitle}>페이지를 불러오지 못했어요</Text>
         <Text style={styles.errorDesc}>네트워크 상태를 확인해 주세요</Text>
-        <Pressable style={styles.retry} onPress={reload} hitSlop={8}>
+        <Pressable
+          style={styles.retry}
+          onPress={reload}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="다시 시도"
+        >
           <Text style={styles.retryText}>다시 시도</Text>
         </Pressable>
       </View>
@@ -93,6 +112,7 @@ const AppWebView = forwardRef<WebView, Props>(
           onNavigationStateChange={onNavigationStateChange}
           onScroll={onScroll}
           onLoadEnd={handleLoadEnd}
+          onError={() => setLoadFailed(true)}
           onContentProcessDidTerminate={handleCrash}
           onRenderProcessGone={handleCrash}
           renderError={renderErrorView}

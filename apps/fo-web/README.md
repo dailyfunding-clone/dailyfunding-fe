@@ -2,6 +2,10 @@
 
 데일리펀딩 클론의 고객용 웹. 웹 브라우저와 `fo-native` WebView 하이브리드(`ReactNativeWebView` 브릿지)에서 동일하게 동작한다.
 
+## 스크린샷
+
+전체 페이지 스크린샷: [`docs/screenshots/fo-web/`](../../../docs/screenshots/fo-web/)
+
 ## 기능
 
 - 투자 상품 목록/상세 — 서버 필터 + 클라이언트 필터, SSE 실시간 진행률

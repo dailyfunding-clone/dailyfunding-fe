@@ -1,12 +1,18 @@
 import { RootProviders } from "@/apps/providers";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@dailyfunding/design-system/tokens.css";
 import "@dailyfunding/design-system/components.css";
 import "./globals.scss";
 
 export const metadata: Metadata = {
   title: "데일리펀딩 관리자",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (

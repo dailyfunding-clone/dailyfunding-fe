@@ -1,7 +1,7 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { api, fmtWon } from "@/shared/api";
 
@@ -70,6 +70,19 @@ const DepositHistory = () => {
   });
 
   const { fetchNextPage } = query;
+  const sentinel = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = sentinel.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver((hits) => {
+      if (hits.some((h) => h.isIntersecting) && query.hasNextPage && !query.isFetchingNextPage) {
+        void fetchNextPage();
+      }
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [query.hasNextPage, query.isFetchingNextPage, fetchNextPage]);
 
   const applyRange = (key: string) => {
     setRange(key);
@@ -192,14 +205,17 @@ const DepositHistory = () => {
             </div>
           )}
           {query.hasNextPage && (
-            <button
-              type="button"
-              className="btn btn-outline more-btn"
-              onClick={() => query.fetchNextPage()}
-              disabled={query.isFetchingNextPage}
-            >
-              {query.isFetchingNextPage ? "불러오는 중…" : "더 보기"}
-            </button>
+            <>
+              <div ref={sentinel} aria-hidden="true" />
+              <button
+                type="button"
+                className="btn btn-outline more-btn"
+                onClick={() => query.fetchNextPage()}
+                disabled={query.isFetchingNextPage}
+              >
+                {query.isFetchingNextPage ? "불러오는 중…" : "더 보기"}
+              </button>
+            </>
           )}
         </>
       )}

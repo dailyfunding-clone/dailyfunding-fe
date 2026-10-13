@@ -1,4 +1,4 @@
-import { createClient, readCsrfToken } from "@dailyfunding/api-client";
+import { createClient, randomId, readCsrfToken } from "@dailyfunding/api-client";
 import ky from "ky";
 
 import {
@@ -92,7 +92,7 @@ export const apiFetch = (path: string, init?: RequestInit & { idempotencyKey?: s
 
 export const API_URL = `${process.env.API_INTERNAL_URL ?? "http://localhost:8000"}/api`;
 
-export const idempotencyKey = () => crypto.randomUUID();
+export const idempotencyKey = () => randomId();
 
 export const fmtWon = (n: number) => `${n.toLocaleString("ko-KR")}원`;
 

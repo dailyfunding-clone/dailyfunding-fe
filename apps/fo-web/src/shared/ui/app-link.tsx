@@ -10,10 +10,14 @@ type AppLinkProps = LinkProps &
     linkTitle?: string;
   };
 
-const AppLink = ({ href, linkTitle, onClick, ...rest }: AppLinkProps) => (
+const AppLink = ({ href, linkTitle, onClick, prefetch, ...rest }: AppLinkProps) => (
   <Link
     {...rest}
     href={href}
+    prefetch={
+      prefetch ??
+      (typeof href === "string" && href.startsWith("/") && !isInWebView() ? true : undefined)
+    }
     onClick={(e) => {
       onClick?.(e);
       if (
